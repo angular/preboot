@@ -80,7 +80,6 @@ export interface NodeContext {
 // interface for global object that contains all preboot data
 export interface PrebootData {
   opts?: PrebootOptions;
-  listening?: boolean;
   overlay?: Element;
   activeNode?: NodeContext;
   apps?: PrebootAppData[];

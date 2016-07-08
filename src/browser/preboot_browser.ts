@@ -11,13 +11,14 @@
 // NOTE: since we are not using webpack or any other external packaging client, this module
 // contains everything. So, don't import anything other than interfaces
 import {
-  PrebootCompleteOptions,
-  PrebootAppData,
-  PrebootData,
-  PrebootEvent,
-  NodeContext,
-  Element,
-  Window
+    ServerClientRoot,
+    PrebootCompleteOptions,
+    PrebootAppData,
+    PrebootData,
+    PrebootEvent,
+    NodeContext,
+    Element,
+    Window
 } from '../preboot_interfaces';
 
 // the idea here is that preboot is a global value on the window that is used by the client
@@ -37,29 +38,10 @@ export function prebootClient() {
 
     let theWindow = <Window> (opts.window || window);
     let prebootData = theWindow.prebootData || {};
-
-    // make sure preboot no longer listening for new events
-    prebootData.listening = false;
+    let apps = prebootData.apps || [];
 
     // loop through each of the preboot apps
-    prebootData.apps.forEach(function (appData) {
-      let root = appData.root;
-
-      // if a specific app root set and it doesn't equal the server selector, then don't do anything
-      if (opts.appRoot && opts.appRoot !== root.serverSelector) {
-        return;
-      }
-
-      // some client side frameworks (like Angular 1 w UI Router) will replace
-      // elements, so we need to re-get client root just to be safe
-      root.clientNode = theWindow.document.querySelector(root.clientSelector);
-
-      // replay all the events from the server view onto the client view
-      appData.events.forEach(event => replayEvent(appData, event));
-
-      // if we are buffering, switch the buffers
-      switchBuffer(theWindow, appData);
-    });
+    apps.forEach(appData => completeApp(opts, appData));
 
     // once all events have been replayed and buffers switched, then we cleanup preboot
     if (!opts.noCleanup) {
@@ -68,13 +50,45 @@ export function prebootClient() {
   }
 
   /**
+   * Complete a particular app
+   * @param opts
+   * @param appData
+   */
+  function completeApp(opts: PrebootCompleteOptions, appData: PrebootAppData) {
+    opts = opts || {};
+    appData = <PrebootAppData> (appData || {});
+
+    let theWindow = <Window> (opts.window || window);
+    let root = <ServerClientRoot> (appData.root || {});
+    let events = appData.events || [];
+
+    // if a specific app root set and it doesn't equal the server selector, then don't do anything
+    if (opts.appRoot && opts.appRoot !== root.serverSelector) {
+      return;
+    }
+
+    // some client side frameworks (like Angular 1 w UI Router) will replace
+    // elements, so we need to re-get client root just to be safe
+    root.clientNode = theWindow.document.querySelector(root.clientSelector);
+
+    // replay all the events from the server view onto the client view
+    events.forEach(event => replayEvent(appData, event));
+
+    // if we are buffering, switch the buffers
+    switchBuffer(theWindow, appData);
+  }
+
+  /**
    * Replay a particular event. The trick here is finding the appropriate client
    * node where the event is to be dispatched that matches up with the server node
    * where the event came from originally.
    */
   function replayEvent(appData: PrebootAppData, prebootEvent: PrebootEvent) {
+    appData = <PrebootAppData> (appData || {});
+    prebootEvent = <PrebootEvent> (prebootEvent || {});
+
     let event = prebootEvent.event;
-    let serverNode = prebootEvent.node;
+    let serverNode = prebootEvent.node || {};
     let nodeKey = prebootEvent.nodeKey;
     let clientNode = findClientNode({
       root: appData.root,
@@ -85,8 +99,8 @@ export function prebootClient() {
     // if client node can't be found, log a warning
     if (!clientNode) {
       console.warn('Trying to dispatch event ' + event.type +
-        ' to node ' + nodeKey + ' but could not find client node. ' +
-        'Server node is: ');
+          ' to node ' + nodeKey + ' but could not find client node. ' +
+          'Server node is: ');
       console.log(serverNode);
       return;
     }
@@ -102,25 +116,29 @@ export function prebootClient() {
    * Hide the server buffer and show the client buffer
    */
   function switchBuffer(window: Window, appData: PrebootAppData) {
-    let root = appData.root;
-    let serverView = root.serverNode;
-    let clientView = root.clientNode;
+    appData = <PrebootAppData> (appData || {});
 
-    // if the server view is the body or client and server view are the same,
-    // then don't do anything and return
-    if (serverView === clientView || serverView.nodeName === 'BODY') {
+    let root = <ServerClientRoot> (appData.root || {});
+    let serverView = root.serverNode || {};
+    let clientView = root.clientNode || {};
+
+    // if no client view or the server view is the body or client
+    // and server view are the same, then don't do anything and return
+    if (!clientView || serverView === clientView || serverView.nodeName === 'BODY') {
       return;
     }
 
     // get the server view display mode
     let display = window
-        .getComputedStyle(serverView)
-        .getPropertyValue('display') || 'block';
+            .getComputedStyle(serverView)
+            .getPropertyValue('display') || 'block';
+
+    // if
 
     // first remove the server view
     serverView.remove ?
-      serverView.remove() :
-      serverView.style.display = 'none';
+        serverView.remove() :
+        serverView.style.display = 'none';
 
     // now add the client view
     clientView.style.display = display;
@@ -135,13 +153,15 @@ export function prebootClient() {
   function cleanup(window: Window, prebootData: PrebootData) {
     prebootData = prebootData || {};
 
+    let listeners = prebootData.listeners || [];
+
     // set focus on the active node AFTER a small delay to ensure buffer switched
     setTimeout(function () {
       setFocus(prebootData.activeNode);
     }, 1);
 
     // remove all event listeners
-    for (let listener of prebootData.listeners) {
+    for (let listener of listeners) {
       listener.node.removeEventListener(listener.eventName, listener.handler);
     }
 
@@ -195,9 +215,15 @@ export function prebootClient() {
    * where the client view is different in structure from the server view
    */
   function findClientNode(serverNodeContext: NodeContext): Element {
+    serverNodeContext = <NodeContext>(serverNodeContext || {});
 
-    // if nothing passed in, then no client node
-    if (!serverNodeContext) { return null; }
+    let serverNode = serverNodeContext.node;
+    let root = serverNodeContext.root;
+
+    // if no server or client root, don't do anything
+    if (!root || !root.serverNode || !root.clientNode) {
+      return null;
+    }
 
     // we use the string of the node to compare to the client node & as key in cache
     let serverNodeKey = serverNodeContext.nodeKey || getNodeKey(serverNodeContext);
@@ -208,7 +234,6 @@ export function prebootClient() {
     }
 
     // get the selector for client nodes
-    let serverNode = serverNodeContext.node;
     let className = (serverNode.className || '').replace('ng-binding', '').trim();
     let selector = serverNode.tagName;
 
@@ -219,9 +244,14 @@ export function prebootClient() {
     }
 
     // select all possible client nodes and look through them to try and find a match
-    let root = serverNodeContext.root;
     let rootClientNode = root.clientNode;
-    let clientNodes = rootClientNode.querySelectorAll(selector);
+    let clientNodes = rootClientNode.querySelectorAll(selector) || [];
+
+    // if nothing found, then just try the tag name as a final option
+    if (!clientNodes.length) {
+      clientNodes = rootClientNode.querySelectorAll(serverNode.tagName) || [];
+    }
+
     for (let clientNode of clientNodes) {
 
       // get the key for the client node
@@ -242,7 +272,7 @@ export function prebootClient() {
 
     // if we get here it means we couldn't find the client node so give the user a warning
     console.warn('No matching client node found for ' + serverNodeKey +
-      '. You can fix this by assigning this element a unique id attribute.');
+        '. You can fix this by assigning this element a unique id attribute.');
     return null;
   }
 
@@ -293,6 +323,7 @@ export function prebootClient() {
 
   return {
     complete: complete,
+    completeApp: completeApp,
     replayEvent: replayEvent,
     switchBuffer: switchBuffer,
     cleanup: cleanup,

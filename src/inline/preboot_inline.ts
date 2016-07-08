@@ -13,17 +13,17 @@
 
 // NOTE: since we inline the prebootstrap function, only import interfaces!!!
 import {
-  EventSelector,
-  PrebootOptions,
-  PrebootAppData,
-  PrebootData,
-  Element,
-  DomEvent,
-  NodeContext,
-  Window,
-  Document,
-  Selection,
-  ServerClientRoot
+    EventSelector,
+    PrebootOptions,
+    PrebootAppData,
+    PrebootData,
+    Element,
+    DomEvent,
+    NodeContext,
+    Window,
+    Document,
+    Selection,
+    ServerClientRoot
 } from '../preboot_interfaces';
 
 /**
@@ -47,7 +47,6 @@ export function prebootstrap() {
 
     // we allow for window to be passed in so we can unit test on the server side
     let theWindow = <Window> (opts.window || window);
-    let document = <Document> (theWindow.document || {});
 
     // add the preboot options to the preboot data and then add the data to
     // the window so it can be used later by the client
@@ -58,12 +57,33 @@ export function prebootstrap() {
       listeners: []
     };
 
-    // in most cases we wait until DOMContentLoaded, but if the document is ready, start NOW!
-    if (document.readyState === 'interactive') {
+    // start up preboot listening as soon as the DOM is ready
+    waitUntilReady(data);
+  }
+
+  /**
+   * We want to attach event handlers as soon as possible. Unfortunately this means before
+   * DOMContentLoaded fires, so we need to look for document.body to exist instead.
+   * @param data
+   */
+  function waitUntilReady(data: PrebootData) {
+    let theWindow = <Window> (data.opts.window || window);
+    let document = <Document> (theWindow.document || {});
+
+    if (document.body) {
       start(document, data);
     } else {
-      document.addEventListener('DOMContentLoaded', () => start(document, data));
+      setTimeout(function () {
+        waitUntilReady(data);
+      }, 10);
     }
+
+    // in most cases we wait until DOMContentLoaded, but if the document is ready, start NOW!
+    // if (document.readyState === 'interactive') {
+    //   start(document, data);
+    // } else {
+    //   document.addEventListener('DOMContentLoaded', () => start(document, data));
+    // }
   }
 
   /**
@@ -105,7 +125,7 @@ export function prebootstrap() {
     let overlay = document.createElement('div');
     overlay.setAttribute('id', 'prebootOverlay');
     overlay.setAttribute('style', 'display:none;position:absolute;left:0;' +
-      'top:0;width:100%;height:100%;z-index:999999;background:black;opacity:.3');
+        'top:0;width:100%;height:100%;z-index:999999;background:black;opacity:.3');
     document.body.appendChild(overlay);
     return overlay;
   }
@@ -167,7 +187,6 @@ export function prebootstrap() {
    * @param prebootData
    * @param appData
    * @param eventSelector
-   * @param createHandler
    */
   function handleEvents(prebootData: PrebootData, appData: PrebootAppData, eventSelector: EventSelector) {
 
@@ -179,7 +198,7 @@ export function prebootstrap() {
       eventSelector.events.forEach(function (eventName: string) {
 
         // get the appropriate handler and add it as an event listener
-        let handler = createListenHandler(prebootData, eventSelector, appData);
+        let handler = createListenHandler(prebootData, eventSelector, appData, node);
         node.addEventListener(eventName, handler);
 
         // need to keep track of listeners so we can do node.removeEventListener() when preboot done
@@ -195,14 +214,13 @@ export function prebootstrap() {
   /**
    * Create handler for events that we will record
    */
-  function createListenHandler(prebootData: PrebootData, eventSelector: EventSelector, appData: PrebootAppData): Function {
+  function createListenHandler(prebootData: PrebootData, eventSelector: EventSelector, appData: PrebootAppData, node: Element): Function {
     return function (event: DomEvent) {
       let root = appData.root;
-      let node = event.target;
       let eventName = event.type;
 
       // if no node or no event name or not listening, just return
-      if (!node || !eventName || !prebootData.listening) { return; }
+      if (!node || !eventName) { return; }
 
       // if key codes set for eventSelector, then don't do anything if event doesn't include key
       let keyCodes = eventSelector.keyCodes;
@@ -346,7 +364,7 @@ export function prebootstrap() {
 
     // if no rootServerNode OR the selector is on the entire html doc or the body OR no parentNode, don't buffer
     if (!serverNode || !serverNode.parentNode ||
-      root.serverSelector === 'html' || root.serverSelector === 'body') {
+        root.serverSelector === 'html' || root.serverSelector === 'body') {
 
       return serverNode;
     }

@@ -147,10 +147,11 @@ describe('node unit test for preboot_inline', function () {
         let event = {
           preventDefault: function () {}
         };
+        let node = <Element>{};
 
         spyOn(event, 'preventDefault');
 
-        let handler = preboot.createListenHandler(prebootData, eventSelector, appData);
+        let handler = preboot.createListenHandler(prebootData, eventSelector, appData, node);
         handler(event);
 
         expect(event.preventDefault).not.toHaveBeenCalled();

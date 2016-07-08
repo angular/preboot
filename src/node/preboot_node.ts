@@ -58,8 +58,8 @@ export function getInlineCode(customOptions?: PrebootOptions): string {
       inlineCode = fs.readFileSync(minCodePath2).toString();
     } else {
       console.warn('Unable to use uglified version of inline preboot. ' +
-        'The /dist/preboot_inline.min.js file is missing from this library. ' +
-        'Using non-uglified version for now.');
+          'The /dist/preboot_inline.min.js file is missing from this library. ' +
+          'Using non-uglified version for now.');
       inlineCode = prebootstrap.toString();
     }
   } else {
@@ -83,11 +83,11 @@ export function getInlineCode(customOptions?: PrebootOptions): string {
  */
 function validateOptions(opts: PrebootOptions) {
   if ( (!opts.appRoot || !opts.appRoot.length) &&
-    (!opts.serverClientRoot || !opts.serverClientRoot.length)) {
+      (!opts.serverClientRoot || !opts.serverClientRoot.length)) {
 
     throw new Error('The appRoot is missing from preboot options. ' +
-      'This is needed to find the root of your application. ' +
-      'Set this value in the preboot options to be a selector for the root element of your app.');
+        'This is needed to find the root of your application. ' +
+        'Set this value in the preboot options to be a selector for the root element of your app.');
   }
 }
 
