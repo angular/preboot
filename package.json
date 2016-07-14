@@ -1,6 +1,6 @@
 {
   "name": "preboot",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Record and play back browser events",
   "main": "dist/preboot_node.js",
   "browser": "dist/preboot_browser.js",
@@ -42,10 +42,10 @@
   "dependencies": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/angular/universal"
+    "url": "https://github.com/angular/preboot"
   },
   "bugs": {
-    "url": "https://github.com/angular/universal/issues"
+    "url": "https://github.com/angular/preboot/issues"
   },
-  "homepage": "https://github.com/angular/universal/tree/master/modules/preboot"
+  "homepage": "https://github.com/angular/preboot"
 }

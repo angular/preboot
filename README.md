@@ -1,14 +1,19 @@
 # preboot
 
-Manage transition from a server-generated view to a client-generated view.
+The purpose of this library to to help manage the transition of state (i.e. events, focus, data) from
+a server-generated web view to a client-generated web view. The most common use cases include:
+
+* Universal apps that re-render (ex. Angular 2) - The client app generates a brand new view that replaces the server view
+* Universal apps that hydrate (ex. React) - The client app attaches to the existing server view
+* Static server-side "shell" (ex. Server Worker Application Shell) - A static, sparse template is used for the initial page load 
 
 ## Key Features
 
 1. Record and play back events
-1. Respond immediately to events
+1. Respond immediately to certain events
 1. Maintain focus even page is re-rendered
 1. Buffer client-side re-rendering for smoother transition
-1. Freeze page until bootstrap complete if user clicks button
+1. Freeze page until bootstrap complete for certain events
 
 ## 3 Parts of Preboot
 
@@ -154,8 +159,7 @@ this, make sure you set `buffer: false` and then use `serverClientRoot` instead 
 preboot options so you can specify both `serverSelector` and `clientSelector`.
 
 Why would you want manually handle buffering? This can be extremely useful for situations where you are 
-NOT working with a truly isomorphic framework like React or Angular 2. So, for example, with Angular 1
-or App Shell (from Progressive Web Apps).
+NOT working with a truly isomorphic framework. So, for example, with Angular 1 or App Shell (from Progressive Web Apps).
 
 ## Contributor Notes
 
