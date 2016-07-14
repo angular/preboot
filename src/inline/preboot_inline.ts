@@ -189,9 +189,20 @@ export function prebootstrap() {
    * @param eventSelector
    */
   function handleEvents(prebootData: PrebootData, appData: PrebootAppData, eventSelector: EventSelector) {
+    let serverRoot = appData.root.serverNode;
+
+    // don't do anything if no server root
+    if (!serverRoot) {
+      return;
+    }
 
     // get all nodes under the server root that match the given selector
-    let nodes = <[Element]> appData.root.serverNode.querySelectorAll(eventSelector.selector);
+    let nodes = <[Element]> serverRoot.querySelectorAll(eventSelector.selector);
+
+    // don't do anything if no nodes found
+    if (!nodes) {
+      return;
+    }
 
     // we want to add an event listener for each node and each event
     for (let node of nodes) {

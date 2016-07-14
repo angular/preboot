@@ -1,24 +1,28 @@
-/**
- * This is the entire inline JavaScript used for preboot. The way it works is that
- * the server side library for preboot calls toString() on the prebootstrap() function
- * and then injects the resulting JavaScript directly into the server view.
- *
- * As a result, all the code must be within the one prebootstrap() function and it
- * can't use any external dependencies other than interfaces.
- *
- * The final result of this code is to have a global object called prebootData which
- * hangs off the window and can be accessed by the preboot client code to replay
- * events, switch buffers and facilitate the switch from server view to client view.
- */
-"use strict";
-/**
- * The purpose of this wrapper function is simply to have an easy way for the preboot node
- * library to generate the inline code without any downstream deps (like webpack). Basically,
- * the node library get this JavaScript by calling prebootstrap.toString() then it adds
- *
- * prebootstrap().init(opts);
- */
-function prebootstrap() {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Preboot with Automatic Buffering</title>
+  <style>
+    body {
+      color: #555; font-family: Helvetica;
+    }
+    .wrapper {
+      width:100%; max-width:500px; margin:10px auto; padding:10px;
+    }
+    h1 {
+      font-size:30px; text-align:center;
+    }
+    h2 {
+      font-size:20px;
+    }
+    .frmelem {
+      width: 100%; font-size: 14px; padding: 10px; margin: 10px 0;
+    }
+  </style>
+  <script>
+
+    function prebootstrap() {
     var CARET_EVENTS = ['keyup', 'keydown', 'focusin', 'mouseup', 'mousedown'];
     var CARET_NODES = ['INPUT', 'TEXTAREA'];
     /**
@@ -340,4 +344,71 @@ function prebootstrap() {
         createBuffer: createBuffer
     };
 }
+ prebootstrap().init({"buffer":true,"eventSelectors":[{"selector":"input,textarea","events":["keypress","keyup","keydown","input","change"]},{"selector":"select,option","events":["change"]},{"selector":"input","events":["keyup"],"preventDefault":true,"keyCodes":[13],"freeze":true},{"selector":"input,textarea","events":["focusin","focusout","mousedown","mouseup"],"noReplay":true},{"selector":"input[type=\"submit\"],button","events":["click"],"preventDefault":true,"freeze":true}],"appRoot":"app"});
 
+  </script>
+</head>
+<body>
+
+  <div class="wrapper">
+    <h1>Preboot with Automatic Buffering</h1>
+
+    <app>
+      <h2 style="color:blue;text-align:center">Server View</h2>
+      <input  class="frmelem" type="text" name="myText" autofocus>
+      <input  class="frmelem" type="checkbox" name="myCheckbox" value="foo">
+      <input class="frmelem" type="radio" name="myRadio" value="val1">
+      <input class="frmelem" type="radio" name="myRadio" value="val2">
+      <select class="frmelem">
+        <option></option>
+        <option>op1</option>
+        <option>op2</option>
+      </select>
+      <button class="frmelem">Server Click</button>
+    </app>
+
+    <button id="clientBootBtn" class="frmelem" onclick="runClientBootstrap()">Client Bootstrap</button>
+
+  </div>
+  <script src="preboot_browser.js"></script>
+  <script>
+
+    // get a copy of the server view
+    var appViews = document.querySelectorAll('app');
+    var serverView = appViews[appViews.length - 1];
+    var serverClone = serverView.cloneNode(true);
+
+
+    function runClientBootstrap() {
+      var clientView = document.querySelector('app');
+      clientView.innerHTML = serverClone.innerHTML;
+
+      var h2 = clientView.querySelector('h2');
+      h2.innerHTML = 'Client View';
+      h2.style.color = 'green';
+
+      var btn = clientView.querySelector('button');
+      btn.innerHTML = 'Client Click';
+      btn.addEventListener('click', function () {
+        alert('client clicked');
+      });
+
+      setTimeout(function () {
+        runPrebootComplete();
+      }, 1000);
+
+      var clientBootBtn = document.querySelector('#clientBootBtn');
+      clientBootBtn.style.display = 'none';
+    }
+
+
+    function runPrebootComplete() {
+      preboot.complete();
+    }
+
+    setTimeout(runClientBootstrap, 5000);
+
+
+  </script>
+</body>
+</html>
