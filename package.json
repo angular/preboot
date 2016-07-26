@@ -1,10 +1,10 @@
 {
   "name": "preboot",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Record and play back browser events",
   "main": "dist/preboot_node.js",
   "browser": "dist/preboot_browser.js",
-  "typings": "src/node/preboot_node.ts",
+  "typings": "src/preboot.d.ts",
   "scripts": {
     "build": "gulp tsc",
     "prepublish": "gulp dist"
