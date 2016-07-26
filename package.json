@@ -1,8 +1,8 @@
 {
   "name": "preboot",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "Record and play back browser events",
-  "main": "dist/preboot_node.js",
+  "main": "dist/src/node/preboot_node.js",
   "browser": "dist/preboot_browser.js",
   "typings": "src/preboot.d.ts",
   "scripts": {

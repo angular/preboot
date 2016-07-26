@@ -28,12 +28,5 @@ module.exports = function (opts) {
       .pipe(gulp.dest('dist'));
   });
 
-  gulp.task('dist.server', [ 'tsc' ], function () {
-    return gulp.src([
-      'dist/src/node/preboot_node.js'
-    ])
-      .pipe(gulp.dest('dist'));
-  });
-
-  gulp.task('dist', ['dist.min', 'dist.client', 'dist.server']);
+  gulp.task('dist', ['dist.min', 'dist.client']);
 };
