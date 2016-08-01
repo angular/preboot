@@ -9,10 +9,6 @@
     "build": "gulp tsc",
     "prepublish": "gulp dist"
   },
-  "files": [
-    "src",
-    "dist"
-  ],
   "author": "Jeff Whelpley",
   "license": "MIT",
   "contributors": [
@@ -34,6 +30,7 @@
     "gulp-typedoc": "^2.0.0",
     "gulp-typescript": "^2.13.6",
     "gulp-uglify": "^1.5.3",
+    "merge2": "^1.0.2",
     "open": "0.0.5",
     "serve-static": "^1.11.1",
     "tslint": "^3.11.0",
