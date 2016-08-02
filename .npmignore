@@ -1,8 +1,8 @@
 #ignore all
 /*
 
-# keep these
 !/dist/**
+/dist/test/**
 
 !/README.md
 !/LICENSE
