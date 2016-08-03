@@ -15,7 +15,7 @@ a server-generated web view to a client-generated web view. The most common use 
 1. Buffer client-side re-rendering for smoother transition
 1. Freeze page until bootstrap complete for certain events
 
-## 3 Parts of Preboot
+## Preboot Modules
 
 It is important to note that there are 3 differet parts of preboot:
 

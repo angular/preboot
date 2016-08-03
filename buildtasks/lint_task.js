@@ -1,15 +1,16 @@
 var gulp = require('gulp');
-var tslint = require('gulp-tslint');
-var path = require('path');
+var gulpTsLint = require('gulp-tslint');
+var tslint = require('tslint');
 
 module.exports = function (opts) {
   gulp.task('lint', function () {
-    var tslintConfig = require(path.join(opts.rootDir, 'tslint.json'));
+    var program = tslint.createProgram('../tsconfig.json');
 
     return gulp.src(opts.tsFiles).
-      pipe(tslint({
-        configuration: tslintConfig
+      pipe(gulpTsLint({
+        formatter: 'verbose',
+        program: program
       })).
-      pipe(tslint.report('verbose'));
+      pipe(gulpTsLint.report());
   });
 };
