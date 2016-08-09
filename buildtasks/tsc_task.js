@@ -4,7 +4,7 @@ var typescript = require('gulp-typescript');
 var path = require('path');
 
 module.exports = function (opts) {
-  gulp.task('tsc', [ 'clean' ], function () {
+  gulp.task('tsc', function () {
     var tsConfig = path.join(opts.rootDir, 'tsconfig.json');
     var tsProject = typescript.createProject(tsConfig, {
       declaration: true

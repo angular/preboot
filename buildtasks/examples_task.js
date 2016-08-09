@@ -6,10 +6,10 @@ var codeRegex = /\/\/prebootInlineHere/;
 module.exports = function (opts) {
 
   function runExample(name, opts) {
-    var preboot = require('../dist/src/node/preboot_node');
+    var preboot = require('../__build/src/node/preboot_node');
     return gulp.src('examples/' + name + '.html')
       .pipe(replace(codeRegex, preboot.getInlineCode(opts)))
-      .pipe(gulp.dest('dist'));
+      .pipe(gulp.dest('__dist'));
   }
 
   gulp.task('example.bufferAuto', ['dist'], function () {
@@ -50,7 +50,7 @@ module.exports = function (opts) {
     'example.bufferNone',
     'example.bufferMultiapp'
   ], function () {
-    return gulp.src('examples/preboot_examples.html').pipe(gulp.dest('dist'));
+    return gulp.src('examples/preboot_examples.html').pipe(gulp.dest('__dist'));
   });
 
   gulp.task('examples', [ 'dist', 'example.templates' ], function() {
@@ -67,7 +67,7 @@ module.exports = function (opts) {
       port: LIVERELOAD_PORT
     }));
 
-    server.use(serveStatic('dist'));
+    server.use(serveStatic('__dist'));
 
     server.listen(PORT);
     reloader.listen({
@@ -80,9 +80,9 @@ module.exports = function (opts) {
     var watchFiles = opts.tsFiles;
     watchFiles.push('examples/*.html');
     watchFiles.push('buildtasks/*.js');
-    gulp.watch(watchFiles, [ 'dist', 'example.templates' ]);
+    gulp.watch(watchFiles, [ 'src/**/*.ts', 'example.templates' ]);
 
     // if dist stuff changes, reload
-    gulp.watch(['dist/*'], function () { reloader.reload(); });
+    gulp.watch(['__dist/*'], function () { reloader.reload(); });
   });
 };

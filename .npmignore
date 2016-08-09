@@ -1,10 +1,13 @@
 
-examples
-node_modules
-src
-test
-typings
+/buildtasks/
+/docs/
+/examples/
+/node_modules/
+/src/
+/test/
+/typings/
 
+.github
 .idea
 .vscode
 .DS_Store

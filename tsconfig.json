@@ -11,11 +11,12 @@
     "experimentalDecorators": true,
   	"sourceMap": true,
     "listFiles": false,
-  	"outDir": "dist"
+  	"outDir": "__build"
   },
   "exclude": [
     "node_modules",
-    "dist"
+    "__dist",
+    "__build"
   ],
   "formatCodeOptions": {
     "indentSize": 2,
