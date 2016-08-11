@@ -119,29 +119,34 @@ export function prebootClient() {
     appData = <PrebootAppData> (appData || {});
 
     let root = <ServerClientRoot> (appData.root || {});
-    let serverView = root.serverNode || {};
-    let clientView = root.clientNode || {};
+    let serverView = root.serverNode;
+    let clientView = root.clientNode;
 
     // if no client view or the server view is the body or client
     // and server view are the same, then don't do anything and return
-    if (!clientView || serverView === clientView || serverView.nodeName === 'BODY') {
+    if (!clientView || !serverView || serverView === clientView || serverView.nodeName === 'BODY') {
       return;
     }
 
-    // get the server view display mode
-    let display = window
-            .getComputedStyle(serverView)
-            .getPropertyValue('display') || 'block';
+    // do a try-catch for case where serverView is an object but NOT of type Element
+    try {
 
-    // if
+      // get the server view display mode
+      let display = window
+              .getComputedStyle(serverView)
+              .getPropertyValue('display') || 'block';
 
-    // first remove the server view
-    serverView.remove ?
-        serverView.remove() :
-        serverView.style.display = 'none';
+      // first remove the server view
+      serverView.remove ?
+          serverView.remove() :
+          serverView.style.display = 'none';
 
-    // now add the client view
-    clientView.style.display = display;
+      // now add the client view
+      clientView.style.display = display;
+
+    } catch (ex) {
+      console.error(ex);
+    }
   }
 
   /**
