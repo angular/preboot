@@ -6,12 +6,14 @@
     "noImplicitAny": false,
     "removeComments": false,
     "noLib": false,
+    "baseUrl": ".",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
   	"sourceMap": true,
     "listFiles": false,
-  	"outDir": "__build"
+  	"outDir": "__build",
+    "traceResolution": false
   },
   "exclude": [
     "node_modules",

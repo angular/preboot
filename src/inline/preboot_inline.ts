@@ -35,8 +35,8 @@ import {
  */
 export function prebootstrap() {
 
-  var CARET_EVENTS = ['keyup', 'keydown', 'focusin', 'mouseup', 'mousedown'];
-  var CARET_NODES = ['INPUT', 'TEXTAREA'];
+  const CARET_EVENTS = ['keyup', 'keydown', 'focusin', 'mouseup', 'mousedown'];
+  const CARET_NODES = ['INPUT', 'TEXTAREA'];
 
   /**
    * Called right away to initialize preboot
@@ -87,12 +87,20 @@ export function prebootstrap() {
   }
 
   /**
-   * Start up preboot by going through each app and assigning the appropriate handlers
+   * Start up preboot by going through each app and assigning the appropriate handlers.
+   * Normally this wouldn't be called directly, but we have set it up so that it can
+   * for older versions of Universal.
    *
    * @param document Global document object passed in for testing purposes
    * @param prebootData Global preboot data object that contains options and will have events
    */
   function start(document: Document, prebootData: PrebootData) {
+
+    // hack to tslint; otherwise typescript complains about window.prebootData
+    /* tslint:disable: no-string-literal */
+    prebootData = <PrebootData> (prebootData || window['prebootData']);
+    document = <Document> (document || window.document);
+
     let opts = prebootData.opts || {};
     let eventSelectors = opts.eventSelectors || [];
 
