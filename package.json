@@ -1,12 +1,11 @@
 {
   "name": "preboot",
-  "version": "4.4.0",
+  "version": "4.5.0",
   "description": "Record and play back browser events",
   "main": "__build/src/node/preboot_node.js",
   "browser": "__dist/preboot_browser.js",
   "typings": "preboot.d.ts",
   "scripts": {
-    "build": "gulp tsc",
     "prepublish": "gulp dist"
   },
   "author": "Jeff Whelpley",
@@ -17,6 +16,9 @@
     "Jeff Whelpley <jeff@gethuman.com>"
   ],
   "devDependencies": {
+    "@types/es6-promise": "0.0.29",
+    "@types/jasmine": "^2.2.31",
+    "@types/node": "^6.0.33",
     "connect-livereload": "^0.5.4",
     "del": "^2.2.1",
     "express": "^4.14.0",
@@ -33,7 +35,8 @@
     "open": "0.0.5",
     "serve-static": "^1.11.1",
     "tslint": "^3.14.0",
-    "typedoc": "^0.4.4"
+    "typedoc": "^0.4.4",
+    "typescript": "2.1.0-dev.20160801"
   },
   "dependencies": {},
   "repository": {

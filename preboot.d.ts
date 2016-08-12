@@ -156,6 +156,7 @@ export declare function prebootClient(): {
 };
 
 export declare const defaultOptions: PrebootOptions;
+export declare function getBrowserCode(legacyOptions: any): any;
 export declare function getInlineCode(customOptions?: PrebootOptions): string;
 export declare function assign(target: Object, ...optionSets: any[]): Object;
 export declare function stringifyWithFunctions(obj: Object): string;

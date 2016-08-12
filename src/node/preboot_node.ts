@@ -1,5 +1,6 @@
 import { PrebootOptions } from '../preboot_interfaces';
 import { prebootstrap } from '../inline/preboot_inline';
+import { prebootClient } from '../browser/preboot_browser';
 import fs = require('fs');
 import path = require('path');
 
@@ -26,6 +27,32 @@ export const defaultOptions = <PrebootOptions> {
     { selector: 'input[type="submit"],button', events: ['click'], preventDefault: true, freeze: true }
   ]
 };
+
+/**
+ * Deprecated function just used for backward compatibility.
+ * note that certian older options for preboot like listen, replay, freeze, etc. are no longer available
+ *
+ * @param legacyOptions Object that contains legacy preboot options
+ */
+export function getBrowserCode(legacyOptions: any): any {
+
+  // we will remove this function with the next version
+  console.warn('getBrowserCode() deprecated and many custom options no longer available. ' +
+      'Please switch to getInlineCode().');
+
+  var inlineCode = getInlineCode({
+    appRoot: legacyOptions.appRoot || 'app',
+    uglify: legacyOptions.uglify,
+    buffer: legacyOptions.buffer,
+    noInlineCache: legacyOptions.noInlineCache,
+    eventSelectors: legacyOptions.eventSelectors,
+    serverClientRoot: legacyOptions.serverClientRoot
+  });
+
+  var browserCode = prebootClient.toString();
+  var deprecatedCode = inlineCode + '\n' + browserCode + '\nvar preboot = prebootClient();';
+  return Promise.resolve(deprecatedCode);
+}
 
 /**
  * Main entry point for the server side version of preboot. The main purpose
