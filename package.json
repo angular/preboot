@@ -4,9 +4,10 @@
   "description": "Record and play back browser events",
   "main": "__build/src/node/preboot_node.js",
   "browser": "__dist/preboot_browser.js",
-  "typings": "preboot.d.ts",
+  "typings": "__build/src/preboot.d.ts",
   "scripts": {
-    "prepublish": "gulp dist"
+    "prepublish": "gulp dist",
+    "test": "gulp test"
   },
   "author": "Jeff Whelpley",
   "license": "MIT",
@@ -30,7 +31,6 @@
     "gulp-size": "^2.1.0",
     "gulp-tslint": "^6.0.2",
     "gulp-typedoc": "^2.0.0",
-    "gulp-typescript": "^2.13.6",
     "gulp-uglify": "^2.0.0",
     "open": "0.0.5",
     "serve-static": "^1.11.1",

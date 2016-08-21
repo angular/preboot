@@ -7,7 +7,7 @@ var rootDir = __dirname;
 var buildConfig = {
   rootDir: rootDir,
   tsFiles: ['src/**/*.ts', 'test/**/*.ts'],
-  testFiles: 'dist/test/**/*_spec.js',
+  testFiles: '__build/test/**/*_spec.js',
   distDir: path.join(rootDir, 'dist'),
   prebootBrowser: path.join(rootDir, 'dist/src/browser/preboot_browser'),
   prebootNode: path.join(rootDir, 'dist/src/node/preboot_node')

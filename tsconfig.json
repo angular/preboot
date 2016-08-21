@@ -15,10 +15,18 @@
   	"outDir": "__build",
     "traceResolution": false
   },
+  "types": [
+    "node",
+    "jasmine"
+  ],
   "exclude": [
     "node_modules",
     "__dist",
     "__build"
+  ],
+  "include": [
+    "src/**/*",
+    "test/**/*"
   ],
   "formatCodeOptions": {
     "indentSize": 2,
