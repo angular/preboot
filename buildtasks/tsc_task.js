@@ -1,29 +1,35 @@
-var gulp = require('gulp');
-var size = require('gulp-size');
-var gulpTs = require('gulp-typescript');
+var gulp       = require('gulp');
+var size       = require('gulp-size');
 var typescript = require('typescript');
-var path = require('path');
-var merge2 = require('merge2');
+var path       = require('path');
+var merge2     = require('merge2');
+var spawn      = require('child_process').spawn;
 
 module.exports = function (opts) {
   gulp.task('tsc', function () {
     var tsConfig = path.join(opts.rootDir, 'tsconfig.json');
-    var tsProject = gulpTs.createProject(tsConfig, {
-      typescript: typescript,
-      declaration: true
+
+    return new Promise(function (resolve, reject) {
+
+      var cmd = "tsc -p " + tsConfig + " --pretty --diagnostics";
+      console.log(cmd);
+
+      const argArray = cmd.split(' ');
+
+      const compiler = spawn(argArray.shift(), argArray, {
+        stdio: 'inherit'
+      });
+
+      compiler.on('close', function (code) {
+        console.log('Typescript compiler exited with code', code);
+        code === 0 ? resolve() : reject();
+      });
+
+      compiler.on('error', function (code) {
+        console.log('error', code);
+        reject();
+      });
+
     });
-
-    var tsStream = tsProject.src().
-      pipe(typescript(tsProject));
-
-
-    return merge2([
-      tsStream.js.
-        pipe(size()).
-        pipe(gulp.dest(tsProject.config.compilerOptions.outDir)),
-      tsStream.dts.
-        pipe(gulp.dest(tsProject.config.compilerOptions.outDir))
-    ]);
-
-  });
+  })
 };
