@@ -1,12 +1,11 @@
 {
   "name": "preboot",
-  "version": "4.0.4",
+  "version": "4.5.1",
   "description": "Record and play back browser events",
-  "main": "dist/src/node/preboot_node.js",
-  "browser": "dist/src/preboot_browser.js",
-  "typings": "dist/src/preboot.d.ts",
+  "main": "__build/src/node/preboot_node.js",
+  "browser": "__dist/preboot_browser.js",
+  "typings": "preboot.d.ts",
   "scripts": {
-    "build": "gulp tsc",
     "prepublish": "gulp dist",
     "test": "gulp test"
   },
@@ -18,24 +17,27 @@
     "Jeff Whelpley <jeff@gethuman.com>"
   ],
   "devDependencies": {
+    "@types/es6-promise": "0.0.29",
+    "@types/jasmine": "^2.2.31",
+    "@types/node": "^6.0.33",
     "connect-livereload": "^0.5.4",
-    "del": "^2.2.0",
+    "del": "^2.2.1",
     "express": "^4.14.0",
     "gulp": "^3.9.1",
-    "gulp-jasmine": "^2.3.0",
+    "gulp-jasmine": "^2.4.0",
     "gulp-livereload": "^3.8.1",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-size": "^2.1.0",
-    "gulp-tslint": "^5.0.0",
+    "gulp-tslint": "^6.0.2",
     "gulp-typedoc": "^2.0.0",
     "gulp-typescript": "^2.13.6",
-    "gulp-uglify": "^1.5.3",
-    "merge2": "^1.0.2",
+    "gulp-uglify": "^2.0.0",
     "open": "0.0.5",
     "serve-static": "^1.11.1",
-    "tslint": "^3.11.0",
-    "typedoc": "^0.4.3"
+    "tslint": "^3.14.0",
+    "typedoc": "^0.4.4",
+    "typescript": "2.1.0-dev.20160801"
   },
   "dependencies": {},
   "repository": {

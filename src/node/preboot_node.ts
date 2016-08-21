@@ -1,5 +1,6 @@
 import { PrebootOptions } from '../preboot_interfaces';
 import { prebootstrap } from '../inline/preboot_inline';
+import { prebootClient } from '../browser/preboot_browser';
 import fs = require('fs');
 import path = require('path');
 
@@ -28,6 +29,38 @@ export const defaultOptions = <PrebootOptions> {
 };
 
 /**
+ * Deprecated function just used for backward compatibility.
+ * note that certian older options for preboot like listen, replay, freeze, etc. are no longer available
+ *
+ * @param legacyOptions Object that contains legacy preboot options
+ */
+export function getBrowserCode(legacyOptions: any): any {
+  legacyOptions = legacyOptions || {};
+
+  // we will remove this function with the next version
+  console.warn('getBrowserCode() deprecated and many custom options no longer available. ' +
+      'Please switch to getInlineCode().');
+
+  var inlineCode = getInlineCode({
+    appRoot: legacyOptions.appRoot || 'app',
+    uglify: legacyOptions.uglify,
+    buffer: legacyOptions.buffer,
+    noInlineCache: legacyOptions.noInlineCache,
+    eventSelectors: legacyOptions.eventSelectors,
+    serverClientRoot: legacyOptions.serverClientRoot
+  });
+
+  // two different possibilities depending on how client is calling preboot_node
+  var minCodePath = path.normalize(__dirname + '/../../../__dist/preboot_browser.min.js');
+  var browserCode = (legacyOptions.uglify && fs.existsSync(minCodePath)) ?
+      fs.readFileSync(minCodePath).toString() :
+      (prebootClient.toString() + '\nvar preboot = prebootClient();');
+
+  var deprecatedCode = inlineCode + '\n' + browserCode;
+  return Promise.resolve(deprecatedCode);
+}
+
+/**
  * Main entry point for the server side version of preboot. The main purpose
  * is to generate inline code that can be inserted into the server view.
  *
@@ -47,24 +80,10 @@ export function getInlineCode(customOptions?: PrebootOptions): string {
   }
 
   // two different possibilities depending on how client is calling preboot_node
-  var minCodePath1 = path.normalize(__dirname + '/preboot_inline.min.js');
-  var minCodePath2 = path.normalize(__dirname + '/../../preboot_inline.min.js');
-  var inlineCode;
-
-  if (opts.uglify) {
-    if (fs.existsSync(minCodePath1)) {
-      inlineCode = fs.readFileSync(minCodePath1).toString();
-    } else if (fs.existsSync(minCodePath2)) {
-      inlineCode = fs.readFileSync(minCodePath2).toString();
-    } else {
-      console.warn('Unable to use uglified version of inline preboot. ' +
-          'The /dist/preboot_inline.min.js file is missing from this library. ' +
-          'Using non-uglified version for now.');
-      inlineCode = prebootstrap.toString();
-    }
-  } else {
-    inlineCode = prebootstrap.toString();
-  }
+  var minCodePath = path.normalize(__dirname + '/../../../__dist/preboot_inline.min.js');
+  var inlineCode = (opts.uglify && fs.existsSync(minCodePath)) ?
+      fs.readFileSync(minCodePath).toString() :
+      prebootstrap.toString();
 
   // generate the inline JavaScript from prebootstrap
   inlineCode += '\n ' + 'prebootstrap().init(' + stringifyWithFunctions(opts) + ');';

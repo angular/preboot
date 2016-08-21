@@ -3,7 +3,7 @@ var del = require('del');
 
 module.exports = function (opts) {
   gulp.task('clean', function() {
-    return del(['dist/src', 'dist/test'], function (err, paths) {
+    return del(['__dist', '__build'], function (err, paths) {
       return paths.length <= 0 ?
         console.log('Nothing to clean.') :
         console.log('Deleted folders:\n', paths.join('\n'));

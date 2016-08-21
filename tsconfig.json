@@ -6,16 +6,19 @@
     "noImplicitAny": false,
     "removeComments": false,
     "noLib": false,
+    "baseUrl": ".",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
   	"sourceMap": true,
     "listFiles": false,
-  	"outDir": "dist"
+  	"outDir": "__build",
+    "traceResolution": false
   },
   "exclude": [
     "node_modules",
-    "dist"
+    "__dist",
+    "__build"
   ],
   "formatCodeOptions": {
     "indentSize": 2,

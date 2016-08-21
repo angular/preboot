@@ -7,8 +7,8 @@ module.exports = function (opts) {
 
   gulp.task('dist.min', ['tsc'], function () {
     return gulp.src([
-      'dist/src/browser/preboot_browser.js',
-      'dist/src/inline/preboot_inline.js'
+      '__build/src/browser/preboot_browser.js',
+      '__build/src/inline/preboot_inline.js'
     ])
       .pipe(replace(/exports\..*;/, ''))
       .pipe(uglify())
@@ -16,16 +16,16 @@ module.exports = function (opts) {
         path.extname = '.min.js';
         return path;
       }))
-      .pipe(gulp.dest('dist'));
+      .pipe(gulp.dest('__dist'));
   });
 
   gulp.task('dist.client', [ 'tsc' ], function () {
     return gulp.src([
-      'dist/src/browser/preboot_browser.js',
-      'dist/src/inline/preboot_inline.js'
+      '__build/src/browser/preboot_browser.js',
+      '__build/src/inline/preboot_inline.js'
     ])
       .pipe(replace(/exports\..*;/, ''))
-      .pipe(gulp.dest('dist'));
+      .pipe(gulp.dest('__dist'));
   });
 
   gulp.task('dist', ['dist.min', 'dist.client']);

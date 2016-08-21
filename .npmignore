@@ -1,10 +1,15 @@
-#ignore all
-/*
 
-!/dist/**
-/dist/test/**
+/buildtasks/
+/docs/
+/examples/
+/node_modules/
+/src/
+/test/
+/typings/
 
-!/README.md
-!/LICENSE
-!/typings.json
-
+.github
+.idea
+.vscode
+.DS_Store
+*.pid
+*.seed

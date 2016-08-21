@@ -1,13 +1,15 @@
 var gulp = require('gulp');
 var size = require('gulp-size');
-var typescript = require('gulp-typescript');
+var gulpTs = require('gulp-typescript');
+var typescript = require('typescript');
 var path = require('path');
 var merge2 = require('merge2');
 
 module.exports = function (opts) {
-  gulp.task('tsc', [ 'clean' ], function () {
+  gulp.task('tsc', function () {
     var tsConfig = path.join(opts.rootDir, 'tsconfig.json');
-    var tsProject = typescript.createProject(tsConfig, {
+    var tsProject = gulpTs.createProject(tsConfig, {
+      typescript: typescript,
       declaration: true
     });
 
