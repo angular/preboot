@@ -150,6 +150,7 @@ export declare function prebootClient(): {
     replayEvent: (appData: PrebootAppData, prebootEvent: PrebootEvent) => void;
     switchBuffer: (window: Window, appData: PrebootAppData) => void;
     cleanup: (window: Window, prebootData: PrebootData) => void;
+    removeOverlay: (window: Window) => void;
     setFocus: (activeNode: NodeContext) => void;
     findClientNode: (serverNodeContext: NodeContext) => Element;
     getNodeKey: (nodeContext: NodeContext) => string;

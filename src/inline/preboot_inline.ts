@@ -37,6 +37,7 @@ export function prebootstrap() {
 
   const CARET_EVENTS = ['keyup', 'keydown', 'focusin', 'mouseup', 'mousedown'];
   const CARET_NODES = ['INPUT', 'TEXTAREA'];
+  let prebootStarted = false;
 
   /**
    * Called right away to initialize preboot
@@ -95,6 +96,13 @@ export function prebootstrap() {
    * @param prebootData Global preboot data object that contains options and will have events
    */
   function start(document: Document, prebootData: PrebootData) {
+
+    // only start once
+    if (prebootStarted) {
+      return;
+    } else {
+      prebootStarted = true;
+    }
 
     // hack to tslint; otherwise typescript complains about window.prebootData
     /* tslint:disable: no-string-literal */

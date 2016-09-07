@@ -171,14 +171,21 @@ export function prebootClient() {
     }
 
     // remove the freeze overlay if it exists
-    let prebootOverlay = window.document.body.querySelector('#prebootOverlay');
-    if (prebootOverlay) {
-      prebootOverlay.style.display = 'none';
-    }
+    removeOverlay(window);
 
     // finally clear out the data stored for each app
     prebootData.apps = [];
     clientNodeCache = {};
+  }
+
+  /**
+   * Remove the overlay if it exists
+   */
+  function removeOverlay(window: Window) {
+    let prebootOverlay = window.document.body.querySelector('#prebootOverlay');
+    if (prebootOverlay) {
+      prebootOverlay.style.display = 'none';
+    }
   }
 
   /**
@@ -331,6 +338,7 @@ export function prebootClient() {
     completeApp: completeApp,
     replayEvent: replayEvent,
     switchBuffer: switchBuffer,
+    removeOverlay: removeOverlay,
     cleanup: cleanup,
     setFocus: setFocus,
     findClientNode: findClientNode,
