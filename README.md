@@ -5,7 +5,7 @@ a server-generated web view to a client-generated web view. The most common use 
 
 * Universal apps that re-render (ex. Angular 2) - The client app generates a brand new view that replaces the server view
 * Universal apps that hydrate (ex. React) - The client app attaches to the existing server view
-* Static server-side "shells" (ex. Server Worker Application Shell) - A static, sparse template is used for the initial page load 
+* Static server-side "shells" (ex. Service Worker Application Shell) - A static, sparse template is used for the initial page load 
 
 ## Key Features
 
