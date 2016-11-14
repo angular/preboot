@@ -22,7 +22,10 @@ import {
 } from '../preboot_interfaces';
 
 // the idea here is that preboot is a global value on the window that is used by the client
-prebootClient();
+var preboot = prebootClient();
+/* tslint:disable */
+void preboot; // suppress unused variable error
+/* tslint:enable */
 
 // wrapper function used to contain all the preboot client functionality
 export function prebootClient() {
