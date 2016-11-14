@@ -22,13 +22,13 @@ import {
 } from '../preboot_interfaces';
 
 // the idea here is that preboot is a global value on the window that is used by the client
-var preboot = prebootClient();
+prebootClient();
 
 // wrapper function used to contain all the preboot client functionality
 export function prebootClient() {
 
   // used to cache map from server node key to associated client node
-  let clientNodeCache = {};
+  let clientNodeCache: { [key: string]: Element; } = {};
 
   /**
    * External code call this to kick off the switch from server to client
@@ -296,7 +296,7 @@ export function prebootClient() {
    * to keep all inline code separated and distinct (i.e. without imports)
    */
   function getNodeKey(nodeContext: NodeContext): string {
-    let ancestors = [];
+    let ancestors: Element[] = [];
     let root = nodeContext.root;
     let node = nodeContext.node;
     let temp = node;

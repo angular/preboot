@@ -49,7 +49,7 @@ export interface DomEvent {
   which?: number;
   type?: string;
   target?: any;
-  preventDefault();
+  preventDefault(): void;
 }
 
 // data on global preboot object for one particular app
@@ -96,7 +96,7 @@ export interface Selection {
 export interface Document {
   body?: Element;
   readyState?: string;
-  addEventListener?(name?: string, callback?: Function);
+  addEventListener?(name?: string, callback?: Function): void;
   querySelector?(selector?: string): Element;
   querySelectorAll?(selector?: string): Element[];
   createElement?(elementName?: string): Element;
@@ -127,23 +127,23 @@ export interface Element {
   selectionDirection?: string;
   selection?: any;
   createTextRange?(): any;
-  setSelectionRange?(fromPos: number, toPos: number, direction: string);
+  setSelectionRange?(fromPos: number, toPos: number, direction: string): void;
   style?: {
     display?: string;
   };
   parentNode?: Element;
   childNodes?: Element[];
   attributes?: string[];
-  remove?();
-  focus?();
-  dispatchEvent?(event: DomEvent);
+  remove?(): void;
+  focus?(): void;
+  dispatchEvent?(event: DomEvent): boolean;
   getAttribute?(name: string): string;
   cloneNode?(deep?: boolean): Element;
-  insertBefore?(nodeToInsert: Element, beforeNode: Element);
-  addEventListener?(name: string, callback: Function);
-  removeEventListener?(name: string, callback: Function);
+  insertBefore?(nodeToInsert: Element, beforeNode: Element): Node;
+  addEventListener?(name: string, callback: Function): void;
+  removeEventListener?(name: string, callback: Function): void;
   querySelector?(selector: string): Element;
   querySelectorAll?(selector: string): Element[];
-  appendChild?(node: Element);
-  setAttribute?(attrName: string, styles: string);
+  appendChild?(node: Element): Node;
+  setAttribute?(attrName: string, styles: string): void;
 }

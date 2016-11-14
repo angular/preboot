@@ -106,7 +106,7 @@ export function prebootstrap() {
 
     // hack to tslint; otherwise typescript complains about window.prebootData
     /* tslint:disable: no-string-literal */
-    prebootData = <PrebootData> (prebootData || window['prebootData']);
+    prebootData = <PrebootData> (prebootData || (window as any)['prebootData']);
     document = <Document> (document || window.document);
 
     let opts = prebootData.opts || {};
@@ -318,7 +318,7 @@ export function prebootstrap() {
    * to keep all inline code separated and distinct (i.e. without imports)
    */
   function getNodeKey(nodeContext: NodeContext): string {
-    let ancestors = [];
+    let ancestors: Element[] = [];
     let root = nodeContext.root;
     let node = nodeContext.node;
     let temp = node;
