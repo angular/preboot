@@ -4,7 +4,7 @@ import { prebootClient } from '../browser/preboot_browser';
 import fs = require('fs');
 import path = require('path');
 
-let inlineCodeCache = {};
+let inlineCodeCache: { [key: string]: string; } = {};
 
 // exporting default options in case developer wants to use these + custom on top
 export const defaultOptions = <PrebootOptions> {
@@ -118,7 +118,7 @@ function validateOptions(opts: PrebootOptions) {
  * @param optionSets Any number of addition objects that are added on top of the target
  * @returns {Object} A new object that contains all the merged values
  */
-export function assign(target: Object, ...optionSets): Object {
+export function assign(target: Object, ...optionSets: any[]): Object {
   if (target === undefined || target === null) {
     throw new TypeError('Cannot convert undefined or null to object');
   }
@@ -151,7 +151,7 @@ export function stringifyWithFunctions(obj: Object): string {
   const FUNC_STOP = 'STOP_FUNCTION_HERE';
 
   // first stringify except mark off functions with markers
-  let str = JSON.stringify(obj, function (key, value) {
+  let str = JSON.stringify(obj, function (_key, value) {
 
     // if the value is a function, we want to wrap it with markers
     if (!!(value && value.constructor && value.call && value.apply)) {
@@ -163,7 +163,8 @@ export function stringifyWithFunctions(obj: Object): string {
 
   // now we use the markers to replace function strings with actual functions
   let startFuncIdx = str.indexOf(FUNC_START);
-  let stopFuncIdx, fn;
+  let stopFuncIdx: number;
+  let fn: string;
   while (startFuncIdx >= 0) {
     stopFuncIdx = str.indexOf(FUNC_STOP);
 

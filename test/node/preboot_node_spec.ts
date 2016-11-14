@@ -25,7 +25,7 @@ describe('node unit test for preboot_node', function () {
     });
 
     it('should stringify an object with functions', function () {
-      let obj = { blah: 'foo', zoo: function (blah) {
+      let obj = { blah: 'foo', zoo: function (blah: number) {
         return blah + 1;
       }};
       let expected = '{"blah":"foo","zoo":function (';

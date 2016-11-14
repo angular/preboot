@@ -5,6 +5,9 @@ import {
   ServerClientRoot,
   NodeContext,
   Element,
+  PrebootData,
+  EventSelector,
+  PrebootAppData,
 } from '../../src/preboot_interfaces';
 
 describe('node unit test for preboot_inline', function () {
@@ -129,15 +132,15 @@ describe('node unit test for preboot_inline', function () {
 
   describe('createListenHandler()', function () {
       it('should do nothing if not listening', function () {
-        let prebootData = {
+        let prebootData: PrebootData = <PrebootData> {
           listening: false
         };
-        let eventSelector = {
+        let eventSelector: EventSelector = {
           selector: '',
           events: <[string]> [],
           preventDefault: true
         };
-        let appData = {
+        let appData: PrebootAppData = {
           root: {
             serverSelector: '',
             serverNode: {}
