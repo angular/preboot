@@ -1,6 +1,6 @@
 # preboot
 
-The purpose of this library to to help manage the transition of state (i.e. events, focus, data) from
+The purpose of this library is to help manage the transition of state (i.e. events, focus, data) from
 a server-generated web view to a client-generated web view. The most common use cases include:
 
 * Universal apps that re-render (ex. Angular 2) - The client app generates a brand new view that replaces the server view
@@ -112,7 +112,7 @@ runtime for every server request.
 This part of the options drives a lot of the core behavior of preboot. 
 Each event selector has the following properties:
 
-* `selector` - The selector to find nodes under the server root (ex. `input,.blah,#foo`)
+* `selector` - The selector to find nodes under the server root (ex. `input, .blah, #foo`)
 * `events` - An array of event names to listen for (ex. `['focusin', 'keyup', 'click']`)
 * `keyCodes` - Only do something IF event includes a key pressed that matches the given key codes.
 Useful for doing something when user hits return in a input box or something similar.
