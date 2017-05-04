@@ -44,7 +44,7 @@ Then in your server-side code you would do something like this:
 ```es6
 var preboot = require('preboot');
 var prebootOptions = {};  // see options section below
-var inlinePrebootCode = preboot.getInlineCode(opts);
+var inlinePrebootCode = preboot.getInlineCode(prebootOptions);
 ```
 
 You then inject `inlinePrebootCode` into the HEAD section of your server-side template.
