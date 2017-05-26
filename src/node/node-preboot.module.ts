@@ -17,7 +17,7 @@ export const INLINE_PREBOOT = new InjectionToken<string>('InlinePreboot');
 export class NodePrebootModule {
 
   // user can override the default preboot options by passing them in here
-  static addEventRecorderToDocument(opts?: PrebootOptions): ModuleWithProviders {
+  static recordEvents(opts?: PrebootOptions): ModuleWithProviders {
     return {
       ngModule: NodePrebootModule,
       providers: [{
