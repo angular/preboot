@@ -12,8 +12,8 @@ export interface EventSelector {
 
 export interface PrebootCompleteOptions {
   appRoot?: string;
-  window?: Window;
   noCleanup?: boolean;
+  timeout?: number;
 }
 
 export interface ServerClientRoot {
@@ -26,7 +26,7 @@ export interface ServerClientRoot {
 // interface for the options that can be passed into preboot
 export interface PrebootOptions {
   window?: Window;                  // just used for testing purposes to mock out the window
-  uglify?: boolean;                 // if true, client code generated will be uglified
+  minify?: boolean;                 // if true, client code generated will be uglified
   buffer?: boolean;                 // if true, attempt to buffer client rendering to hidden div
   noInlineCache?: boolean;          // if true, preboot_node will NOT cache generated inline code
   eventSelectors?: EventSelector[]; // when any of these events occur, they are recorded
@@ -92,27 +92,6 @@ export interface Selection {
   direction: string;
 }
 
-// global document object
-export interface Document {
-  body?: Element;
-  readyState?: string;
-  addEventListener?(name?: string, callback?: Function): void;
-  querySelector?(selector?: string): Element;
-  querySelectorAll?(selector?: string): Element[];
-  createElement?(elementName?: string): Element;
-}
-
-export interface ComputedStyle {
-  getPropertyValue(prop: string): string;
-}
-
-// interface for the global window object
-export interface Window {
-  prebootData: PrebootData;
-  document: Document;
-  getComputedStyle?(node: Element): ComputedStyle;
-}
-
 // this represents a node in the DOM
 export interface Element {
   id?: string;
@@ -126,14 +105,14 @@ export interface Element {
   selectionEnd?: number;
   selectionDirection?: string;
   selection?: any;
-  createTextRange?(): any;
-  setSelectionRange?(fromPos: number, toPos: number, direction: string): void;
   style?: {
     display?: string;
   };
   parentNode?: Element;
   childNodes?: Element[];
   attributes?: string[];
+  createTextRange?(): any;
+  setSelectionRange?(fromPos: number, toPos: number, direction: string): void;
   remove?(): void;
   focus?(): void;
   dispatchEvent?(event: DomEvent): boolean;
@@ -147,3 +126,21 @@ export interface Element {
   appendChild?(node: Element): Node;
   setAttribute?(attrName: string, styles: string): void;
 }
+
+export interface Window {
+  prebootData: PrebootData;
+  prebootStarted?: boolean;
+  document: Document;
+  getComputedStyle?(node: Element): ComputedStyle;
+}
+
+export interface Document {
+  body?: Element;
+  readyState?: string;
+  addEventListener?(name?: string, callback?: Function): void;
+  querySelector?(selector?: string): Element;
+  querySelectorAll?(selector?: string): Element[];
+  createElement?(elementName?: string): Element;
+}
+
+export interface ComputedStyle { getPropertyValue(prop: string): string; }

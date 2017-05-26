@@ -1,5 +1,4 @@
-import { defaultOptions, assign } from '../src/node/preboot_node';
-import { PrebootOptions, Window, Element } from '../src/preboot_interfaces';
+import { assign, defaultOptions, Element, PrebootOptions, Window } from '../src';
 
 export function getMockWindow(): Window {
   return <Window> {
@@ -28,7 +27,7 @@ export function getMockElement(): Element {
 // add in parent nodes for children
 export function addParent(anode: Element) {
   if (anode && anode.childNodes) {
-    for (let childNode of anode.childNodes) {
+    for (const childNode of anode.childNodes) {
       childNode.parentNode = anode;
       addParent(childNode);
     }

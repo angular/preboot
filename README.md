@@ -101,7 +101,7 @@ The value here is an array of objects which contain `serverSelector` and `client
 See more in buffering section below. 
 * `buffer` - If true, preboot will attempt to buffer client rendering to an extra hidden div. 
 See more in buffering section below.
-* `uglify` - If true, the code returned from `getInlineCode(opts)` will be uglified. 
+* `minify` - If true, the code returned from `getInlineCode(opts)` will be minified. 
 * `noInlineCache` - By default the results of `getInlineCode(opts)` are cached internally for each different type
 of `opts` object passed in. This is done for perf reasons in case it is being called at 
 runtime for every server request.
@@ -169,4 +169,4 @@ Some misc important things to keep in mind for contributors (in no particular or
 * There are only 3 main code files for preboot. One for each of the different parts (i.e. inline, browser, node). Don't
 break from this paradigm for now.
 * The transpiled `prebootstrap()` function is inlined in the server view, so it should be as small as possible 
-(goal is to keep the uglified version under 3k).
+(goal is to keep the minified version under 3k).
