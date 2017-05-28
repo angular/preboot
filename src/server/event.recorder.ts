@@ -17,14 +17,17 @@ import {
  *
  * @param opts All the preboot options
  */
-export function init(opts: PrebootOptions) {
-  // we allow for window to be passed in so we can unit test on the server side
-  const theWindow = <Window>(opts.window || window);
+export function init(opts: PrebootOptions, win?: Window) {
+  const theWindow = <Window>(win || window);
 
   // add the preboot options to the preboot data and then add the data to
   // the window so it can be used later by the client
-  const data = theWindow.prebootData =
-      <PrebootData>{opts: opts, listening: true, apps: [], listeners: []};
+  const data = theWindow.prebootData = <PrebootData>{
+    opts: opts,
+    listening: true,
+    apps: [],
+    listeners: []
+  };
 
   // start up preboot listening as soon as the DOM is ready
   waitUntilReady(data);
@@ -36,8 +39,8 @@ export function init(opts: PrebootOptions) {
  * exist instead.
  * @param data
  */
-export function waitUntilReady(data: PrebootData) {
-  const theWindow = <Window>(data.opts.window || window);
+export function waitUntilReady(data: PrebootData, win?: Window) {
+  const theWindow = <Window>(win || window);
   const document = <Document>(theWindow.document || {});
 
   if (document.body) {
@@ -54,12 +57,12 @@ export function waitUntilReady(data: PrebootData) {
  * handlers. Normally this wouldn't be called directly, but we have set it up so
  * that it can for older versions of Universal.
  *
- * @param theWindow Global window object passed in for testing purposes
  * @param prebootData Global preboot data object that contains options and will
  * have events
+ * @param win Optional param to pass in mock window for testing purposes
  */
-export function start(prebootData: PrebootData) {
-  const theWindow = <Window>(prebootData.opts.window || window);
+export function start(prebootData: PrebootData, win?: Window) {
+  const theWindow = <Window>(win || window);
 
   // only start once
   if (theWindow.prebootStarted) {
@@ -87,8 +90,7 @@ export function start(prebootData: PrebootData) {
     prebootData.apps.push(appData);
 
     // loop through all the eventSelectors and create event handlers
-    eventSelectors.forEach(
-        eventSelector => handleEvents(prebootData, appData, eventSelector));
+    eventSelectors.forEach(eventSelector => handleEvents(prebootData, appData, eventSelector));
   });
 }
 
@@ -102,10 +104,9 @@ export function start(prebootData: PrebootData) {
 export function createOverlay(document: Document): Element {
   const overlay = document.createElement('div');
   overlay.setAttribute('id', 'prebootOverlay');
-  overlay.setAttribute(
-      'style',
+  overlay.setAttribute('style',
       'display:none;position:absolute;left:0;' +
-          'top:0;width:100%;height:100%;z-index:999999;background:black;opacity:.3');
+      'top:0;width:100%;height:100%;z-index:999999;background:black;opacity:.3');
   document.body.appendChild(overlay);
   return overlay;
 }
@@ -122,8 +123,7 @@ export function createOverlay(document: Document): Element {
  * @param opts Options passed in by the user to init()
  * @returns ServerClientRoot[] An array of root info for each app
  */
-export function getAppRoots(
-    document: Document, opts: PrebootOptions): ServerClientRoot[] {
+export function getAppRoots(document: Document, opts: PrebootOptions): ServerClientRoot[] {
   const roots = <ServerClientRoot[]>(opts.serverClientRoot || []);
 
   // loop through any appRoot selectors to add them to the list of roots
@@ -167,9 +167,7 @@ export function getAppRoots(
  * @param appData
  * @param eventSelector
  */
-export function handleEvents(
-    prebootData: PrebootData, appData: PrebootAppData,
-    eventSelector: EventSelector) {
+export function handleEvents(prebootData: PrebootData, appData: PrebootAppData, eventSelector: EventSelector) {
   const serverRoot = appData.root.serverNode;
 
   // don't do anything if no server root
@@ -190,8 +188,7 @@ export function handleEvents(
     eventSelector.events.forEach(function(eventName: string) {
 
       // get the appropriate handler and add it as an event listener
-      const handler =
-          createListenHandler(prebootData, eventSelector, appData, node);
+      const handler = createListenHandler(prebootData, eventSelector, appData, node);
       node.addEventListener(eventName, handler);
 
       // need to keep track of listeners so we can do node.removeEventListener()
@@ -206,10 +203,13 @@ export function handleEvents(
  * Create handler for events that we will record
  */
 export function createListenHandler(
-    prebootData: PrebootData, eventSelector: EventSelector,
-    appData: PrebootAppData, node: Element): Function {
-  const CARET_EVENTS = ['keyup', 'keydown', 'focusin', 'mouseup', 'mousedown'];
+    prebootData: PrebootData,
+    eventSelector: EventSelector,
+    appData: PrebootAppData,
+    node: Element
+): Function {
 
+  const CARET_EVENTS = ['keyup', 'keydown', 'focusin', 'mouseup', 'mousedown'];
   const CARET_NODES = ['INPUT', 'TEXTAREA'];
 
   return function(event: DomEvent) {
@@ -306,8 +306,7 @@ export function getSelection(node: Element): Selection {
       selection.end = node.selectionEnd;
       selection.direction = node.selectionDirection;
     }
-  } catch (ex) {
-  }
+  } catch (ex) {}
 
   return selection;
 }

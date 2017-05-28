@@ -49,15 +49,8 @@ describe('UNIT TEST preboot.generator', function() {
 
   describe('generatePrebootEventRecorderCode()', function() {
     it('should generate valid JavaScript by default', function() {
-      const code = generatePrebootEventRecorderCode(
-          { window: getMockWindow(), appRoot: 'app' });
-
-      // code should exist
+      const code = generatePrebootEventRecorderCode({ appRoot: 'app' });
       expect(code).toBeTruthy();
-
-      /* tslint:disable:no-eval */
-      // try to eval the code (if error, then test will fail)
-      eval(code);
     });
   });
 });

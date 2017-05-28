@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import 'jasmine';
-import {getNodeKeyForPreboot, NodeContext} from '../../src';
-import {addParent} from '../preboot-test-utils';
+import { getNodeKeyForPreboot, NodeContext } from '../../src';
+import { addParent } from '../preboot-test-utils';
 
 describe('UNIT TEST get-node-key', function() {
   describe('getNodeKeyForPreboot()', function() {

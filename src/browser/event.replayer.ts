@@ -135,9 +135,7 @@ export class EventReplayer {
     // do a try-catch just in case something messed up
     try {
       // get the server view display mode
-      const display =
-          this.window.getComputedStyle(serverView).getPropertyValue('display') ||
-          'block';
+      const display = this.window.getComputedStyle(serverView).getPropertyValue('display') || 'block';
 
       // first remove the server view
       serverView.remove ? serverView.remove() :
@@ -260,7 +258,7 @@ export class EventReplayer {
     for (const clientNode of clientNodes) {
 
       // get the key for the client node
-      const clientNodeKey = getNodeKeyForPreboot({root: root, node: clientNode});
+      const clientNodeKey = getNodeKeyForPreboot({ root: root, node: clientNode });
 
       // if the client node key is exact match for the server node key, then we
       // found the client node

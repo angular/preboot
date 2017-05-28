@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { PrebootCompleteOptions } from '../common';
 import { EventReplayer } from './event.replayer';
+import { WindowRef } from './window';
 
 // only thing this does is replay events
 @NgModule()
@@ -24,6 +25,7 @@ export class BrowserPrebootModule {
     return {
       ngModule: BrowserPrebootModule,
       providers: [
+        { provide: WindowRef, useValue: window },
         EventReplayer,
         {
           // run this once the app as bootstrapped
@@ -37,7 +39,7 @@ export class BrowserPrebootModule {
                   .subscribe(() => replayer.replayAll(opts));
 
               // if there is a timeout, then replay after timeout occurs regardless
-              // whether app is table or not
+              // whether app is stable or not
               if (opts.timeout) {
                 setTimeout(() => replayer.replayAll(opts), opts.timeout);
               }

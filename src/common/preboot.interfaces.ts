@@ -25,7 +25,6 @@ export interface ServerClientRoot {
 
 // interface for the options that can be passed into preboot
 export interface PrebootOptions {
-  window?: Window;                  // just used for testing purposes to mock out the window
   minify?: boolean;                 // if true, client code generated will be uglified
   buffer?: boolean;                 // if true, attempt to buffer client rendering to hidden div
   noInlineCache?: boolean;          // if true, preboot_node will NOT cache generated inline code

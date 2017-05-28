@@ -1,10 +1,9 @@
 {
-  "name": "preboot",
-  "version": "5.0.0",
-  "description": "Record and play back browser events",
-  "main": "__build__/src/node/index.js",
-  "browser": "__build__/src/browser/index.js",
-  "typings": "__build__/src/node/index.d.ts",
+  "name": "temp-preboot",
+  "version": "5.0.2",
+  "description": "Do not use this module",
+  "main": "__build__/src/index.js",
+  "typings": "__build__/src/index.d.ts",
   "scripts": {
     "build": "rm -rf __build__ && rm -rf __dist__ && rm -rf node_modules && npm i && tsc || true",
     "test": "./node_modules/.bin/jasmine JASMINE_CONFIG_PATH=test/jasmine.json || true"
@@ -17,13 +16,6 @@
     "Jeff Whelpley <jeff@gethuman.com>"
   ],
   "devDependencies": {
-    "@types/jasmine": "^2.5.47",
-    "@types/node": "^7.0.22",
-    "@types/uglify-js": "^2.6.28",
-    "jasmine": "^2.6.0",
-    "jasmine-spec-reporter": "^4.1.0"
-  },
-  "dependencies": {
     "@angular/animations": "^4.1.3",
     "@angular/common": "^4.1.3",
     "@angular/compiler": "^4.1.3",
@@ -31,10 +23,29 @@
     "@angular/http": "^4.1.3",
     "@angular/platform-browser": "^4.1.3",
     "@angular/platform-server": "^4.1.3",
+    "@types/jasmine": "^2.5.47",
+    "@types/node": "^7.0.22",
+    "@types/uglify-js": "^2.6.28",
     "reflect-metadata": "^0.1.10",
     "rxjs": "^5.4.0",
-    "uglify-js": "^3.0.11",
+    "jasmine": "^2.6.0",
+    "jasmine-spec-reporter": "^4.1.0",
     "zone.js": "^0.8.11"
+  },
+  "dependencies": {
+    "uglify-js": "^3.0.11"
+  },
+  "peerDependencies": {
+    "@angular/animations": "^4.0.0",
+    "@angular/common": "^4.0.0",
+    "@angular/compiler": "^4.0.0",
+    "@angular/core": "^4.0.0",
+    "@angular/http": "^4.0.0",
+    "@angular/platform-browser": "^4.0.0",
+    "@angular/platform-server": "^4.0.0",
+    "reflect-metadata": "^0.1.0",
+    "rxjs": "^5.0.0",
+    "zone.js": "^0.8.0"
   },
   "repository": {
     "type": "git",

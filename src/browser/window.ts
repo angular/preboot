@@ -4,7 +4,7 @@ export class WindowRef implements Window {
   prebootData: PrebootData;
   document: Document;
 
-  getComputedStyle(node: Element): ComputedStyle {
+  getComputedStyle?(node: Element): ComputedStyle {
     return {
       node: node,
       getPropertyValue: (prop: string): string => {

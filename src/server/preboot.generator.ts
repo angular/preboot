@@ -70,7 +70,7 @@ export function generatePrebootEventRecorderCode(customOptions?: PrebootOptions)
   const eventRecorderFunctions: string[] = [];
   for (const funcName in eventRecorder) {
     if (eventRecorder.hasOwnProperty(funcName)) {
-      eventRecorderFunctions.push(eventRecorder[funcName].toString());
+      eventRecorderFunctions.push((<any>eventRecorder)[funcName].toString());
     }
   }
 

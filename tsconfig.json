@@ -1,17 +1,21 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
-    "module": "commonjs",
-    "target": "es5",
-    "noImplicitAny": false,
-    "sourceMap": true,
+    "declaration": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noImplicitAny": true,
     "outDir": "__build__",
+    "rootDir": ".",
+    "inlineSourceMap": true,
+    "target": "es5",
     "lib": [
-      "es2016",
+      "es6",
       "dom"
-    ]
+    ],
+    "baseUrl": ""
   },
   "include": [
     "src",

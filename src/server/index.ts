@@ -1,3 +1,3 @@
-export * from './node-preboot.module';
+export * from './server-preboot.module';
 export * from './preboot.generator';
 export * from './event.recorder';
