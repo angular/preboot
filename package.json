@@ -6,7 +6,7 @@
   "typings": "__build__/src/index.d.ts",
   "scripts": {
     "build": "rm -rf __build__ && rm -rf __dist__ && rm -rf node_modules && npm i && tsc || true",
-    "test": "./node_modules/.bin/jasmine JASMINE_CONFIG_PATH=test/jasmine.json || true"
+    "test": "./node_modules/.bin/jasmine JASMINE_CONFIG_PATH=test/utils/jasmine.json || true"
   },
   "author": "Jeff Whelpley",
   "license": "MIT",
