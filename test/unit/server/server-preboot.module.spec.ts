@@ -3,8 +3,8 @@ import 'jasmine';
 import 'zone.js';
 import 'zone.js/dist/long-stack-trace-zone.js';
 
-import { NgModule, NgModuleFactory, Component, ReflectiveInjector, enableProdMode } from '@angular/core';
-import { COMPILER_PROVIDERS, JitCompiler, ResourceLoader } from '@angular/compiler';
+import { NgModule, NgModuleFactory, Component, ReflectiveInjector } from '@angular/core';
+import { COMPILER_PROVIDERS, JitCompiler } from '@angular/compiler';
 import { ServerModule, renderModuleFactory } from '@angular/platform-server';
 import { BrowserModule } from '@angular/platform-browser';
 import { ServerPrebootModule } from '../../../src';
