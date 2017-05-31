@@ -1,7 +1,7 @@
 {
   "name": "preboot",
   "version": "5.0.0",
-  "description": "Do not use this module",
+  "description": "Record server view events and play back to Angular client view",
   "main": "__build__/src/index.js",
   "typings": "__build__/src/index.d.ts",
   "scripts": {

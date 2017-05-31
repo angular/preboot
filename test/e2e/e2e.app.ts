@@ -7,6 +7,7 @@ export const CURRENT_PLATFORM = new InjectionToken<string>('CurrentPlatform');
   template: `
     <h1>{{platform}}</h1>
     <p>Here is something</p>
+    <input id="myTextBox">
   `,
 })
 export class AppComponent {
