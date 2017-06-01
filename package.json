@@ -1,6 +1,6 @@
 {
   "name": "preboot",
-  "version": "5.0.0-rc.4",
+  "version": "5.0.0-rc.5",
   "description": "Record server view events and play back to Angular client view",
   "main": "src/index.js",
   "typings": "src/index.d.ts",
