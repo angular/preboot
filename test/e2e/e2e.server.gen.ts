@@ -23,7 +23,6 @@ jitCompiler.compileModuleAsync(AppModule)
       <html>
         <head>
           <title>Preboot Test</title>
-          <script src="/e2e.client.js"></script>
         </head>
         <body>
           <app-root></app-root>
