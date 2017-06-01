@@ -30,10 +30,6 @@ test/coverage
 # Users Environment Variables
 .lock-wscript
 
-# Server
-/__build__
-/__dist__
-
 # Static files
 
 /bower_components/

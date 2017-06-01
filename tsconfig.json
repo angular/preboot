@@ -7,7 +7,6 @@
     "moduleResolution": "node",
     "noEmitOnError": true,
     "noImplicitAny": true,
-    "outDir": "__build__",
     "rootDir": ".",
     "inlineSourceMap": true,
     "target": "es5",
@@ -19,6 +18,8 @@
   },
   "include": [
     "src",
-    "test"
+    "test",
+    "browser.ts",
+    "server.ts"
   ]
 }
