@@ -31,7 +31,7 @@ Assume that all documentation on this page from this point further is related to
 Preboot is currently in beta, so to insteall you must cd into your Angular app root and run the following command:
 
 ```
-npm i preboot@5.0.0-rc.1 --save
+npm i preboot@5.0.0-rc.3 --save
 ```
 
 In most cases, you will be using preboot with Angular server rendering. As such, there are two parts to preboot that

@@ -1,10 +1,11 @@
 {
   "name": "preboot",
-  "version": "5.0.0-rc.1",
+  "version": "5.0.0-rc.3",
   "description": "Record server view events and play back to Angular client view",
   "main": "__build__/src/index.js",
   "typings": "__build__/src/index.d.ts",
   "scripts": {
+    "prep": "tsc -p tsconfig-publish.json",
     "build": "rm -rf __build__ && rm -rf __dist__ && rm -rf node_modules && npm i && ./node_modules/.bin/webdriver-manager update && tsc || true",
     "test": "./node_modules/.bin/jasmine JASMINE_CONFIG_PATH=test/utils/jasmine.json || true",
     "start": "node __build__/test/e2e/e2e.server start || true",
