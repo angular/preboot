@@ -1,12 +1,12 @@
 import { minify } from 'uglify-js';
-import { getNodeKeyForPreboot, PrebootOptions } from '../common';
+import { getNodeKeyForPreboot, PrebootRecordOptions } from '../common';
 import * as eventRecorder from './event.recorder';
 
 const inlineCodeCache: { [key: string]: string; } = {};
 
 // exporting default options in case developer wants to use these + custom on
 // top
-export const defaultOptions = <PrebootOptions>{
+export const defaultOptions = <PrebootRecordOptions>{
   buffer: true,
   minify: true,
 
@@ -51,18 +51,18 @@ export const defaultOptions = <PrebootOptions>{
  * Main entry point for the server side version of preboot. The main purpose
  * is to generate inline code that can be inserted into the server view.
  *
- * @param customOptions PrebootOptions that override the defaults
+ * @param customOptions PrebootRecordOptions that override the defaults
  * @returns {string} Generated inline preboot code is returned
  */
-export function generatePrebootEventRecorderCode(customOptions?: PrebootOptions): string {
-  const opts = <PrebootOptions>assign({}, defaultOptions, customOptions);
+export function generatePrebootEventRecorderCode(customOptions?: PrebootRecordOptions): string {
+  const opts = <PrebootRecordOptions>assign({}, defaultOptions, customOptions);
 
   // safety check to make sure options passed in are valid
   validateOptions(opts);
 
   // use cache if exists and user hasn't disabled the cache
   const optsKey = JSON.stringify(opts);
-  if (!opts.noInlineCache && inlineCodeCache[optsKey]) {
+  if (inlineCodeCache[optsKey]) {
     return inlineCodeCache[optsKey];
   }
 
@@ -84,11 +84,8 @@ export function generatePrebootEventRecorderCode(customOptions?: PrebootOptions)
   const optsStr = stringifyWithFunctions(opts, opts.minify);
   const inlineCode = `(function(){${inlinePrebootCode}init(${optsStr})})()`;
 
-  // cache results as long as caching not disabled
-  if (!opts.noInlineCache) {
-    inlineCodeCache[optsKey] = inlineCode;
-  }
-
+  // cache results and return
+  inlineCodeCache[optsKey] = inlineCode;
   return inlineCode;
 }
 
@@ -96,9 +93,8 @@ export function generatePrebootEventRecorderCode(customOptions?: PrebootOptions)
  * Throw an error if issues with any options
  * @param opts
  */
-export function validateOptions(opts: PrebootOptions) {
-  if ((!opts.appRoot || !opts.appRoot.length) &&
-      (!opts.serverClientRoot || !opts.serverClientRoot.length)) {
+export function validateOptions(opts: PrebootRecordOptions) {
+  if (!opts.appRoot || !opts.appRoot.length) {
     throw new Error(
         'The appRoot is missing from preboot options. ' +
         'This is needed to find the root of your application. ' +

@@ -10,10 +10,8 @@ export interface EventSelector {
   noReplay?: boolean;               // if true, no replay will occur
 }
 
-export interface PrebootCompleteOptions {
-  appRoot?: string;
-  noCleanup?: boolean;
-  timeout?: number;
+export interface PrebootReplayOptions {
+  noReplay?: boolean;
 }
 
 export interface ServerClientRoot {
@@ -24,15 +22,11 @@ export interface ServerClientRoot {
 }
 
 // interface for the options that can be passed into preboot
-export interface PrebootOptions {
+export interface PrebootRecordOptions {
   minify?: boolean;                 // if true, client code generated will be uglified
   buffer?: boolean;                 // if true, attempt to buffer client rendering to hidden div
-  noInlineCache?: boolean;          // if true, preboot_node will NOT cache generated inline code
   eventSelectors?: EventSelector[]; // when any of these events occur, they are recorded
-  appRoot?: string | string[];      // define selectors for one or more server roots
-
-  // an alternative for appRoot where you can define separate server and client root selectors
-  serverClientRoot?: ServerClientRoot[];
+  appRoot: string | string[];       // define selectors for one or more server roots
 }
 
 // our wrapper around DOM events in preboot
@@ -78,7 +72,7 @@ export interface NodeContext {
 
 // interface for global object that contains all preboot data
 export interface PrebootData {
-  opts?: PrebootOptions;
+  opts?: PrebootRecordOptions;
   overlay?: Element;
   activeNode?: NodeContext;
   apps?: PrebootAppData[];

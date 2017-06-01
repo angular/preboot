@@ -1,6 +1,6 @@
 import {
     EventSelector,
-    PrebootOptions,
+    PrebootRecordOptions,
     PrebootAppData,
     PrebootData,
     Element,
@@ -17,7 +17,7 @@ import {
  *
  * @param opts All the preboot options
  */
-export function init(opts: PrebootOptions, win?: Window) {
+export function init(opts: PrebootRecordOptions, win?: Window) {
   const theWindow = <Window>(win || window);
 
   // add the preboot options to the preboot data and then add the data to
@@ -72,7 +72,7 @@ export function start(prebootData: PrebootData, win?: Window) {
   }
 
   const document = <Document>(theWindow.document || {});
-  const opts = prebootData.opts || {};
+  const opts = prebootData.opts || {} as PrebootRecordOptions;
   const eventSelectors = opts.eventSelectors || [];
 
   // create an overlay that can be used later if a freeze event occurs
@@ -114,23 +114,20 @@ export function createOverlay(document: Document): Element {
 /**
  * Get references to all app root nodes based on input options. Users can
  * initialize preboot either by specifying appRoot which is just one or more
- * selectors for apps, or if you want to get more complex they can pass in the
- * serverClientRoot option which contains selectors for both the client and the
- * server. This section option is useful for people that are doing their own
+ * selectors for apps. This section option is useful for people that are doing their own
  * buffering (i.e. they have their own client and server view)
  *
  * @param document The global document object passed in for testing purposes
  * @param opts Options passed in by the user to init()
  * @returns ServerClientRoot[] An array of root info for each app
  */
-export function getAppRoots(document: Document, opts: PrebootOptions): ServerClientRoot[] {
-  const roots = <ServerClientRoot[]>(opts.serverClientRoot || []);
+export function getAppRoots(document: Document, opts: PrebootRecordOptions): ServerClientRoot[] {
+  const roots: ServerClientRoot[] = [];
 
   // loop through any appRoot selectors to add them to the list of roots
   if (opts.appRoot && opts.appRoot.length) {
     const appRootSelectors = [].concat(opts.appRoot);
-    appRootSelectors.forEach(
-        selector => roots.push({serverSelector: selector}));
+    appRootSelectors.forEach(selector => roots.push({ serverSelector: selector }));
   }
 
   // now loop through the roots to get the nodes for each root

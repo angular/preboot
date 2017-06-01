@@ -8,7 +8,7 @@ import {
   APP_BOOTSTRAP_LISTENER
 } from '@angular/core';
 import { PlatformState } from '@angular/platform-server';
-import { PrebootOptions } from '../common';
+import { PrebootRecordOptions } from '../common';
 import { generatePrebootEventRecorderCode } from './preboot.generator';
 
 // only thing this does is modify the document
@@ -16,7 +16,7 @@ import { generatePrebootEventRecorderCode } from './preboot.generator';
 export class ServerPrebootModule {
 
   // user can override the default preboot options by passing them in here
-  static recordEvents(opts?: PrebootOptions): ModuleWithProviders {
+  static recordEvents(opts?: PrebootRecordOptions): ModuleWithProviders {
     return {
       ngModule: ServerPrebootModule,
       providers: [{

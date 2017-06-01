@@ -4,7 +4,8 @@ import {
   stringifyWithFunctions,
   assign,
   validateOptions,
-  generatePrebootEventRecorderCode
+  generatePrebootEventRecorderCode,
+  PrebootRecordOptions
 } from '../../../src';
 import { getMockWindow } from '../../utils';
 
@@ -43,7 +44,7 @@ describe('UNIT TEST preboot.generator', function() {
 
   describe('validateOptions()', function() {
     it('should throw error if nothing passed in', function() {
-      expect(() => validateOptions({})).toThrowError(/appRoot is missing/);
+      expect(() => validateOptions({} as PrebootRecordOptions)).toThrowError(/appRoot is missing/);
     });
   });
 

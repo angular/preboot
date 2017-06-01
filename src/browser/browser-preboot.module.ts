@@ -5,7 +5,7 @@ import {
   ModuleWithProviders,
   NgModule
 } from '@angular/core';
-import { PrebootCompleteOptions } from '../common';
+import { PrebootReplayOptions } from '../common';
 import { EventReplayer } from './event.replayer';
 import { WindowRef } from './window';
 
@@ -14,12 +14,8 @@ import { WindowRef } from './window';
 export class BrowserPrebootModule {
 
   // user can override the default preboot options by passing them in here
-  static replayEvents(opts?: PrebootCompleteOptions): ModuleWithProviders {
-    opts = opts || {};
-
-    if (opts.timeout === undefined) {
-      opts.timeout = 10000;
-    }
+  static replayEvents(opts?: PrebootReplayOptions): ModuleWithProviders {
+    const shouldReplay = !opts || !opts.noReplay;
 
     return {
       ngModule: BrowserPrebootModule,
@@ -34,10 +30,11 @@ export class BrowserPrebootModule {
           useFactory: function(replayer: EventReplayer) {
             return function() {
 
-              // todo: add option for PrebootCompleteOptions where user can dictate
+              // todo: add option for PrebootReplayOptions where user can dictate
               // when events replayed
-
-              replayer.replayAll(opts);
+              if (shouldReplay) {
+                replayer.replayAll();
+              }
             };
           },
 

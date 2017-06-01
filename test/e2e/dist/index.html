@@ -66,7 +66,7 @@ function createOverlay(document) {
 }
 
 function getAppRoots(document, opts) {
-    var roots = (opts.serverClientRoot || []);
+    var roots = [];
     // loop through any appRoot selectors to add them to the list of roots
     if (opts.appRoot && opts.appRoot.length) {
         var appRootSelectors = [].concat(opts.appRoot);
@@ -320,6 +320,11 @@ init({
     <h1>server view</h1>
     <p>Here is something</p>
     <input id="myTextBox">
+    <select id="mySelect">
+      <option></option>
+      <option id="myVal">foo</option>
+      <option>moo</option>
+    </select>
   </app-root>
         
       

@@ -7,107 +7,96 @@ a server-generated web view to a client-generated web view. The most common use 
 * Universal apps that hydrate (ex. React) - The client app attaches to the existing server view
 * Static server-side "shells" (ex. Service Worker Application Shell) - A static, sparse template is used for the initial page load 
 
-## Key Features
+The key features of preboot include:
 
 1. Record and play back events
-1. Respond immediately to certain events
+1. Respond immediately to certain events in the server view
 1. Maintain focus even page is re-rendered
 1. Buffer client-side re-rendering for smoother transition
-1. Freeze page until bootstrap complete for certain events
+1. Freeze page until bootstrap complete for certain events (ex. form submission)
 
-## Preboot Modules
+In essence, this library is all about managing the user experience from the time from when 
+a server view is visible until the client view takes over control of the page.
 
-It is important to note that there are 3 differet parts of preboot:
+## Import note about 5.0.0 release
 
-1. **Inline** - This is the code that is injected into the HEAD of your server view and 
-is in charge of recording all server view events.
-2. **Node** - The node.js library for preboot really just exists to generate the inline code.
-3. **Browser** - This client side library should not be inlined, but it should be loaded as a 
-file BEFORE your client side application code. This library is in charge of replaying all the
-events on the client view and then switching from server view to client view.
+Preboot version < 5.0.0 is built without any downstream dependencies and can be used with any front
+end framework. As of 5.0.0, however, preboot is built specifically for Angular. If you are NOT using
+Angular 4+ then you can continue to use version 4.x.x (it is very stable and has worked bug free for over a year).
 
-NOTE: The inline code will add an object `prebootData` onto the global window scope that contains
-all the recorded events and other application details. The browser code will pick up this global
-object and replay the events from this object onto the client view.
+Assume that all documentation on this page from this point further is related to >=5.0.0.
 
 ## Installation
 
-This is a server-side library that generates client-side code.
-To use this library, you would first install it through npm:
+Preboot is currently in beta, so to insteall you must cd into your Angular app root and run the following command:
 
-```sh
-npm install preboot
+```
+npm i preboot@5.0.0-rc.1 --save
 ```
 
-Then in your server-side code you would do something like this:
+In most cases, you will be using preboot with Angular server rendering. As such, there are two parts to preboot that
+must be configured: the server module and the client module.
 
-```es6
-var preboot = require('preboot');
-var prebootOptions = {};  // see options section below
-var inlinePrebootCode = preboot.getInlineCode(prebootOptions);
+#### Preboot Server Configuration
+
+```
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { ServerModule } from '@angular/platform-server';
+import { ServerPrebootModule } from 'preboot/server';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule.withServerTransition({ appId: 'foo' }),
+    ServerModule,
+    ServerPrebootModule.recordEvents({ appRoot: 'app-root' })
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
 ```
 
-You then inject `inlinePrebootCode` into the HEAD section of your server-side template.
-Then, at the very bottom of your `body` tag in your server-side template, add a reference
-to the preboot client and have some way of calling `preboot.complete()`:
+The key part here for preboot is to include `ServerPrebootModule.recordEvents({ appRoot: 'app-root' })` where the `appRoot`
+is the selector to find the root of your application. The options you can pass into `recordEvents()` are in the (PrebootRecordOptions)[#PrebootRecordOptions] section below. In most cases, however, you will only need to specify the `appRoot`.
 
-```html
-<body>
+#### Preboot Browser Configuration
 
+```
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserPrebootModule } from 'preboot/browser';
+import { AppComponent } from './app.component';
 
-  <script src="preboot_client.min.js"></script>
-  <script>
-  
-    // have some way to call this once the client is done loading
-    function callPrebootComplete() {
-    
-      // preboot is global object added by the preboot_client
-      preboot.complete();
-    }
-  
-  </script>
-</body>
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    BrowserPrebootModule.replayEvents()
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
 ```
 
-At a high level, you want to call `preboot.complete()` once the client is done bootstrapping/loading.
-The exact way in which this is done will be different for each type of client side app. For Angular 2
-for example, you can call it like this:
+The key part here for preboot is to include `BrowserPrebootModule.replayEvents()`. You can optionally pass an object
+into `replayEvents()` that is detailed in the (PrebootReplayOptions)[#PrebootReplayOptions] section below. In most
+cases, however, you can just rely on the preset defaults.
 
-```es6
-bootstrap(MyRootComponent, [PROVIDERS])
-  .then(function () {
-    preboot.complete();
-  });
-```
-
-One thing to watch out for, though, is that if you are not caching data between your client and server,
-then you should probably set up way of calling `preboot.complete()` after the initial client side async
-calls are all done. Otherwise, the async calls may not complete until AFTER preboot is complete which 
-likely will result in jank. HOWEVER, our recommendation for this is to focus on data caching rather
-than trying to delay `preboot.complete()` until after async calls are done.
-
-## Options
-
-Here is a detailed explanation of each option you can pass into `getInlineCode(opts)` for the
-node version of preboot.
-
-* `eventSelectors` - This is an array of objects which specify what events preboot should be listening for 
+#### PrebootRecordOptions
+ 
+* `appRoot` (**required**) - One or more selectors for apps in the page (i.e. so one string or an array of strings).
+* `buffer` (default true) - If true, preboot will attempt to buffer client rendering to an extra hidden div. In most
+cases you will want to leave the default (i.e. true) but may turn off if you are debugging an issue.
+* `minify` (default true) - If true, the inline code for recording will be minified in the server view. We recommend
+only setting this to false if you are debugging an issue.
+* `eventSelectors` (defaults below) - This is an array of objects which specify what events preboot should be listening for 
 on the server view and how preboot should replay those events to the client view. 
 See Event Selector section below for more details but note that in most cases, you can just rely on the defaults
 and you don't need to explicitly set anything here.
-* `appRoot` - This is one or more selectors for apps in the page (i.e. so one string or an array of strings).
-* `serverClientRoot` - This is an alternative to appRoot which can be used when you are doing manual buffering. 
-The value here is an array of objects which contain `serverSelector` and `clientSelector`. 
-See more in buffering section below. 
-* `buffer` - If true, preboot will attempt to buffer client rendering to an extra hidden div. 
-See more in buffering section below.
-* `minify` - If true, the code returned from `getInlineCode(opts)` will be minified. 
-* `noInlineCache` - By default the results of `getInlineCode(opts)` are cached internally for each different type
-of `opts` object passed in. This is done for perf reasons in case it is being called at 
-runtime for every server request.
-* `window` - This will override the actual window object and is only used for testing purposes.
 
-## Event Selectors
+**Event Selectors**
 
 This part of the options drives a lot of the core behavior of preboot. 
 Each event selector has the following properties:
@@ -143,30 +132,31 @@ var eventSelectors = [
 ];
 ```
 
-## Buffering
+#### PrebootReplayOptions
 
-Buffering is when the client application initially renders to a hidden div and once the client is ready,
-preboot will switch the server and client view in one shot. This is probably NOT needed for client-side 
-frameworks that do a good job at hydration (i.e. re-using the server view) like React. For everyone
-else, though, buffering is extremely useful (especially as your page becomes bigger and more complex)
- 
-There are two basic ways to do buffering with preboot:
+* `noReplay` (default false) - The only reason why you would want to set this to true is if you want to
+manually trigger the replay yourself. 
 
-1. **Automatic buffering** - This is where you let preboot generate an extra hidden div where your client 
-app will write to. To do this, simply set `buffer: true` in your preboot options.
-2. **Manual buffering** - This is where you manually create your own hidden div for your client view. To do
-this, make sure you set `buffer: false` and then use `serverClientRoot` instead of `appRoot` in your 
-preboot options so you can specify both `serverSelector` and `clientSelector`.
+This comes in handy for situations where you want to hold off
+on the replay and buffer switch until AFTER some async events occur (i.e. route loading, http calls, etc.). By
+default, replay occurs right after bootstrap is complete. In some apps, there are more events after bootstrap
+however where the page continues to change in significant ways. Basically if you are making major changes to
+the page after bootstrap then you will see some jank unless you set `noReplay` to `true` and then trigger replay
+yourself once you know that all async events are complete.
 
-Why would you want manually handle buffering? This can be extremely useful for situations where you are 
-NOT working with a truly isomorphic framework. So, for example, with Angular 1 or App Shell (from Progressive Web Apps).
+To manually trigger replay, simply inject the EventReplayer like this:
 
-## Contributor Notes
+```
+import { Injectable } from '@angular/core';
+import { EventReplayer } from 'preboot/browser';
 
-Some misc important things to keep in mind for contributors (in no particular order):
+@Injectable()
+class Foo {
+  constructor(private replayer: EventReplayer) {}
 
-* There are no downstream dependencies for preboot. This is done on purpose to keep preboot as light as possible.
-* There are only 3 main code files for preboot. One for each of the different parts (i.e. inline, browser, node). Don't
-break from this paradigm for now.
-* The transpiled `prebootstrap()` function is inlined in the server view, so it should be as small as possible 
-(goal is to keep the minified version under 3k).
+  // you decide when to call this based on what your app is doing
+  manualReplay() {
+    this.replayer.replayAll();
+  }
+}
+```

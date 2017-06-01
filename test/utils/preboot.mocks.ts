@@ -1,4 +1,4 @@
-import { assign, defaultOptions, Element, PrebootOptions, Window } from '../../src';
+import { assign, defaultOptions, Element, PrebootRecordOptions, Window } from '../../src';
 
 export function getMockWindow(): Window {
   return <Window> {
@@ -9,8 +9,8 @@ export function getMockWindow(): Window {
   };
 }
 
-export function getMockOptions(): PrebootOptions {
-  return <PrebootOptions> assign({}, defaultOptions, {
+export function getMockOptions(): PrebootRecordOptions {
+  return <PrebootRecordOptions> assign({}, defaultOptions, {
     window: getMockWindow()
   });
 }

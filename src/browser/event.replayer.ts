@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
     ServerClientRoot,
-    PrebootCompleteOptions,
     PrebootAppData,
     PrebootData,
     PrebootEvent,
@@ -21,11 +20,8 @@ export class EventReplayer {
   /**
    * Replay all events for all apps. this can only be run once.
    * if called multiple times, will only do something once
-   *
-   * @param opts
    */
-  replayAll(opts?: PrebootCompleteOptions) {
-    opts = opts || {};
+  replayAll() {
 
     if (this.replayStarted) {
       return;
@@ -36,12 +32,10 @@ export class EventReplayer {
     // loop through each of the preboot apps
     const prebootData = this.window.prebootData || {};
     const apps = prebootData.apps || [];
-    apps.forEach(appData => this.replayForApp(appData, opts));
+    apps.forEach(appData => this.replayForApp(appData));
 
     // once all events have been replayed and buffers switched, then we cleanup preboot
-    if (!opts.noCleanup) {
-      this.cleanup(prebootData);
-    }
+    this.cleanup(prebootData);
   }
 
   /**
@@ -49,20 +43,13 @@ export class EventReplayer {
    * @param appData
    * @param opts
    */
-  replayForApp(appData: PrebootAppData, opts: PrebootCompleteOptions) {
-    opts = opts || {};
+  replayForApp(appData: PrebootAppData) {
     appData = <PrebootAppData>(appData || {});
 
     // try catch around events b/c even if error occurs, we still move forward
     try {
       const root = <ServerClientRoot>(appData.root || {});
       const events = appData.events || [];
-
-      // if a specific app root set and it doesn't equal the server selector,
-      // then don't do anything
-      if (opts.appRoot && opts.appRoot !== root.serverSelector) {
-        return;
-      }
 
       // some client side frameworks (like Angular 1 w UI Router) will replace
       // elements, so we need to re-get client root just to be safe
@@ -252,6 +239,7 @@ export class EventReplayer {
 
     // if nothing found, then just try the tag name as a final option
     if (!clientNodes.length) {
+      console.log('nothing found for ' + selector + ' so using ' + serverNode.tagName);
       clientNodes = rootClientNode.querySelectorAll(serverNode.tagName) || [];
     }
 

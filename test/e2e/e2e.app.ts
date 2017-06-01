@@ -8,6 +8,11 @@ export const CURRENT_PLATFORM = new InjectionToken<string>('CurrentPlatform');
     <h1>{{platform}}</h1>
     <p>Here is something</p>
     <input id="myTextBox">
+    <select id="mySelect">
+      <option></option>
+      <option id="myVal">foo</option>
+      <option>moo</option>
+    </select>
   `,
 })
 export class AppComponent {
