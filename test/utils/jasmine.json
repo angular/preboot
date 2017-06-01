@@ -1,0 +1,9 @@
+{
+  "spec_dir": "__build__/test",
+  "spec_files": [
+    "unit/**/*[sS]pec.js"
+  ],
+  "helpers": ["utils/jasmine.reporter.js"],
+  "stopSpecOnExpectationFailure": false,
+  "random": false
+}

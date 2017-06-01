@@ -1,41 +1,24 @@
 {
   "compilerOptions": {
-  	"target": "es5",
-  	"module": "commonjs",
-  	"declaration": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
-    "removeComments": false,
-    "noLib": false,
-    "baseUrl": ".",
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
+    "declaration": true,
     "experimentalDecorators": true,
-  	"sourceMap": true,
-    "listFiles": false,
-  	"outDir": "__build",
-    "traceResolution": false
+    "emitDecoratorMetadata": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noImplicitAny": true,
+    "outDir": "__build__",
+    "rootDir": ".",
+    "inlineSourceMap": true,
+    "target": "es5",
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    "baseUrl": ""
   },
-  "exclude": [
-    "node_modules",
-    "__dist",
-    "__build"
-  ],
-  "formatCodeOptions": {
-    "indentSize": 2,
-    "tabSize": 2,
-    "newLineCharacter": "\r\n",
-    "convertTabsToSpaces": true,
-    "insertSpaceAfterCommaDelimiter": true,
-    "insertSpaceAfterSemicolonInForStatements": true,
-    "insertSpaceBeforeAndAfterBinaryOperators": true,
-    "insertSpaceAfterKeywordsInControlFlowStatements": true,
-    "insertSpaceAfterFunctionKeywordForAnonymousFunctions": true,
-    "insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
-    "placeOpenBraceOnNewLineForFunctions": false,
-    "placeOpenBraceOnNewLineForControlBlocks": false
-  }
+  "include": [
+    "src",
+    "test"
+  ]
 }
