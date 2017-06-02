@@ -56437,34 +56437,38 @@ __webpack_require__(28);
 var core_1 = __webpack_require__(1);
 var event_replayer_1 = __webpack_require__(18);
 var window_1 = __webpack_require__(8);
+function eventReplayerFactory(replayer, opts) {
+    return function () {
+        // todo: add option for PrebootReplayOptions where user can dictate
+        // when events replayed
+        if (!opts.noReplay) {
+            replayer.replayAll();
+        }
+    };
+}
+exports.eventReplayerFactory = eventReplayerFactory;
+exports.PREBOOT_REPLAY_OPTIONS = new core_1.InjectionToken('PrebootReplayOptions');
 // only thing this does is replay events
 var BrowserPrebootModule = BrowserPrebootModule_1 = (function () {
     function BrowserPrebootModule() {
     }
     // user can override the default preboot options by passing them in here
     BrowserPrebootModule.replayEvents = function (opts) {
-        var shouldReplay = !opts || !opts.noReplay;
+        if (opts === void 0) { opts = {}; }
         return {
             ngModule: BrowserPrebootModule_1,
             providers: [
                 { provide: window_1.WindowRef, useValue: window },
                 event_replayer_1.EventReplayer,
+                { provide: exports.PREBOOT_REPLAY_OPTIONS, useValue: opts },
                 {
                     // run this once the app as bootstrapped
                     provide: core_1.APP_BOOTSTRAP_LISTENER,
                     // generate the inline preboot code and inject it into the document
-                    useFactory: function (replayer) {
-                        return function () {
-                            // todo: add option for PrebootReplayOptions where user can dictate
-                            // when events replayed
-                            if (shouldReplay) {
-                                replayer.replayAll();
-                            }
-                        };
-                    },
+                    useFactory: eventReplayerFactory,
                     multi: true,
                     // we need access to the document and renderer
-                    deps: [event_replayer_1.EventReplayer]
+                    deps: [event_replayer_1.EventReplayer, exports.PREBOOT_REPLAY_OPTIONS]
                 }
             ]
         };
@@ -56476,7 +56480,7 @@ BrowserPrebootModule = BrowserPrebootModule_1 = __decorate([
 ], BrowserPrebootModule);
 exports.BrowserPrebootModule = BrowserPrebootModule;
 var BrowserPrebootModule_1;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYnJvd3Nlci1wcmVib290Lm1vZHVsZS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbImJyb3dzZXItcHJlYm9vdC5tb2R1bGUudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7QUFBQSxvQ0FBa0M7QUFDbEMsbUNBQWlDO0FBQ2pDLHNDQUl1QjtBQUV2QixtREFBaUQ7QUFDakQsbUNBQXFDO0FBRXJDLHdDQUF3QztBQUV4QyxJQUFhLG9CQUFvQjtJQUFqQztJQW1DQSxDQUFDO0lBakNDLHdFQUF3RTtJQUNqRSxpQ0FBWSxHQUFuQixVQUFvQixJQUEyQjtRQUM3QyxJQUFNLFlBQVksR0FBRyxDQUFDLElBQUksSUFBSSxDQUFDLElBQUksQ0FBQyxRQUFRLENBQUM7UUFFN0MsTUFBTSxDQUFDO1lBQ0wsUUFBUSxFQUFFLHNCQUFvQjtZQUM5QixTQUFTLEVBQUU7Z0JBQ1QsRUFBRSxPQUFPLEVBQUUsa0JBQVMsRUFBRSxRQUFRLEVBQUUsTUFBTSxFQUFFO2dCQUN4Qyw4QkFBYTtnQkFDYjtvQkFDRSx3Q0FBd0M7b0JBQ3hDLE9BQU8sRUFBRSw2QkFBc0I7b0JBRS9CLG1FQUFtRTtvQkFDbkUsVUFBVSxFQUFFLFVBQVMsUUFBdUI7d0JBQzFDLE1BQU0sQ0FBQzs0QkFFTCxtRUFBbUU7NEJBQ25FLHVCQUF1Qjs0QkFDdkIsRUFBRSxDQUFDLENBQUMsWUFBWSxDQUFDLENBQUMsQ0FBQztnQ0FDakIsUUFBUSxDQUFDLFNBQVMsRUFBRSxDQUFDOzRCQUN2QixDQUFDO3dCQUNILENBQUMsQ0FBQztvQkFDSixDQUFDO29CQUVELEtBQUssRUFBRSxJQUFJO29CQUVYLDhDQUE4QztvQkFDOUMsSUFBSSxFQUFFLENBQUMsOEJBQWEsQ0FBQztpQkFDdEI7YUFDRjtTQUNGLENBQUM7SUFDSixDQUFDO0lBQ0gsMkJBQUM7QUFBRCxDQUFDLEFBbkNELElBbUNDO0FBbkNZLG9CQUFvQjtJQURoQyxlQUFRLEVBQUU7R0FDRSxvQkFBb0IsQ0FtQ2hDO0FBbkNZLG9EQUFvQiJ9
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYnJvd3Nlci1wcmVib290Lm1vZHVsZS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbImJyb3dzZXItcHJlYm9vdC5tb2R1bGUudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7QUFBQSxvQ0FBa0M7QUFDbEMsbUNBQWlDO0FBQ2pDLHNDQUt1QjtBQUV2QixtREFBaUQ7QUFDakQsbUNBQXFDO0FBRXJDLDhCQUFxQyxRQUF1QixFQUFFLElBQTBCO0lBQ3RGLE1BQU0sQ0FBQztRQUVMLG1FQUFtRTtRQUNuRSx1QkFBdUI7UUFDdkIsRUFBRSxDQUFDLENBQUMsQ0FBQyxJQUFJLENBQUMsUUFBUSxDQUFDLENBQUMsQ0FBQztZQUNuQixRQUFRLENBQUMsU0FBUyxFQUFFLENBQUM7UUFDdkIsQ0FBQztJQUNILENBQUMsQ0FBQztBQUNKLENBQUM7QUFURCxvREFTQztBQUVZLFFBQUEsc0JBQXNCLEdBQUcsSUFBSSxxQkFBYyxDQUF1QixzQkFBc0IsQ0FBQyxDQUFDO0FBRXZHLHdDQUF3QztBQUV4QyxJQUFhLG9CQUFvQjtJQUFqQztJQTBCQSxDQUFDO0lBeEJDLHdFQUF3RTtJQUNqRSxpQ0FBWSxHQUFuQixVQUFvQixJQUErQjtRQUEvQixxQkFBQSxFQUFBLFNBQStCO1FBRWpELE1BQU0sQ0FBQztZQUNMLFFBQVEsRUFBRSxzQkFBb0I7WUFDOUIsU0FBUyxFQUFFO2dCQUNULEVBQUUsT0FBTyxFQUFFLGtCQUFTLEVBQUUsUUFBUSxFQUFFLE1BQU0sRUFBRTtnQkFDeEMsOEJBQWE7Z0JBQ2IsRUFBRSxPQUFPLEVBQUUsOEJBQXNCLEVBQUUsUUFBUSxFQUFFLElBQUksRUFBRTtnQkFDbkQ7b0JBQ0Usd0NBQXdDO29CQUN4QyxPQUFPLEVBQUUsNkJBQXNCO29CQUUvQixtRUFBbUU7b0JBQ25FLFVBQVUsRUFBRSxvQkFBb0I7b0JBRWhDLEtBQUssRUFBRSxJQUFJO29CQUVYLDhDQUE4QztvQkFDOUMsSUFBSSxFQUFFLENBQUMsOEJBQWEsRUFBRSw4QkFBc0IsQ0FBQztpQkFDOUM7YUFDRjtTQUNGLENBQUM7SUFDSixDQUFDO0lBQ0gsMkJBQUM7QUFBRCxDQUFDLEFBMUJELElBMEJDO0FBMUJZLG9CQUFvQjtJQURoQyxlQUFRLEVBQUU7R0FDRSxvQkFBb0IsQ0EwQmhDO0FBMUJZLG9EQUFvQiJ9
 
 /***/ }),
 /* 53 */

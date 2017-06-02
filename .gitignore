@@ -42,3 +42,12 @@ test/coverage
 /typings/browser.d.ts
 /tsd_typings
 /docs
+
+/src/**/*.js
+/src/**/*.d.ts
+/test/**/*.js
+/test/**/*.d.ts
+/server.js
+/server.d.ts
+/browser.js
+/browser.d.ts

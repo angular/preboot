@@ -69,11 +69,9 @@ export function generatePrebootEventRecorderCode(customOptions?: PrebootRecordOp
   // generate the inline preboot code that will be injected into the document
   const eventRecorderFunctions: string[] = [];
   for (const funcName in eventRecorder) {
-    if (eventRecorder.hasOwnProperty(funcName)) {
-      const fn = (<any>eventRecorder)[funcName].toString();
-      const fnCleaned = fn.replace('common_1.', '');
-      eventRecorderFunctions.push(fnCleaned);
-    }
+    const fn = (<any>eventRecorder)[funcName].toString();
+    const fnCleaned = fn.replace('common_1.', '');
+    eventRecorderFunctions.push(fnCleaned);
   }
 
   // this is common function used to get the node key
