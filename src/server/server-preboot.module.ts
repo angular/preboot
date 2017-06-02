@@ -59,5 +59,5 @@ export function addInlineCodeToDocument(inlineCode: string, doc: Document, rende
   const renderer = rendererFactory.createRenderer(doc, renderType);
   const script = renderer.createElement('script');
   renderer.setValue(script, inlineCode);
-  renderer.insertBefore(doc.head, script, null);
+  renderer.insertBefore(doc.head, script, doc.head.firstChild);
 }

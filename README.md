@@ -22,17 +22,10 @@ Angular 4+ then you can continue to use version 4.x.x (it is very stable and has
 
 Assume that all documentation on this page from this point further is related to >=5.0.0.
 
-Also, please be aware that there are two outstanding issues that are being worked on and must be resolved before
+Also, please be aware that there is one outstanding issue that is being worked on and must be resolved before
 the final release of 5.0.0:
 
-**Issue 1 - insertBefore**
-
-We need to make sure that the injected preboot code is before any other JavaScript in the HEAD section of your
-server side document. Unfortunately there is a [bug in core that needs to be fixed](https://github.com/angular/angular/issues/17177) 
-to make this work for all scenarios. This issue does not cause an issue if all your JavaScript script tags are
-in the BODY instead of the HEAD, so that is a near term workaround.
-
-**Issue 2 - Server Side Webpack**
+**Server Side Webpack**
 
 Currently the server module for preboot uses uglify to minify code. Unfortunately, when you use webpack on your server code,
 this will choke unless you add this to your webpack config:
@@ -52,7 +45,7 @@ make some changes to preboot that will remove the uglify dependency.
 Preboot is currently in beta, so to insteall you must cd into your Angular app root and run the following command:
 
 ```
-npm i preboot@5.0.0-rc.7 --save
+npm i preboot@5.0.0-rc.8 --save
 ```
 
 In most cases, you will be using preboot with Angular server rendering. As such, there are two parts to preboot that
