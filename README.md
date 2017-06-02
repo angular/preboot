@@ -1,11 +1,7 @@
 # preboot
 
 The purpose of this library is to help manage the transition of state (i.e. events, focus, data) from
-a server-generated web view to a client-generated web view. The most common use cases include:
-
-* Universal apps that re-render (ex. Angular 2) - The client app generates a brand new view that replaces the server view
-* Universal apps that hydrate (ex. React) - The client app attaches to the existing server view
-* Static server-side "shells" (ex. Service Worker Application Shell) - A static, sparse template is used for the initial page load 
+a server-generated Angular web view to a client-generated Angular web view. 
 
 The key features of preboot include:
 
@@ -18,13 +14,38 @@ The key features of preboot include:
 In essence, this library is all about managing the user experience from the time from when 
 a server view is visible until the client view takes over control of the page.
 
-## Import note about 5.0.0 release
+## Import notes about 5.0.0 release
 
 Preboot version < 5.0.0 is built without any downstream dependencies and can be used with any front
 end framework. As of 5.0.0, however, preboot is built specifically for Angular. If you are NOT using
 Angular 4+ then you can continue to use version 4.x.x (it is very stable and has worked bug free for over a year).
 
 Assume that all documentation on this page from this point further is related to >=5.0.0.
+
+Also, please be aware that there are two outstanding issues that are being worked on and must be resolved before
+the final release of 5.0.0:
+
+**Issue 1 - insertBefore**
+
+We need to make sure that the injected preboot code is before any other JavaScript in the HEAD section of your
+server side document. Unfortunately there is a [bug in core that needs to be fixed](https://github.com/angular/angular/issues/17177) 
+to make this work for all scenarios. This issue does not cause an issue if all your JavaScript script tags are
+in the BODY instead of the HEAD, so that is a near term workaround.
+
+**Issue 2 - Server Side Webpack**
+
+Currently the server module for preboot uses uglify to minify code. Unfortunately, when you use webpack on your server code,
+this will choke unless you add this to your webpack config:
+
+```
+externals: {
+  'uglify-js': 'commonjs uglify-js'
+}
+```
+
+That is the workaround for this issue, but we ideally don't want to force everyone to take this extra step so we will
+make some changes to preboot that will remove the uglify dependency.
+
 
 ## Installation
 
