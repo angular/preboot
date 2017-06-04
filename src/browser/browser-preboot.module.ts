@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { PrebootReplayOptions } from '../common';
 import { EventReplayer } from './event.replayer';
-import { WindowRef } from './window';
 
 export function eventReplayerFactory(replayer: EventReplayer, opts: PrebootReplayOptions) {
   return function () {
@@ -33,7 +32,6 @@ export class BrowserPrebootModule {
     return {
       ngModule: BrowserPrebootModule,
       providers: [
-        { provide: WindowRef, useValue: window },
         EventReplayer,
         { provide: PREBOOT_REPLAY_OPTIONS, useValue: opts },
         {

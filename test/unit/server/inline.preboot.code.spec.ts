@@ -59,7 +59,6 @@ describe('UNIT TEST inline.preboot.code', function() {
   describe('getInlinePrebootCode()', function () {
     it('should generate valid JavaScript minified', function () {
       const code = getInlinePrebootCode({ appRoot: 'foo' });
-      console.log('minified is ' + code);
       expect(code).toBeTruthy();
     });
 

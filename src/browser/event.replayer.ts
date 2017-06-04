@@ -4,18 +4,33 @@ import {
     PrebootAppData,
     PrebootData,
     PrebootEvent,
+    Window,
     Element,
     NodeContext,
     getNodeKeyForPreboot
 } from '../common';
-import { WindowRef } from './window';
 
 @Injectable()
 export class EventReplayer {
   clientNodeCache: { [key: string]: Element; } = {};
   replayStarted = false;
+  win: Window;
 
-  constructor(private window: WindowRef) {}
+  /**
+   * Window setting and getter to facilitate testing of window
+   * in non-browser environments
+   */
+  setWindow(win: Window) {
+    this.win = win;
+  }
+
+  /**
+   * Window setting and getter to facilitate testing of window
+   * in non-browser environments
+   */
+  getWindow(): Window {
+    return (this.win ? this.win : window) as Window;
+  }
 
   /**
    * Replay all events for all apps. this can only be run once.
@@ -30,7 +45,7 @@ export class EventReplayer {
     }
 
     // loop through each of the preboot apps
-    const prebootData = this.window.prebootData || {};
+    const prebootData = this.getWindow().prebootData || {};
     const apps = prebootData.apps || [];
     apps.forEach(appData => this.replayForApp(appData));
 
@@ -53,7 +68,7 @@ export class EventReplayer {
 
       // some client side frameworks (like Angular 1 w UI Router) will replace
       // elements, so we need to re-get client root just to be safe
-      root.clientNode = this.window.document.querySelector(root.clientSelector);
+      root.clientNode = this.getWindow().document.querySelector(root.clientSelector);
 
       // replay all the events from the server view onto the client view
       events.forEach(event => this.replayEvent(appData, event));
@@ -122,7 +137,7 @@ export class EventReplayer {
     // do a try-catch just in case something messed up
     try {
       // get the server view display mode
-      const display = this.window.getComputedStyle(serverView).getPropertyValue('display') || 'block';
+      const display = this.getWindow().getComputedStyle(serverView).getPropertyValue('display') || 'block';
 
       // first remove the server view
       serverView.remove ? serverView.remove() :
@@ -156,7 +171,7 @@ export class EventReplayer {
     }
 
     // remove the freeze overlay if it exists
-    const prebootOverlay = this.window.document.body.querySelector('#prebootOverlay');
+    const prebootOverlay = this.getWindow().document.body.querySelector('#prebootOverlay');
     if (prebootOverlay) {
       prebootOverlay.style.display = 'none';
     }
