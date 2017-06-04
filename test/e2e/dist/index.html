@@ -1,4 +1,6 @@
 <html><head><script>(function(){
+  
+  
 
 function init(opts, win) {
     var theWindow = (win || window);
@@ -261,58 +263,9 @@ function getNodeKeyForPreboot(nodeContext) {
     return key;
 }
 
-init({
-  "buffer": true,
-  "minify": false,
-  "eventSelectors": [
-    {
-      "selector": "input,textarea",
-      "events": [
-        "keypress",
-        "keyup",
-        "keydown",
-        "input",
-        "change"
-      ]
-    },
-    {
-      "selector": "select,option",
-      "events": [
-        "change"
-      ]
-    },
-    {
-      "selector": "input",
-      "events": [
-        "keyup"
-      ],
-      "preventDefault": true,
-      "keyCodes": [
-        13
-      ],
-      "freeze": true
-    },
-    {
-      "selector": "input,textarea",
-      "events": [
-        "focusin",
-        "focusout",
-        "mousedown",
-        "mouseup"
-      ],
-      "noReplay": true
-    },
-    {
-      "selector": "input[type=\"submit\"],button",
-      "events": [
-        "click"
-      ],
-      "preventDefault": true,
-      "freeze": true
-    }
-  ],
-  "appRoot": "app-root"
-})})()</script>
+
+
+init({"buffer":true,"minify":false,"eventSelectors":[{"selector":"input,textarea","events":["keypress","keyup","keydown","input","change"]},{"selector":"select,option","events":["change"]},{"selector":"input","events":["keyup"],"preventDefault":true,"keyCodes":[13],"freeze":true},{"selector":"input,textarea","events":["focusin","focusout","mousedown","mouseup"],"noReplay":true},{"selector":"input[type=\"submit\"],button","events":["click"],"preventDefault":true,"freeze":true}],"appRoot":"app-root"})})()</script>
           <title>Preboot Test</title>
         </head>
         <body>

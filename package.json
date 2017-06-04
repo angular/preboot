@@ -1,11 +1,12 @@
 {
   "name": "preboot",
-  "version": "5.0.0-rc.8",
+  "version": "5.0.0-rc.9",
   "description": "Record server view events and play back to Angular client view",
-  "main": "src/index.js",
-  "typings": "src/index.d.ts",
+  "main": "server.js",
+  "typings": "server.d.ts",
   "scripts": {
-    "build": "rm -rf node_modules && npm i && ./node_modules/.bin/webdriver-manager update && tsc || true",
+    "inline": "node src/build/inline.preboot.builder",
+    "build": "rm -rf node_modules && npm i && ./node_modules/.bin/webdriver-manager update && tsc && npm run inline || true",
     "test": "./node_modules/.bin/jasmine JASMINE_CONFIG_PATH=test/utils/jasmine.json || true",
     "start": "node test/e2e/e2e.server start || true",
     "e2e:build": "./node_modules/.bin/webdriver-manager update && tsc && node test/e2e/e2e.server.gen.js && node_modules/.bin/webpack --config test/e2e/webpack.config.js",
@@ -39,13 +40,12 @@
     "protractor": "~5.1.2",
     "reflect-metadata": "^0.1.10",
     "rxjs": "^5.4.0",
+    "uglify-js": "^3.0.15",
     "webdriver-manager": "^12.0.6",
     "webpack": "^2.6.1",
     "zone.js": "^0.8.11"
   },
-  "dependencies": {
-    "uglify-js": "^3.0.15"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "@angular/animations": "^4.0.0",
     "@angular/common": "^4.0.0",

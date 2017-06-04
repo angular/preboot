@@ -22,30 +22,12 @@ Angular 4+ then you can continue to use version 4.x.x (it is very stable and has
 
 Assume that all documentation on this page from this point further is related to >=5.0.0.
 
-Also, please be aware that there is one outstanding issue that is being worked on and must be resolved before
-the final release of 5.0.0:
-
-**Server Side Webpack**
-
-Currently the server module for preboot uses uglify to minify code. Unfortunately, when you use webpack on your server code,
-this will choke unless you add this to your webpack config:
-
-```
-externals: {
-  'uglify-js': 'commonjs uglify-js'
-}
-```
-
-That is the workaround for this issue, but we ideally don't want to force everyone to take this extra step so we will
-make some changes to preboot that will remove the uglify dependency.
-
-
 ## Installation
 
 Preboot is currently in beta, so to insteall you must cd into your Angular app root and run the following command:
 
 ```
-npm i preboot@5.0.0-rc.8 --save
+npm i preboot@5.0.0-rc.9 --save
 ```
 
 In most cases, you will be using preboot with Angular server rendering. As such, there are two parts to preboot that

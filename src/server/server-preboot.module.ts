@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { PlatformState } from '@angular/platform-server';
 import { PrebootRecordOptions } from '../common';
-import { generatePrebootEventRecorderCode } from './preboot.generator';
+import { getInlinePrebootCode } from './inline.preboot.code';
 
 export function loadPrebootFactory(
   state: PlatformState,
@@ -18,8 +18,8 @@ export function loadPrebootFactory(
 ) {
   return function () {
     const doc = state.getDocument();
-    const prebootEventRecorderCode = generatePrebootEventRecorderCode(opts);
-    addInlineCodeToDocument(prebootEventRecorderCode, doc, rendererFactory);
+    const inlinePrebootCode = getInlinePrebootCode(opts);
+    addInlineCodeToDocument(inlinePrebootCode, doc, rendererFactory);
   };
 }
 

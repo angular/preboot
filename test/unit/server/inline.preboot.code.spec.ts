@@ -4,12 +4,13 @@ import {
   stringifyWithFunctions,
   assign,
   validateOptions,
-  generatePrebootEventRecorderCode,
+  getEventRecorderCode,
+  getInlinePrebootCode,
   PrebootRecordOptions
 } from '../../../src';
 import { getMockWindow } from '../../utils';
 
-describe('UNIT TEST preboot.generator', function() {
+describe('UNIT TEST inline.preboot.code', function() {
   describe('stringifyWithFunctions()', function() {
     it('should do the same thing as stringify if no functions', function
     () {
@@ -48,9 +49,22 @@ describe('UNIT TEST preboot.generator', function() {
     });
   });
 
-  describe('generatePrebootEventRecorderCode()', function() {
+  describe('getEventRecorderCode()', function() {
     it('should generate valid JavaScript by default', function() {
-      const code = generatePrebootEventRecorderCode({ appRoot: 'app' });
+      const code = getEventRecorderCode();
+      expect(code).toBeTruthy();
+    });
+  });
+
+  describe('getInlinePrebootCode()', function () {
+    it('should generate valid JavaScript minified', function () {
+      const code = getInlinePrebootCode({ appRoot: 'foo' });
+      console.log('minified is ' + code);
+      expect(code).toBeTruthy();
+    });
+
+    it('should generate valid JavaScript not minified', function () {
+      const code = getInlinePrebootCode({ appRoot: 'foo', minify: false });
       expect(code).toBeTruthy();
     });
   });

@@ -1,8 +1,6 @@
-import { minify } from 'uglify-js';
+
 import { getNodeKeyForPreboot, PrebootRecordOptions } from '../common';
 import * as eventRecorder from './event.recorder';
-
-const inlineCodeCache: { [key: string]: string; } = {};
 
 // exporting default options in case developer wants to use these + custom on
 // top
@@ -48,26 +46,12 @@ export const defaultOptions = <PrebootRecordOptions>{
 };
 
 /**
- * Main entry point for the server side version of preboot. The main purpose
- * is to generate inline code that can be inserted into the server view.
- *
- * @param customOptions PrebootRecordOptions that override the defaults
- * @returns {string} Generated inline preboot code is returned
+ * Get the event recorder code based on all functions in event.recorder.ts
+ * and the getNodeKeyForPreboot function.
  */
-export function generatePrebootEventRecorderCode(customOptions?: PrebootRecordOptions): string {
-  const opts = <PrebootRecordOptions>assign({}, defaultOptions, customOptions);
-
-  // safety check to make sure options passed in are valid
-  validateOptions(opts);
-
-  // use cache if exists and user hasn't disabled the cache
-  const optsKey = JSON.stringify(opts);
-  if (inlineCodeCache[optsKey]) {
-    return inlineCodeCache[optsKey];
-  }
-
-  // generate the inline preboot code that will be injected into the document
+export function getEventRecorderCode(): string {
   const eventRecorderFunctions: string[] = [];
+
   for (const funcName in eventRecorder) {
     const fn = (<any>eventRecorder)[funcName].toString();
     const fnCleaned = fn.replace('common_1.', '');
@@ -77,14 +61,36 @@ export function generatePrebootEventRecorderCode(customOptions?: PrebootRecordOp
   // this is common function used to get the node key
   eventRecorderFunctions.push(getNodeKeyForPreboot.toString());
 
-  const eventRecorderCode = '\n\n' + eventRecorderFunctions.join('\n\n') + '\n\n';
-  const inlinePrebootCode = opts.minify ? minify(eventRecorderCode).code : eventRecorderCode;
-  const optsStr = stringifyWithFunctions(opts, opts.minify);
-  const inlineCode = `(function(){${inlinePrebootCode}init(${optsStr})})()`;
+  // add new line characters for readability
+  return '\n\n' + eventRecorderFunctions.join('\n\n') + '\n\n';
+}
 
-  // cache results and return
-  inlineCodeCache[optsKey] = inlineCode;
-  return inlineCode;
+/**
+ * Used by the server side version of preboot. The main purpose
+ * is to get the inline code that can be inserted into the server view.
+ *
+ * @param customOptions PrebootRecordOptions that override the defaults
+ * @returns {string} Generated inline preboot code is returned
+ */
+export function getInlinePrebootCode(customOptions?: PrebootRecordOptions): string {
+  const opts = <PrebootRecordOptions>assign({}, defaultOptions, customOptions);
+
+  // safety check to make sure options passed in are valid
+  validateOptions(opts);
+
+  const optsStr = stringifyWithFunctions(opts);
+  const eventRecorderFn = opts.minify ?
+    require('../../dist/preboot.min.js') :
+    require('../../dist/preboot.js');
+
+  // remove the function() {} wrapper so we have the bare functions
+  const eventRecorderFnStr = eventRecorderFn.toString();
+  const openSquiggle = eventRecorderFnStr.indexOf('{');
+  let eventRecorderCode = eventRecorderFnStr.substring(openSquiggle + 1);
+  eventRecorderCode = eventRecorderCode.substring(0, eventRecorderCode.length - 1)
+
+  // wrap inline preboot code with a self executing function in order to create scope
+  return `(function(){${eventRecorderCode}init(${optsStr})})()`;
 }
 
 /**
@@ -136,13 +142,11 @@ export function assign(target: Object, ...optionSets: any[]): Object {
  *
  * @param obj This is the object you want to stringify that includes some
  * functions
- * @param minify If false, JSON outputed with 2 char indents
  * @returns {string} The stringified version of an object
  */
-export function stringifyWithFunctions(obj: Object, minify = true): string {
+export function stringifyWithFunctions(obj: Object): string {
   const FUNC_START = 'START_FUNCTION_HERE';
   const FUNC_STOP = 'STOP_FUNCTION_HERE';
-  const indent = minify ? undefined : 2;
 
   // first stringify except mark off functions with markers
   let str = JSON.stringify(obj, function(_key, value) {
@@ -153,7 +157,7 @@ export function stringifyWithFunctions(obj: Object, minify = true): string {
     } else {
       return value;
     }
-  }, indent);
+  });
 
   // now we use the markers to replace function strings with actual functions
   let startFuncIdx = str.indexOf(FUNC_START);
