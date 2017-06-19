@@ -14,7 +14,7 @@ The key features of preboot include:
 In essence, this library is all about managing the user experience from the time from when 
 a server view is visible until the client view takes over control of the page.
 
-## Import notes about 5.0.0 release
+## Important notes about 5.0.0 release
 
 Preboot version < 5.0.0 is built without any downstream dependencies and can be used with any front
 end framework. As of 5.0.0, however, preboot is built specifically for Angular. If you are NOT using
