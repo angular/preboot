@@ -196,8 +196,9 @@ export class EventReplayer {
       // set selection if a modern browser (i.e. IE9+, etc.)
       const selection = activeNode.selection;
       if (clientNode.setSelectionRange && selection) {
-        clientNode.setSelectionRange(
-            selection.start, selection.end, selection.direction);
+        try {
+          clientNode.setSelectionRange(selection.start, selection.end, selection.direction);
+        } catch (ex) {}
       }
     }
   }
