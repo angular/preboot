@@ -52,3 +52,7 @@ test/coverage
 /server.d.ts
 /browser.js
 /browser.d.ts
+/record.js
+/record.d.ts
+/replay.js
+/replay.d.ts
