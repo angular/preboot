@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+
 import {
     ServerClientRoot,
     PrebootAppData,
@@ -10,7 +10,6 @@ import {
     getNodeKeyForPreboot
 } from '../common';
 
-@Injectable()
 export class EventReplayer {
   clientNodeCache: { [key: string]: Element; } = {};
   replayStarted = false;

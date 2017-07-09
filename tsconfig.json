@@ -19,6 +19,8 @@
   "include": [
     "src",
     "test",
+    "record.ts",
+    "replay.ts",
     "browser.ts",
     "server.ts"
   ]

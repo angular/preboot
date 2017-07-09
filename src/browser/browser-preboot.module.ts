@@ -4,18 +4,25 @@ import {
   APP_BOOTSTRAP_LISTENER,
   ModuleWithProviders,
   NgModule,
-  InjectionToken
+  InjectionToken,
+  ApplicationRef
 } from '@angular/core';
 import { PrebootReplayOptions } from '../common';
 import { EventReplayer } from './event.replayer';
 
-export function eventReplayerFactory(replayer: EventReplayer, opts: PrebootReplayOptions) {
+export function eventReplayerFactory(appRef: ApplicationRef, replayer: EventReplayer, opts: PrebootReplayOptions) {
   return function () {
 
-    // todo: add option for PrebootReplayOptions where user can dictate
-    // when events replayed
+    // if noReplay it means user is going to call replayAll() manually
     if (!opts.noReplay) {
-      replayer.replayAll();
+
+      // we will wait until the application is stable, then replay
+      appRef.isStable
+        .filter(stable => stable)
+        .first()
+        .subscribe(() => {
+          replayer.replayAll();
+        });
     }
   };
 }
@@ -44,7 +51,7 @@ export class BrowserPrebootModule {
           multi: true,
 
           // we need access to the document and renderer
-          deps: [EventReplayer, PREBOOT_REPLAY_OPTIONS]
+          deps: [ApplicationRef, EventReplayer, PREBOOT_REPLAY_OPTIONS]
         }
       ]
     };

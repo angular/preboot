@@ -1,7 +1,6 @@
 # preboot
 
-The purpose of this library is to help manage the transition of state (i.e. events, focus, data) from
-a server-generated Angular web view to a client-generated Angular web view. 
+The purpose of this library is to help manage the transition of state (i.e. events, focus, data) from a server-generated web view to a client-generated web view. This library works with any front end JavaScript framework (i.e. React, Vue, Ember, etc.), but does have a few extra convenience modules for Angular apps.
 
 The key features of preboot include:
 
@@ -14,26 +13,22 @@ The key features of preboot include:
 In essence, this library is all about managing the user experience from the time from when 
 a server view is visible until the client view takes over control of the page.
 
-## Important notes about 5.0.0 release
-
-Preboot version < 5.0.0 is built without any downstream dependencies and can be used with any front
-end framework. As of 5.0.0, however, preboot is built specifically for Angular. If you are NOT using
-Angular 4+ then you can continue to use version 4.x.x (it is very stable and has worked bug free for over a year).
-
-Assume that all documentation on this page from this point further is related to >=5.0.0.
-
 ## Installation
 
-Preboot is currently in beta, so to insteall you must cd into your Angular app root and run the following command:
+Preboot is currently in beta, so to install you must cd into your app root and run the following command:
 
 ```
-npm i preboot@5.0.0-rc.11 --save
+npm i preboot@5.0.0-rc.12 --save
 ```
 
-In most cases, you will be using preboot with Angular server rendering. As such, there are two parts to preboot that
-must be configured: the server module and the client module.
+There are two parts of preboot (server configuration and browser configuration). For each part of preboot, there is a slightly different API for Angular and non-Angular apps. The following sections covers these 4 different configurations:
 
-#### Preboot Server Configuration
+- Angular Server Configuration
+- Angular Browser Configuration
+- Non-Angular Server Configuration
+- Non-Angular Browser Configuration
+
+#### Angular Server Configuration
 
 ```
 import { NgModule } from '@angular/core';
@@ -57,7 +52,7 @@ export class AppModule { }
 The key part here for preboot is to include `ServerPrebootModule.recordEvents({ appRoot: 'app-root' })` where the `appRoot`
 is the selector to find the root of your application. The options you can pass into `recordEvents()` are in the (PrebootRecordOptions)[#PrebootRecordOptions] section below. In most cases, however, you will only need to specify the `appRoot`.
 
-#### Preboot Browser Configuration
+#### Angular Browser Configuration
 
 ```
 import { NgModule } from '@angular/core';
@@ -76,9 +71,30 @@ import { AppComponent } from './app.component';
 export class AppModule { }
 ```
 
-The key part here for preboot is to include `BrowserPrebootModule.replayEvents()`. You can optionally pass an object
-into `replayEvents()` that is detailed in the (PrebootReplayOptions)[#PrebootReplayOptions] section below. In most
-cases, however, you can just rely on the preset defaults.
+The key part here for preboot is to include `BrowserPrebootModule.replayEvents()`. You can optionally pass an object into `replayEvents()` that is detailed in the (PrebootReplayOptions)[#PrebootReplayOptions] section further below. In most cases, however, you can just rely on the preset defaults.
+
+#### Non-Angular Server Configuration
+
+```
+import { getInlinePrebootCode } from 'preboot/record';
+
+const prebootOptions = {};  // see PrebootRecordOptions section below
+const inlineCode = getInlinePrebootCode(prebootOptions);
+
+// now simply insert the inlineCode into the HEAD section of your server view
+
+```
+
+#### Non-Angular Browser Configuration
+
+```
+import { EventReplayer } from 'preboot/replay';
+
+const replayer = new EventReplayer();
+
+// once you are ready to replay events (usually after client app fully loaded)
+replayer.replayAll();
+```
 
 #### PrebootRecordOptions
  
@@ -129,6 +145,8 @@ var eventSelectors = [
 ```
 
 #### PrebootReplayOptions
+
+This is only used with the Angular browser configuration for preboot.
 
 * `noReplay` (default false) - The only reason why you would want to set this to true is if you want to
 manually trigger the replay yourself. 

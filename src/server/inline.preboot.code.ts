@@ -1,4 +1,3 @@
-
 import { getNodeKeyForPreboot, PrebootRecordOptions } from '../common';
 import * as eventRecorder from './event.recorder';
 
