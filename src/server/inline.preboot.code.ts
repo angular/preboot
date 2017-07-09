@@ -27,6 +27,14 @@ export const defaultOptions = <PrebootRecordOptions>{
       freeze: true
     },
 
+    // when user submit form (press enter, click on button/input[type="submit"])
+    {
+      selector: 'form',
+      events: ['submit'],
+      preventDefault: true,
+      freeze: true
+    },
+
     // for tracking focus (no need to replay)
     {
       selector: 'input,textarea',
@@ -36,7 +44,7 @@ export const defaultOptions = <PrebootRecordOptions>{
 
     // user clicks on a button
     {
-      selector: 'input[type="submit"],button',
+      selector: 'button',
       events: ['click'],
       preventDefault: true,
       freeze: true

@@ -135,12 +135,15 @@ var eventSelectors = [
 
   // when user hits return button in an input box
   { selector: 'input', events: ['keyup'], preventDefault: true, keyCodes: [13], freeze: true },
+  
+  // when user submit form (press enter, click on button/input[type="submit"])
+  { selector: 'form', events: ['submit'], preventDefault: true, freeze: true },
 
   // for tracking focus (no need to replay)
   { selector: 'input,textarea', events: ['focusin', 'focusout', 'mousedown', 'mouseup'], noReplay: true },
 
   // user clicks on a button
-  { selector: 'input[type="submit"],button', events: ['click'], preventDefault: true, freeze: true }
+  { selector: 'button', events: ['click'], preventDefault: true, freeze: true }
 ];
 ```
 
