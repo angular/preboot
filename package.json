@@ -1,6 +1,6 @@
 {
   "name": "preboot",
-  "version": "5.0.0-rc.12",
+  "version": "5.0.0-rc.13",
   "description": "Record server view events and play back to Angular client view",
   "scripts": {
     "inline": "node src/build/inline.preboot.builder",

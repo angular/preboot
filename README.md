@@ -18,7 +18,7 @@ a server view is visible until the client view takes over control of the page.
 Preboot is currently in beta, so to install you must cd into your app root and run the following command:
 
 ```
-npm i preboot@5.0.0-rc.12 --save
+npm i preboot@5.0.0-rc.13 --save
 ```
 
 There are two parts of preboot (server configuration and browser configuration). For each part of preboot, there is a slightly different API for Angular and non-Angular apps. The following sections covers these 4 different configurations:
