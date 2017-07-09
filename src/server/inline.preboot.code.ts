@@ -19,12 +19,11 @@ export const defaultOptions = <PrebootRecordOptions>{
     },
     {selector: 'select,option', events: ['change']},
 
-    // when user hits return button in an input box
+    // when user submit form (press enter, click on button/input[type="submit"])
     {
-      selector: 'input',
-      events: ['keyup'],
+      selector: 'form',
+      events: ['submit'],
       preventDefault: true,
-      keyCodes: [13],
       freeze: true
     },
 
@@ -33,14 +32,6 @@ export const defaultOptions = <PrebootRecordOptions>{
       selector: 'input,textarea',
       events: ['focusin', 'focusout', 'mousedown', 'mouseup'],
       noReplay: true
-    },
-
-    // user clicks on a button
-    {
-      selector: 'input[type="submit"],button',
-      events: ['click'],
-      preventDefault: true,
-      freeze: true
     }
   ]
 };
