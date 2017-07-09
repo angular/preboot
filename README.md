@@ -117,6 +117,9 @@ var eventSelectors = [
   { selector: 'input,textarea', events: ['keypress', 'keyup', 'keydown', 'input', 'change'] },
   { selector: 'select,option', events: ['change'] },
 
+  // when user hits return button in an input box
+  { selector: 'input', events: ['keyup'], preventDefault: true, keyCodes: [13], freeze: true },
+  
   // when user submit form (press enter, click on button/input[type="submit"])
   { selector: 'form', events: ['submit'], preventDefault: true, freeze: true },
 

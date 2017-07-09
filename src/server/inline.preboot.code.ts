@@ -19,6 +19,15 @@ export const defaultOptions = <PrebootRecordOptions>{
     },
     {selector: 'select,option', events: ['change']},
 
+    // when user hits return button in an input box
+    {
+      selector: 'input',
+      events: ['keyup'],
+      preventDefault: true,
+      keyCodes: [13],
+      freeze: true
+    },
+
     // when user submit form (press enter, click on button/input[type="submit"])
     {
       selector: 'form',
