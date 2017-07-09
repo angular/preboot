@@ -41,6 +41,14 @@ export const defaultOptions = <PrebootRecordOptions>{
       selector: 'input,textarea',
       events: ['focusin', 'focusout', 'mousedown', 'mouseup'],
       noReplay: true
+    },
+
+    // user clicks on a button
+    {
+      selector: 'button',
+      events: ['click'],
+      preventDefault: true,
+      freeze: true
     }
   ]
 };

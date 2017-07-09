@@ -127,7 +127,7 @@ var eventSelectors = [
   { selector: 'input,textarea', events: ['focusin', 'focusout', 'mousedown', 'mouseup'], noReplay: true },
 
   // user clicks on a button
-  { selector: 'input[type="submit"],button', events: ['click'], preventDefault: true, freeze: true }
+  { selector: 'button', events: ['click'], preventDefault: true, freeze: true }
 ];
 ```
 
