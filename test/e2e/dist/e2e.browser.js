@@ -536,7 +536,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_Subject__);
 
 /**
- * @license Angular v4.2.6
+ * @license Angular v4.3.1
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -1332,7 +1332,7 @@ var Version = (function () {
 /**
  * \@stable
  */
-var VERSION = new Version('4.2.6');
+var VERSION = new Version('4.3.1');
 /**
  * @license
  * Copyright Google Inc. All Rights Reserved.
@@ -5250,7 +5250,7 @@ var ApplicationRef_ = (function (_super) {
                 unstableSub.unsubscribe();
             };
         });
-        _this._isStable = __WEBPACK_IMPORTED_MODULE_2_rxjs_observable_merge__["merge"](isCurrentlyStable, __WEBPACK_IMPORTED_MODULE_3_rxjs_operator_share__["share"].call(isStable));
+        _this._isStable = Object(__WEBPACK_IMPORTED_MODULE_2_rxjs_observable_merge__["merge"])(isCurrentlyStable, __WEBPACK_IMPORTED_MODULE_3_rxjs_operator_share__["share"].call(isStable));
         return _this;
     }
     /**
@@ -6433,7 +6433,7 @@ var ChangeDetectorRef = (function () {
      * class Cmp {
      *   numberOfTicks = 0;
      *
-     *   constructor(ref: ChangeDetectorRef) {
+     *   constructor(private ref: ChangeDetectorRef) {
      *     setInterval(() => {
      *       this.numberOfTicks ++
      *       // the following is required, otherwise the view will not be updated
@@ -14382,24 +14382,25 @@ var NgModuleFactory_ = (function (_super) {
  */
 /**
  * `trigger` is an animation-specific function that is designed to be used inside of Angular's
- * animation DSL language. If this information is new, please navigate to the {\@link
- * Component#animations component animations metadata page} to gain a better understanding of
- * how animations in Angular are used.
+ * animation DSL language. If this information is new, please navigate to the
+ * {\@link Component#animations component animations metadata page} to gain a better
+ * understanding of how animations in Angular are used.
  *
- * `trigger` Creates an animation trigger which will a list of {\@link state state} and {\@link
- * transition transition} entries that will be evaluated when the expression bound to the trigger
- * changes.
+ * `trigger` Creates an animation trigger which will a list of {\@link state state} and
+ * {\@link transition transition} entries that will be evaluated when the expression
+ * bound to the trigger changes.
  *
- * Triggers are registered within the component annotation data under the {\@link
- * Component#animations animations section}. An animation trigger can be placed on an element
- * within a template by referencing the name of the trigger followed by the expression value that the
+ * Triggers are registered within the component annotation data under the
+ * {\@link Component#animations animations section}. An animation trigger can be placed on an element
+ * within a template by referencing the name of the trigger followed by the expression value that
+ * the
  * trigger is bound to (in the form of `[\@triggerName]="expression"`.
  *
  * ### Usage
  *
  * `trigger` will create an animation trigger reference based on the provided `name` value. The
- * provided `animation` value is expected to be an array consisting of {\@link state state} and {\@link
- * transition transition} declarations.
+ * provided `animation` value is expected to be an array consisting of {\@link state state} and
+ * {\@link transition transition} declarations.
  *
  * ```typescript
  * \@Component({
@@ -14425,9 +14426,65 @@ var NgModuleFactory_ = (function (_super) {
  * ```html
  * <!-- somewhere inside of my-component-tpl.html -->
  * <div [\@myAnimationTrigger]="myStatusExp">...</div>
- * tools/gulp-tasks/validate-commit-message.js ```
+ * ```
  *
- * {\@example core/animation/ts/dsl/animation_example.ts region='Component'}
+ * ## Disable Child Animations
+ * A special animation control binding called `\@.disabled` can be placed on an element which will
+ * then disable animations for any inner animation triggers situated within the element.
+ *
+ * When true, the `\@.disabled` binding will prevent inner animations from rendering. The example
+ * below shows how to use this feature:
+ *
+ * ```ts
+ * \@Component({
+ *   selector: 'my-component',
+ *   template: `
+ *     <div [\@.disabled]="isDisabled">
+ *       <div [\@childAnimation]="exp"></div>
+ *     </div>
+ *   `,
+ *   animations: [
+ *     trigger("childAnimation", [
+ *       // ...
+ *     ])
+ *   ]
+ * })
+ * class MyComponent {
+ *   isDisabled = true;
+ *   exp = '...';
+ * }
+ * ```
+ *
+ * The `\@childAnimation` trigger will not animate because `\@.disabled` prevents it from happening
+ * (when true).
+ *
+ * Note that `\@.disbled` will only disable inner animations (any animations running on the same
+ * element will not be disabled).
+ *
+ * ### Disabling Animations Application-wide
+ * When an area of the template is set to have animations disabled, **all** inner components will
+ * also have their animations disabled as well. This means that all animations for an angular
+ * application can be disabled by placing a host binding set on `\@.disabled` on the topmost Angular
+ * component.
+ *
+ * ```ts
+ * import {Component, HostBinding} from '\@angular/core';
+ *
+ * \@Component({
+ *   selector: 'app-component',
+ *   templateUrl: 'app.component.html',
+ * })
+ * class AppComponent {
+ *   \@HostBinding('\@.disabled')
+ *   public animationsDisabled = true;
+ * }
+ * ```
+ *
+ * ### What about animations that us `query()` and `animateChild()`?
+ * Despite inner animations being disabled, a parent animation can {\@link query query} for inner
+ * elements located in disabled areas of the template and still animate them as it sees fit. This is
+ * also the case for when a sub animation is queried by a parent and then later animated using {\@link
+ * animateChild animateChild}.
  *
  * \@experimental Animation support is experimental.
  * @param {?} name
@@ -16276,6 +16333,7 @@ webpackEmptyAsyncContext.id = 15;
 "use strict";
 /* unused harmony export NgLocaleLocalization */
 /* unused harmony export NgLocalization */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return parseCookieValue; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CommonModule; });
 /* unused harmony export NgClass */
 /* unused harmony export NgFor */
@@ -16326,7 +16384,7 @@ webpackEmptyAsyncContext.id = 15;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(1);
 
 /**
- * @license Angular v4.2.6
+ * @license Angular v4.3.1
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -17480,6 +17538,28 @@ function getPluralCase(locale, nLike) {
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
+ * @param {?} cookieStr
+ * @param {?} name
+ * @return {?}
+ */
+function parseCookieValue(cookieStr, name) {
+    name = encodeURIComponent(name);
+    for (var _i = 0, _a = cookieStr.split(';'); _i < _a.length; _i++) {
+        var cookie = _a[_i];
+        var /** @type {?} */ eqIndex = cookie.indexOf('=');
+        var _b = eqIndex == -1 ? [cookie, ''] : [cookie.slice(0, eqIndex), cookie.slice(eqIndex + 1)], cookieName = _b[0], cookieValue = _b[1];
+        if (cookieName.trim() === name) {
+            return decodeURIComponent(cookieValue);
+        }
+    }
+    return null;
+}
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
  */
 /**
  * \@ngModule CommonModule
@@ -17548,7 +17628,7 @@ var NgClass = (function () {
             this._keyValueDiffer = null;
             this._rawClass = typeof v === 'string' ? v.split(/\s+/) : v;
             if (this._rawClass) {
-                if (__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵisListLikeIterable"](this._rawClass)) {
+                if (Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵisListLikeIterable"])(this._rawClass)) {
                     this._iterableDiffer = this._iterableDiffers.find(this._rawClass).create();
                 }
                 else {
@@ -17609,7 +17689,7 @@ var NgClass = (function () {
                 _this._toggleClass(record.item, true);
             }
             else {
-                throw new Error("NgClass can only toggle CSS classes expressed as strings, got " + __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](record.item));
+                throw new Error("NgClass can only toggle CSS classes expressed as strings, got " + Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(record.item));
             }
         });
         changes.forEachRemovedItem(function (record) { return _this._toggleClass(record.item, false); });
@@ -17941,7 +18021,7 @@ var NgForOf = (function () {
          * @return {?}
          */
         set: function (fn) {
-            if (__WEBPACK_IMPORTED_MODULE_1__angular_core__["isDevMode"]() && fn != null && typeof fn !== 'function') {
+            if (Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["isDevMode"])() && fn != null && typeof fn !== 'function') {
                 // TODO(vicb): use a log service once there is a public one available
                 if ((console) && (console.warn)) {
                     console.warn("trackBy must be a function, but received " + JSON.stringify(fn) + ". " +
@@ -18911,7 +18991,7 @@ var COMMON_DIRECTIVES = [
  * @return {?}
  */
 function invalidPipeArgumentError(type, value) {
-    return Error("InvalidPipeArgument: '" + value + "' for pipe '" + __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](type) + "'");
+    return Error("InvalidPipeArgument: '" + value + "' for pipe '" + Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(type) + "'");
 }
 /**
  * @license
@@ -19050,10 +19130,10 @@ var AsyncPipe = (function () {
      * @return {?}
      */
     AsyncPipe.prototype._selectStrategy = function (obj) {
-        if (__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵisPromise"](obj)) {
+        if (Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵisPromise"])(obj)) {
             return _promiseStrategy;
         }
-        if (__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵisObservable"](obj)) {
+        if (Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵisObservable"])(obj)) {
             return _observableStrategy;
         }
         throw invalidPipeArgumentError(AsyncPipe, obj);
@@ -20247,7 +20327,7 @@ function isPlatformWorkerUi(platformId) {
 /**
  * \@stable
  */
-var VERSION = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["Version"]('4.2.6');
+var VERSION = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["Version"]('4.3.1');
 /**
  * @license
  * Copyright Google Inc. All Rights Reserved.
@@ -20335,7 +20415,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(1);
 
 /**
- * @license Angular v4.2.6
+ * @license Angular v4.3.1
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -22082,7 +22162,7 @@ var BrowserDomAdapter = (function (_super) {
      * @param {?} name
      * @return {?}
      */
-    BrowserDomAdapter.prototype.getCookie = function (name) { return parseCookieValue(document.cookie, name); };
+    BrowserDomAdapter.prototype.getCookie = function (name) { return Object(__WEBPACK_IMPORTED_MODULE_1__angular_common__["e" /* ɵparseCookieValue */])(document.cookie, name); };
     /**
      * @param {?} name
      * @param {?} value
@@ -22123,23 +22203,6 @@ function relativePath(url) {
         '/' + urlParsingNode.pathname;
 }
 /**
- * @param {?} cookieStr
- * @param {?} name
- * @return {?}
- */
-function parseCookieValue(cookieStr, name) {
-    name = encodeURIComponent(name);
-    for (var _i = 0, _a = cookieStr.split(';'); _i < _a.length; _i++) {
-        var cookie = _a[_i];
-        var /** @type {?} */ eqIndex = cookie.indexOf('=');
-        var _b = eqIndex == -1 ? [cookie, ''] : [cookie.slice(0, eqIndex), cookie.slice(eqIndex + 1)], cookieName = _b[0], cookieValue = _b[1];
-        if (cookieName.trim() === name) {
-            return decodeURIComponent(cookieValue);
-        }
-    }
-    return null;
-}
-/**
  * @license
  * Copyright Google Inc. All Rights Reserved.
  *
@@ -22152,7 +22215,7 @@ function parseCookieValue(cookieStr, name) {
  * Note: Document might not be available in the Application Context when Application and Rendering
  * Contexts are not the same (e.g. when running the application into a Web Worker).
  *
- * \@deprecated, import from `\@angular/common` instead.
+ * @deprecated import from `\@angular/common` instead.
  */
 var DOCUMENT$1 = __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* DOCUMENT */];
 /**
@@ -22506,7 +22569,7 @@ var BrowserGetTestability = (function () {
     /**
      * @return {?}
      */
-    BrowserGetTestability.init = function () { __WEBPACK_IMPORTED_MODULE_2__angular_core__["setTestabilityGetter"](new BrowserGetTestability()); };
+    BrowserGetTestability.init = function () { Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["setTestabilityGetter"])(new BrowserGetTestability()); };
     /**
      * @param {?} registry
      * @return {?}
@@ -22663,7 +22726,7 @@ var CORE_TOKENS_GLOBAL_NAME = 'coreTokens';
  * @return {?}
  */
 function inspectNativeElement(element) {
-    return __WEBPACK_IMPORTED_MODULE_2__angular_core__["getDebugNode"](element);
+    return Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["getDebugNode"])(element);
 }
 /**
  * Deprecated. Use the one from '\@angular/core'.
@@ -23745,7 +23808,7 @@ function sanitizeUrl(url) {
     url = String(url);
     if (url.match(SAFE_URL_PATTERN) || url.match(DATA_URL_PATTERN))
         return url;
-    if (__WEBPACK_IMPORTED_MODULE_2__angular_core__["isDevMode"]()) {
+    if (Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["isDevMode"])()) {
         getDOM().log("WARNING: sanitizing unsafe URL value " + url + " (see http://g.co/ng/security#xss)");
     }
     return 'unsafe:' + url;
@@ -24054,7 +24117,7 @@ function sanitizeHtml(defaultDoc, unsafeHtmlInput) {
             var child = _a[_i];
             DOM.removeChild(parent, child);
         }
-        if (__WEBPACK_IMPORTED_MODULE_2__angular_core__["isDevMode"]() && sanitizer.sanitizedSomething) {
+        if (Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["isDevMode"])() && sanitizer.sanitizedSomething) {
             DOM.log('WARNING: sanitizing HTML stripped some content (see http://g.co/ng/security#xss).');
         }
         return safeHtml;
@@ -24155,7 +24218,7 @@ function sanitizeStyle(value) {
         value.match(SAFE_STYLE_VALUE) && hasBalancedQuotes(value)) {
         return value; // Safe style values.
     }
-    if (__WEBPACK_IMPORTED_MODULE_2__angular_core__["isDevMode"]()) {
+    if (Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["isDevMode"])()) {
         getDOM().log("WARNING: sanitizing unsafe style value " + value + " (see http://g.co/ng/security#xss).");
     }
     return 'unsafe';
@@ -24479,7 +24542,7 @@ var BROWSER_SANITIZATION_PROVIDERS = [
 /**
  * \@stable
  */
-var platformBrowser = __WEBPACK_IMPORTED_MODULE_2__angular_core__["createPlatformFactory"](__WEBPACK_IMPORTED_MODULE_2__angular_core__["platformCore"], 'browser', INTERNAL_BROWSER_PLATFORM_PROVIDERS);
+var platformBrowser = Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["createPlatformFactory"])(__WEBPACK_IMPORTED_MODULE_2__angular_core__["platformCore"], 'browser', INTERNAL_BROWSER_PLATFORM_PROVIDERS);
 /**
  * @return {?}
  */
@@ -24759,7 +24822,7 @@ var By = (function () {
 /**
  * \@stable
  */
-var VERSION = new __WEBPACK_IMPORTED_MODULE_2__angular_core__["Version"]('4.2.6');
+var VERSION = new __WEBPACK_IMPORTED_MODULE_2__angular_core__["Version"]('4.3.1');
 /**
  * @license
  * Copyright Google Inc. All Rights Reserved.
@@ -25071,7 +25134,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_platform_browser__ = __webpack_require__(17);
 
 /**
- * @license Angular v4.2.6
+ * @license Angular v4.3.1
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -25204,7 +25267,7 @@ var CachedResourceLoader = (function (_super) {
 /**
  * @stable
  */
-var VERSION = new __WEBPACK_IMPORTED_MODULE_2__angular_core__["Version"]('4.2.6');
+var VERSION = new __WEBPACK_IMPORTED_MODULE_2__angular_core__["Version"]('4.3.1');
 /**
  * @license
  * Copyright Google Inc. All Rights Reserved.
@@ -25219,7 +25282,7 @@ var RESOURCE_CACHE_PROVIDER = [{ provide: __WEBPACK_IMPORTED_MODULE_1__angular_c
 /**
  * @stable
  */
-var platformBrowserDynamic = __WEBPACK_IMPORTED_MODULE_2__angular_core__["createPlatformFactory"](__WEBPACK_IMPORTED_MODULE_1__angular_compiler__["b" /* platformCoreDynamic */], 'browserDynamic', INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS);
+var platformBrowserDynamic = Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["createPlatformFactory"])(__WEBPACK_IMPORTED_MODULE_1__angular_compiler__["b" /* platformCoreDynamic */], 'browserDynamic', INTERNAL_BROWSER_DYNAMIC_PLATFORM_PROVIDERS);
 /**
  * @license
  * Copyright Google Inc. All Rights Reserved.
@@ -25289,6 +25352,7 @@ var platformBrowserDynamic = __WEBPACK_IMPORTED_MODULE_2__angular_core__["create
 /* unused harmony export Statement */
 /* unused harmony export EmitterVisitorContext */
 /* unused harmony export ViewCompiler */
+/* unused harmony export getParseErrors */
 /* unused harmony export isSyntaxError */
 /* unused harmony export syntaxError */
 /* unused harmony export TextAst */
@@ -25325,7 +25389,6 @@ var platformBrowserDynamic = __WEBPACK_IMPORTED_MODULE_2__angular_core__["create
 /* unused harmony export viewClassName */
 /* unused harmony export rendererTypeName */
 /* unused harmony export hostViewClassName */
-/* unused harmony export dirWrapperClassName */
 /* unused harmony export componentFactoryName */
 /* unused harmony export CompileSummaryKind */
 /* unused harmony export tokenName */
@@ -25472,7 +25535,7 @@ var platformBrowserDynamic = __WEBPACK_IMPORTED_MODULE_2__angular_core__["create
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(1);
 
 /**
- * @license Angular v4.2.6
+ * @license Angular v4.3.1
  * (c) 2010-2017 Google, Inc. https://angular.io/
  * License: MIT
  */
@@ -25492,7 +25555,7 @@ var platformBrowserDynamic = __WEBPACK_IMPORTED_MODULE_2__angular_core__["create
 /**
  * \@stable
  */
-var VERSION = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["Version"]('4.2.6');
+var VERSION = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["Version"]('4.3.1');
 /**
  * @license
  * Copyright Google Inc. All Rights Reserved.
@@ -27143,32 +27206,43 @@ var ValueTransformer = (function () {
 }());
 var SyncAsync = {
     assertSync: function (value) {
-        if (__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵisPromise"](value)) {
+        if (Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵisPromise"])(value)) {
             throw new Error("Illegal state: value cannot be a promise");
         }
         return value;
     },
-    then: function (value, cb) { return __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵisPromise"](value) ? value.then(cb) : cb(value); },
+    then: function (value, cb) { return Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵisPromise"])(value) ? value.then(cb) : cb(value); },
     all: function (syncAsyncValues) {
         return syncAsyncValues.some(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵisPromise"]) ? Promise.all(syncAsyncValues) : (syncAsyncValues);
     }
 };
 /**
  * @param {?} msg
+ * @param {?=} parseErrors
  * @return {?}
  */
-function syntaxError(msg) {
+function syntaxError(msg, parseErrors) {
     var /** @type {?} */ error = Error(msg);
     ((error))[ERROR_SYNTAX_ERROR] = true;
+    if (parseErrors)
+        ((error))[ERROR_PARSE_ERRORS] = parseErrors;
     return error;
 }
 var ERROR_SYNTAX_ERROR = 'ngSyntaxError';
+var ERROR_PARSE_ERRORS = 'ngParseErrors';
 /**
  * @param {?} error
  * @return {?}
  */
 function isSyntaxError(error) {
     return ((error))[ERROR_SYNTAX_ERROR];
+}
+/**
+ * @param {?} error
+ * @return {?}
+ */
+function getParseErrors(error) {
+    return ((error))[ERROR_PARSE_ERRORS] || [];
 }
 /**
  * @param {?} s
@@ -27391,7 +27465,7 @@ function identifierName(compileIdentifier) {
     if (ref['__anonymousType']) {
         return ref['__anonymousType'];
     }
-    var /** @type {?} */ identifier = __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](ref);
+    var /** @type {?} */ identifier = Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(ref);
     if (identifier.indexOf('(') >= 0) {
         // case: anonymous functions!
         identifier = "anonymous_" + _anonymousTypeIndex++;
@@ -27412,7 +27486,7 @@ function identifierModuleUrl(compileIdentifier) {
         return ref.filePath;
     }
     // Runtime type
-    return "./" + __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](ref);
+    return "./" + Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(ref);
 }
 /**
  * @param {?} compType
@@ -27435,13 +27509,6 @@ function rendererTypeName(compType) {
  */
 function hostViewClassName(compType) {
     return "HostView_" + identifierName({ reference: compType });
-}
-/**
- * @param {?} dirType
- * @return {?}
- */
-function dirWrapperClassName(dirType) {
-    return "Wrapper_" + identifierName({ reference: dirType });
 }
 /**
  * @param {?} compType
@@ -29377,7 +29444,7 @@ function CompilerInjectable() {
  * @return {?}
  */
 function assertArrayOfStrings(identifier, value) {
-    if (!__WEBPACK_IMPORTED_MODULE_1__angular_core__["isDevMode"]() || value == null) {
+    if (!Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["isDevMode"])() || value == null) {
         return;
     }
     if (!Array.isArray(value)) {
@@ -29405,7 +29472,7 @@ function assertInterpolationSymbols(identifier, value) {
     if (value != null && !(Array.isArray(value) && value.length == 2)) {
         throw new Error("Expected '" + identifier + "' to be an array, [start, end].");
     }
-    else if (__WEBPACK_IMPORTED_MODULE_1__angular_core__["isDevMode"]() && value != null) {
+    else if (Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["isDevMode"])() && value != null) {
         var /** @type {?} */ start_1 = (value[0]);
         var /** @type {?} */ end_1 = (value[1]);
         // black list checking
@@ -31216,11 +31283,16 @@ var ParseError = (function () {
     /**
      * @return {?}
      */
-    ParseError.prototype.toString = function () {
+    ParseError.prototype.contextualMessage = function () {
         var /** @type {?} */ ctx = this.span.start.getContext(100, 3);
-        var /** @type {?} */ contextStr = ctx ? " (\"" + ctx.before + "[" + ParseErrorLevel[this.level] + " ->]" + ctx.after + "\")" : '';
+        return ctx ? " (\"" + ctx.before + "[" + ParseErrorLevel[this.level] + " ->]" + ctx.after + "\")" : '';
+    };
+    /**
+     * @return {?}
+     */
+    ParseError.prototype.toString = function () {
         var /** @type {?} */ details = this.span.details ? ", " + this.span.details : '';
-        return "" + this.msg + contextStr + ": " + this.span.start + details;
+        return "" + this.msg + this.contextualMessage() + ": " + this.span.start + details;
     };
     return ParseError;
 }());
@@ -34901,7 +34973,7 @@ var Xliff = (function (_super) {
                 contextTags.push(new CR(8), contextGroupTag);
             });
             var /** @type {?} */ transUnit = new Tag(_UNIT_TAG, { id: message.id, datatype: 'html' });
-            (_a = transUnit.children).push.apply(_a, [new CR(8), new Tag(_SOURCE_TAG, {}, visitor.serialize(message.nodes)), new CR(8), new Tag(_TARGET_TAG)].concat(contextTags));
+            (_a = transUnit.children).push.apply(_a, [new CR(8), new Tag(_SOURCE_TAG, {}, visitor.serialize(message.nodes))].concat(contextTags));
             if (message.description) {
                 transUnit.children.push(new CR(8), new Tag('note', { priority: '1', from: 'description' }, [new Text$2(message.description)]));
             }
@@ -38271,7 +38343,7 @@ var TemplateParser = (function () {
         }
         if (errors.length > 0) {
             var /** @type {?} */ errorString = errors.join('\n');
-            throw syntaxError("Template parse errors:\n" + errorString);
+            throw syntaxError("Template parse errors:\n" + errorString, errors);
         }
         return { template: /** @type {?} */ ((result.templateAst)), pipes: /** @type {?} */ ((result.usedPipes)) };
     };
@@ -39543,19 +39615,19 @@ var DirectiveNormalizer = (function () {
         var _this = this;
         if (isDefined(prenormData.template)) {
             if (isDefined(prenormData.templateUrl)) {
-                throw syntaxError("'" + __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](prenormData.componentType) + "' component cannot define both template and templateUrl");
+                throw syntaxError("'" + Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(prenormData.componentType) + "' component cannot define both template and templateUrl");
             }
             if (typeof prenormData.template !== 'string') {
-                throw syntaxError("The template specified for component " + __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](prenormData.componentType) + " is not a string");
+                throw syntaxError("The template specified for component " + Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(prenormData.componentType) + " is not a string");
             }
         }
         else if (isDefined(prenormData.templateUrl)) {
             if (typeof prenormData.templateUrl !== 'string') {
-                throw syntaxError("The templateUrl specified for component " + __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](prenormData.componentType) + " is not a string");
+                throw syntaxError("The templateUrl specified for component " + Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(prenormData.componentType) + " is not a string");
             }
         }
         else {
-            throw syntaxError("No template specified for component " + __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](prenormData.componentType));
+            throw syntaxError("No template specified for component " + Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(prenormData.componentType));
         }
         return SyncAsync.then(this.normalizeTemplateOnly(prenormData), function (result) { return _this.normalizeExternalStylesheets(result); });
     };
@@ -39779,7 +39851,7 @@ var DirectiveResolver = (function () {
      * @return {?}
      */
     DirectiveResolver.prototype.isDirective = function (type) {
-        var /** @type {?} */ typeMetadata = this._reflector.annotations(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"](type));
+        var /** @type {?} */ typeMetadata = this._reflector.annotations(Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"])(type));
         return typeMetadata && typeMetadata.some(isDirectiveMetadata);
     };
     /**
@@ -39789,7 +39861,7 @@ var DirectiveResolver = (function () {
      */
     DirectiveResolver.prototype.resolve = function (type, throwIfNotFound) {
         if (throwIfNotFound === void 0) { throwIfNotFound = true; }
-        var /** @type {?} */ typeMetadata = this._reflector.annotations(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"](type));
+        var /** @type {?} */ typeMetadata = this._reflector.annotations(Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"])(type));
         if (typeMetadata) {
             var /** @type {?} */ metadata = findLast(typeMetadata, isDirectiveMetadata);
             if (metadata) {
@@ -39798,7 +39870,7 @@ var DirectiveResolver = (function () {
             }
         }
         if (throwIfNotFound) {
-            throw new Error("No Directive annotation found on " + __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](type));
+            throw new Error("No Directive annotation found on " + Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(type));
         }
         return null;
     };
@@ -40165,7 +40237,7 @@ var NgModuleResolver = (function () {
         }
         else {
             if (throwIfNotFound) {
-                throw new Error("No NgModule metadata found for '" + __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](type) + "'.");
+                throw new Error("No NgModule metadata found for '" + Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(type) + "'.");
             }
             return null;
         }
@@ -40214,7 +40286,7 @@ var PipeResolver = (function () {
      * @return {?}
      */
     PipeResolver.prototype.isPipe = function (type) {
-        var /** @type {?} */ typeMetadata = this._reflector.annotations(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"](type));
+        var /** @type {?} */ typeMetadata = this._reflector.annotations(Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"])(type));
         return typeMetadata && typeMetadata.some(_isPipeMetadata);
     };
     /**
@@ -40225,7 +40297,7 @@ var PipeResolver = (function () {
      */
     PipeResolver.prototype.resolve = function (type, throwIfNotFound) {
         if (throwIfNotFound === void 0) { throwIfNotFound = true; }
-        var /** @type {?} */ metas = this._reflector.annotations(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"](type));
+        var /** @type {?} */ metas = this._reflector.annotations(Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"])(type));
         if (metas) {
             var /** @type {?} */ annotation = findLast(metas, _isPipeMetadata);
             if (annotation) {
@@ -40233,7 +40305,7 @@ var PipeResolver = (function () {
             }
         }
         if (throwIfNotFound) {
-            throw new Error("No Pipe decorator found on " + __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](type));
+            throw new Error("No Pipe decorator found on " + Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(type));
         }
         return null;
     };
@@ -40430,7 +40502,7 @@ var CompileMetadataResolver = (function () {
         var /** @type {?} */ delegate = null;
         var /** @type {?} */ proxyClass = (function () {
             if (!delegate) {
-                throw new Error("Illegal state: Class " + name + " for type " + __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](baseType) + " is not compiled yet!");
+                throw new Error("Illegal state: Class " + name + " for type " + Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(baseType) + " is not compiled yet!");
             }
             return delegate.apply(this, arguments);
         });
@@ -40513,7 +40585,7 @@ var CompileMetadataResolver = (function () {
             var /** @type {?} */ hostView = this.getHostComponentViewClass(dirType);
             // Note: ngContentSelectors will be filled later once the template is
             // loaded.
-            return __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵccf"](selector, dirType, /** @type {?} */ (hostView), inputs, outputs, []);
+            return Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵccf"])(selector, dirType, /** @type {?} */ (hostView), inputs, outputs, []);
         }
     };
     /**
@@ -40552,7 +40624,7 @@ var CompileMetadataResolver = (function () {
         if (this._directiveCache.has(directiveType)) {
             return null;
         }
-        directiveType = __WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"](directiveType);
+        directiveType = Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"])(directiveType);
         var _a = ((this.getNonNormalizedDirectiveMetadata(directiveType))), annotation = _a.annotation, metadata = _a.metadata;
         var /** @type {?} */ createDirectiveMetadata = function (templateMetadata) {
             var /** @type {?} */ normalizedDirMeta = new CompileDirectiveMetadata({
@@ -40598,7 +40670,7 @@ var CompileMetadataResolver = (function () {
                 animations: template.animations,
                 interpolation: template.interpolation
             });
-            if (__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵisPromise"](templateMeta) && isSync) {
+            if (Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵisPromise"])(templateMeta) && isSync) {
                 this._reportError(componentStillLoadingError(directiveType), directiveType);
                 return null;
             }
@@ -40616,7 +40688,7 @@ var CompileMetadataResolver = (function () {
      */
     CompileMetadataResolver.prototype.getNonNormalizedDirectiveMetadata = function (directiveType) {
         var _this = this;
-        directiveType = __WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"](directiveType);
+        directiveType = Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"])(directiveType);
         if (!directiveType) {
             return null;
         }
@@ -40807,7 +40879,7 @@ var CompileMetadataResolver = (function () {
     CompileMetadataResolver.prototype.getNgModuleMetadata = function (moduleType, throwIfNotFound) {
         var _this = this;
         if (throwIfNotFound === void 0) { throwIfNotFound = true; }
-        moduleType = __WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"](moduleType);
+        moduleType = Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"])(moduleType);
         var /** @type {?} */ compileMeta = this._ngModuleCache.get(moduleType);
         if (compileMeta) {
             return compileMeta;
@@ -41046,7 +41118,7 @@ var CompileMetadataResolver = (function () {
      * @return {?}
      */
     CompileMetadataResolver.prototype._getIdentifierMetadata = function (type) {
-        type = __WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"](type);
+        type = Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"])(type);
         return { reference: type };
     };
     /**
@@ -41105,7 +41177,7 @@ var CompileMetadataResolver = (function () {
      */
     CompileMetadataResolver.prototype._getFactoryMetadata = function (factory, dependencies) {
         if (dependencies === void 0) { dependencies = null; }
-        factory = __WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"](factory);
+        factory = Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"])(factory);
         return { reference: factory, diDeps: this._getDependenciesMetadata(factory, dependencies) };
     };
     /**
@@ -41148,7 +41220,7 @@ var CompileMetadataResolver = (function () {
      * @return {?}
      */
     CompileMetadataResolver.prototype._loadPipeMetadata = function (pipeType) {
-        pipeType = __WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"](pipeType);
+        pipeType = Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"])(pipeType);
         var /** @type {?} */ pipeAnnotation = ((this._pipeResolver.resolve(pipeType)));
         var /** @type {?} */ pipeMeta = new CompilePipeMetadata({
             type: this._getTypeMetadata(pipeType),
@@ -41239,7 +41311,7 @@ var CompileMetadataResolver = (function () {
      * @return {?}
      */
     CompileMetadataResolver.prototype._getTokenMetadata = function (token) {
-        token = __WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"](token);
+        token = Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"])(token);
         var /** @type {?} */ compileToken;
         if (typeof token === 'string') {
             compileToken = { value: token };
@@ -41265,7 +41337,7 @@ var CompileMetadataResolver = (function () {
                 _this._getProvidersMetadata(provider, targetEntryComponents, debugInfo, compileProviders);
             }
             else {
-                provider = __WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"](provider);
+                provider = Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"])(provider);
                 var /** @type {?} */ providerMeta = ((undefined));
                 if (provider && typeof provider === 'object' && provider.hasOwnProperty('provide')) {
                     _this._validateProvider(provider);
@@ -41490,7 +41562,7 @@ function flattenArray(tree, out) {
     if (out === void 0) { out = []; }
     if (tree) {
         for (var /** @type {?} */ i = 0; i < tree.length; i++) {
-            var /** @type {?} */ item = __WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"](tree[i]);
+            var /** @type {?} */ item = Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["resolveForwardRef"])(tree[i]);
             if (Array.isArray(item)) {
                 flattenArray(item, out);
             }
@@ -41557,7 +41629,7 @@ function stringifyType(type) {
         return type.name + " in " + type.filePath;
     }
     else {
-        return __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](type);
+        return Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(type);
     }
 }
 /**
@@ -41566,7 +41638,7 @@ function stringifyType(type) {
  * @return {?}
  */
 function componentStillLoadingError(compType) {
-    var /** @type {?} */ error = Error("Can't compile synchronously as " + __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](compType) + " is still being loaded!");
+    var /** @type {?} */ error = Error("Can't compile synchronously as " + Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(compType) + " is still being loaded!");
     ((error))[__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵERROR_COMPONENT_TYPE"]] = compType;
     return error;
 }
@@ -45600,11 +45672,13 @@ var OBJECT = 'object';
 //
 // =================================================================================================
 var SCHEMA = [
-    '[Element]|textContent,%classList,className,id,innerHTML,*beforecopy,*beforecut,*beforepaste,*copy,*cut,*paste,*search,*selectstart,*webkitfullscreenchange,*webkitfullscreenerror,*wheel,outerHTML,#scrollLeft,#scrollTop',
-    '[HTMLElement]^[Element]|accessKey,contentEditable,dir,!draggable,!hidden,innerText,lang,*abort,*beforecopy,*beforecut,*beforepaste,*blur,*cancel,*canplay,*canplaythrough,*change,*click,*close,*contextmenu,*copy,*cuechange,*cut,*dblclick,*drag,*dragend,*dragenter,*dragleave,*dragover,*dragstart,*drop,*durationchange,*emptied,*ended,*error,*focus,*input,*invalid,*keydown,*keypress,*keyup,*load,*loadeddata,*loadedmetadata,*loadstart,*message,*mousedown,*mouseenter,*mouseleave,*mousemove,*mouseout,*mouseover,*mouseup,*mousewheel,*mozfullscreenchange,*mozfullscreenerror,*mozpointerlockchange,*mozpointerlockerror,*paste,*pause,*play,*playing,*progress,*ratechange,*reset,*resize,*scroll,*search,*seeked,*seeking,*select,*selectstart,*show,*stalled,*submit,*suspend,*timeupdate,*toggle,*volumechange,*waiting,*webglcontextcreationerror,*webglcontextlost,*webglcontextrestored,*webkitfullscreenchange,*webkitfullscreenerror,*wheel,outerText,!spellcheck,%style,#tabIndex,title,!translate',
-    'abbr,address,article,aside,b,bdi,bdo,cite,code,dd,dfn,dt,em,figcaption,figure,footer,header,i,kbd,main,mark,nav,noscript,rb,rp,rt,rtc,ruby,s,samp,section,small,strong,sub,sup,u,var,wbr^[HTMLElement]|accessKey,contentEditable,dir,!draggable,!hidden,innerText,lang,*abort,*beforecopy,*beforecut,*beforepaste,*blur,*cancel,*canplay,*canplaythrough,*change,*click,*close,*contextmenu,*copy,*cuechange,*cut,*dblclick,*drag,*dragend,*dragenter,*dragleave,*dragover,*dragstart,*drop,*durationchange,*emptied,*ended,*error,*focus,*input,*invalid,*keydown,*keypress,*keyup,*load,*loadeddata,*loadedmetadata,*loadstart,*message,*mousedown,*mouseenter,*mouseleave,*mousemove,*mouseout,*mouseover,*mouseup,*mousewheel,*mozfullscreenchange,*mozfullscreenerror,*mozpointerlockchange,*mozpointerlockerror,*paste,*pause,*play,*playing,*progress,*ratechange,*reset,*resize,*scroll,*search,*seeked,*seeking,*select,*selectstart,*show,*stalled,*submit,*suspend,*timeupdate,*toggle,*volumechange,*waiting,*webglcontextcreationerror,*webglcontextlost,*webglcontextrestored,*webkitfullscreenchange,*webkitfullscreenerror,*wheel,outerText,!spellcheck,%style,#tabIndex,title,!translate',
-    'media^[HTMLElement]|!autoplay,!controls,%crossOrigin,#currentTime,!defaultMuted,#defaultPlaybackRate,!disableRemotePlayback,!loop,!muted,*encrypted,#playbackRate,preload,src,%srcObject,#volume',
-    ':svg:^[HTMLElement]|*abort,*blur,*cancel,*canplay,*canplaythrough,*change,*click,*close,*contextmenu,*cuechange,*dblclick,*drag,*dragend,*dragenter,*dragleave,*dragover,*dragstart,*drop,*durationchange,*emptied,*ended,*error,*focus,*input,*invalid,*keydown,*keypress,*keyup,*load,*loadeddata,*loadedmetadata,*loadstart,*mousedown,*mouseenter,*mouseleave,*mousemove,*mouseout,*mouseover,*mouseup,*mousewheel,*pause,*play,*playing,*progress,*ratechange,*reset,*resize,*scroll,*seeked,*seeking,*select,*show,*stalled,*submit,*suspend,*timeupdate,*toggle,*volumechange,*waiting,%style,#tabIndex',
+    '[Element]|textContent,%classList,className,id,innerHTML,*beforecopy,*beforecut,*beforepaste,*copy,*cut,*paste,*search,*selectstart,*webkitfullscreenchange,*webkitfullscreenerror,*wheel,outerHTML,#scrollLeft,#scrollTop,slot' +
+        /* added manually to avoid breaking changes */
+        ',*message,*mozfullscreenchange,*mozfullscreenerror,*mozpointerlockchange,*mozpointerlockerror,*webglcontextcreationerror,*webglcontextlost,*webglcontextrestored',
+    '[HTMLElement]^[Element]|accessKey,contentEditable,dir,!draggable,!hidden,innerText,lang,*abort,*auxclick,*blur,*cancel,*canplay,*canplaythrough,*change,*click,*close,*contextmenu,*cuechange,*dblclick,*drag,*dragend,*dragenter,*dragleave,*dragover,*dragstart,*drop,*durationchange,*emptied,*ended,*error,*focus,*gotpointercapture,*input,*invalid,*keydown,*keypress,*keyup,*load,*loadeddata,*loadedmetadata,*loadstart,*lostpointercapture,*mousedown,*mouseenter,*mouseleave,*mousemove,*mouseout,*mouseover,*mouseup,*mousewheel,*pause,*play,*playing,*pointercancel,*pointerdown,*pointerenter,*pointerleave,*pointermove,*pointerout,*pointerover,*pointerup,*progress,*ratechange,*reset,*resize,*scroll,*seeked,*seeking,*select,*show,*stalled,*submit,*suspend,*timeupdate,*toggle,*volumechange,*waiting,outerText,!spellcheck,%style,#tabIndex,title,!translate',
+    'abbr,address,article,aside,b,bdi,bdo,cite,code,dd,dfn,dt,em,figcaption,figure,footer,header,i,kbd,main,mark,nav,noscript,rb,rp,rt,rtc,ruby,s,samp,section,small,strong,sub,sup,u,var,wbr^[HTMLElement]|accessKey,contentEditable,dir,!draggable,!hidden,innerText,lang,*abort,*auxclick,*blur,*cancel,*canplay,*canplaythrough,*change,*click,*close,*contextmenu,*cuechange,*dblclick,*drag,*dragend,*dragenter,*dragleave,*dragover,*dragstart,*drop,*durationchange,*emptied,*ended,*error,*focus,*gotpointercapture,*input,*invalid,*keydown,*keypress,*keyup,*load,*loadeddata,*loadedmetadata,*loadstart,*lostpointercapture,*mousedown,*mouseenter,*mouseleave,*mousemove,*mouseout,*mouseover,*mouseup,*mousewheel,*pause,*play,*playing,*pointercancel,*pointerdown,*pointerenter,*pointerleave,*pointermove,*pointerout,*pointerover,*pointerup,*progress,*ratechange,*reset,*resize,*scroll,*seeked,*seeking,*select,*show,*stalled,*submit,*suspend,*timeupdate,*toggle,*volumechange,*waiting,outerText,!spellcheck,%style,#tabIndex,title,!translate',
+    'media^[HTMLElement]|!autoplay,!controls,%controlsList,%crossOrigin,#currentTime,!defaultMuted,#defaultPlaybackRate,!disableRemotePlayback,!loop,!muted,*encrypted,*waitingforkey,#playbackRate,preload,src,%srcObject,#volume',
+    ':svg:^[HTMLElement]|*abort,*auxclick,*blur,*cancel,*canplay,*canplaythrough,*change,*click,*close,*contextmenu,*cuechange,*dblclick,*drag,*dragend,*dragenter,*dragleave,*dragover,*dragstart,*drop,*durationchange,*emptied,*ended,*error,*focus,*gotpointercapture,*input,*invalid,*keydown,*keypress,*keyup,*load,*loadeddata,*loadedmetadata,*loadstart,*lostpointercapture,*mousedown,*mouseenter,*mouseleave,*mousemove,*mouseout,*mouseover,*mouseup,*mousewheel,*pause,*play,*playing,*pointercancel,*pointerdown,*pointerenter,*pointerleave,*pointermove,*pointerout,*pointerover,*pointerup,*progress,*ratechange,*reset,*resize,*scroll,*seeked,*seeking,*select,*show,*stalled,*submit,*suspend,*timeupdate,*toggle,*volumechange,*waiting,%style,#tabIndex',
     ':svg:graphics^:svg:|',
     ':svg:animation^:svg:|*begin,*end,*repeat',
     ':svg:geometry^:svg:|',
@@ -45613,7 +45687,7 @@ var SCHEMA = [
     ':svg:textContent^:svg:graphics|',
     ':svg:textPositioning^:svg:textContent|',
     'a^[HTMLElement]|charset,coords,download,hash,host,hostname,href,hreflang,name,password,pathname,ping,port,protocol,referrerPolicy,rel,rev,search,shape,target,text,type,username',
-    'area^[HTMLElement]|alt,coords,hash,host,hostname,href,!noHref,password,pathname,ping,port,protocol,referrerPolicy,search,shape,target,username',
+    'area^[HTMLElement]|alt,coords,download,hash,host,hostname,href,!noHref,password,pathname,ping,port,protocol,referrerPolicy,rel,search,shape,target,username',
     'audio^media|',
     'br^[HTMLElement]|clear',
     'base^[HTMLElement]|href,target',
@@ -45640,11 +45714,10 @@ var SCHEMA = [
     'iframe^[HTMLElement]|align,!allowFullscreen,frameBorder,height,longDesc,marginHeight,marginWidth,name,referrerPolicy,%sandbox,scrolling,src,srcdoc,width',
     'img^[HTMLElement]|align,alt,border,%crossOrigin,#height,#hspace,!isMap,longDesc,lowsrc,name,referrerPolicy,sizes,src,srcset,useMap,#vspace,#width',
     'input^[HTMLElement]|accept,align,alt,autocapitalize,autocomplete,!autofocus,!checked,!defaultChecked,defaultValue,dirName,!disabled,%files,formAction,formEnctype,formMethod,!formNoValidate,formTarget,#height,!incremental,!indeterminate,max,#maxLength,min,#minLength,!multiple,name,pattern,placeholder,!readOnly,!required,selectionDirection,#selectionEnd,#selectionStart,#size,src,step,type,useMap,value,%valueAsDate,#valueAsNumber,#width',
-    'keygen^[HTMLElement]|!autofocus,challenge,!disabled,keytype,name',
     'li^[HTMLElement]|type,#value',
     'label^[HTMLElement]|htmlFor',
     'legend^[HTMLElement]|align',
-    'link^[HTMLElement]|as,charset,%crossOrigin,!disabled,href,hreflang,integrity,media,rel,%relList,rev,%sizes,target,type',
+    'link^[HTMLElement]|as,charset,%crossOrigin,!disabled,href,hreflang,integrity,media,referrerPolicy,rel,%relList,rev,%sizes,target,type',
     'map^[HTMLElement]|name',
     'marquee^[HTMLElement]|behavior,bgColor,direction,height,#hspace,#loop,#scrollAmount,#scrollDelay,!trueSpeed,#vspace,width',
     'menu^[HTMLElement]|!compact',
@@ -45665,6 +45738,7 @@ var SCHEMA = [
     'script^[HTMLElement]|!async,charset,%crossOrigin,!defer,event,htmlFor,integrity,src,text,type',
     'select^[HTMLElement]|!autofocus,!disabled,#length,!multiple,name,!required,#selectedIndex,#size,value',
     'shadow^[HTMLElement]|',
+    'slot^[HTMLElement]|name',
     'source^[HTMLElement]|media,sizes,src,srcset,type',
     'span^[HTMLElement]|',
     'style^[HTMLElement]|!disabled,media,type',
@@ -45687,7 +45761,6 @@ var SCHEMA = [
     ':svg:animateTransform^:svg:animation|',
     ':svg:circle^:svg:geometry|',
     ':svg:clipPath^:svg:graphics|',
-    ':svg:cursor^:svg:|',
     ':svg:defs^:svg:graphics|',
     ':svg:desc^:svg:|',
     ':svg:discard^:svg:|',
@@ -45747,9 +45820,11 @@ var SCHEMA = [
     ':svg:use^:svg:graphics|',
     ':svg:view^:svg:|#zoomAndPan',
     'data^[HTMLElement]|value',
+    'keygen^[HTMLElement]|!autofocus,challenge,!disabled,form,keytype,name',
     'menuitem^[HTMLElement]|type,label,icon,!disabled,!checked,radiogroup,!default',
     'summary^[HTMLElement]|',
     'time^[HTMLElement]|dateTime',
+    ':svg:cursor^:svg:|',
 ];
 var _ATTR_TO_PROP = {
     'class': 'className',
@@ -46382,7 +46457,10 @@ var _shadowDOMSelectorsRe = [
     /\/shadow-deep\//g,
     /\/shadow\//g,
 ];
-var _shadowDeepSelectors = /(?:>>>)|(?:\/deep\/)/g;
+// The deep combinator is deprecated in the CSS spec
+// Support for `>>>`, `deep`, `::ng-deep` is then also deprecated and will be removed in the future.
+// see https://github.com/angular/angular/pull/17677
+var _shadowDeepSelectors = /(?:>>>)|(?:\/deep\/)|(?:::ng-deep)/g;
 var _selectorReSuffix = '([>\\s~+\[.,{:][\\s\\S]*)?$';
 var _polyfillHostRe = /-shadowcsshost/gim;
 var _colonHostRe = /:host/gim;
@@ -47978,12 +48056,12 @@ var ViewBuilder = (function () {
         var /** @type {?} */ usedEvents = new Map();
         ast.outputs.forEach(function (event) {
             var _a = elementEventNameAndTarget(event, null), name = _a.name, target = _a.target;
-            usedEvents.set(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵelementEventFullName"](target, name), [target, name]);
+            usedEvents.set(Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵelementEventFullName"])(target, name), [target, name]);
         });
         ast.directives.forEach(function (dirAst) {
             dirAst.hostEvents.forEach(function (event) {
                 var _a = elementEventNameAndTarget(event, dirAst), name = _a.name, target = _a.target;
-                usedEvents.set(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵelementEventFullName"](target, name), [target, name]);
+                usedEvents.set(Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵelementEventFullName"])(target, name), [target, name]);
             });
         });
         var /** @type {?} */ hostBindings = [];
@@ -48428,7 +48506,7 @@ var ViewBuilder = (function () {
                 trueStmts.push(ALLOW_DEFAULT_VAR.set(allowDefault.and(ALLOW_DEFAULT_VAR)).toStmt());
             }
             var _c = elementEventNameAndTarget(eventAst, dirAst), eventTarget = _c.target, eventName = _c.name;
-            var /** @type {?} */ fullEventName = __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵelementEventFullName"](eventTarget, eventName);
+            var /** @type {?} */ fullEventName = Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵelementEventFullName"])(eventTarget, eventName);
             handleEventStmts.push(applySourceSpanToStatementIfNeeded(new IfStmt(literal(fullEventName).identical(EVENT_NAME_VAR), trueStmts), eventAst.sourceSpan));
         });
         var /** @type {?} */ handleEventFn;
@@ -49204,7 +49282,17 @@ var AotCompiler = (function () {
     AotCompiler.prototype.emitAllStubs = function (analyzeResult) {
         var _this = this;
         var files = analyzeResult.files;
-        var /** @type {?} */ sourceModules = files.map(function (file) { return _this._compileStubFile(file.srcUrl, file.directives, file.ngModules); });
+        var /** @type {?} */ sourceModules = files.map(function (file) { return _this._compileStubFile(file.srcUrl, file.directives, file.pipes, file.ngModules, false); });
+        return flatten(sourceModules);
+    };
+    /**
+     * @param {?} analyzeResult
+     * @return {?}
+     */
+    AotCompiler.prototype.emitPartialStubs = function (analyzeResult) {
+        var _this = this;
+        var files = analyzeResult.files;
+        var /** @type {?} */ sourceModules = files.map(function (file) { return _this._compileStubFile(file.srcUrl, file.directives, file.pipes, file.ngModules, true); });
         return flatten(sourceModules);
     };
     /**
@@ -49220,15 +49308,26 @@ var AotCompiler = (function () {
     /**
      * @param {?} srcFileUrl
      * @param {?} directives
+     * @param {?} pipes
      * @param {?} ngModules
+     * @param {?} partial
      * @return {?}
      */
-    AotCompiler.prototype._compileStubFile = function (srcFileUrl, directives, ngModules) {
+    AotCompiler.prototype._compileStubFile = function (srcFileUrl, directives, pipes, ngModules, partial) {
         var _this = this;
+        // partial is true when we only need the files we are certain will produce a factory and/or
+        // summary.
+        // This is the normal case for `ngc` but if we assume libraryies are generating their own
+        // factories
+        // then we might need a factory for a file that re-exports a module or factory which we cannot
+        // know
+        // ahead of time so we need a stub generate for all non-.d.ts files. The .d.ts files do not need
+        // to
+        // be excluded here because they are excluded when the modules are analyzed. If a factory ends
+        // up
+        // not being needed, the factory file is not written in writeFile callback.
         var /** @type {?} */ fileSuffix = splitTypescriptSuffix(srcFileUrl, true)[1];
         var /** @type {?} */ generatedFiles = [];
-        var /** @type {?} */ jitSummaryStmts = [];
-        var /** @type {?} */ ngFactoryStms = [];
         var /** @type {?} */ ngFactoryOutputCtx = this._createOutputContext(ngfactoryFilePath(srcFileUrl, true));
         var /** @type {?} */ jitSummaryOutputCtx = this._createOutputContext(summaryForJitFileName(srcFileUrl, true));
         // create exports that user code can reference
@@ -49236,25 +49335,42 @@ var AotCompiler = (function () {
             _this._ngModuleCompiler.createStub(ngFactoryOutputCtx, ngModuleReference);
             createForJitStub(jitSummaryOutputCtx, ngModuleReference);
         });
-        // Note: we are creating stub ngfactory/ngsummary for all source files,
-        // as the real calculation requires almost the same logic as producing the real content for
-        // them.
-        // Our pipeline will filter out empty ones at the end.
-        generatedFiles.push(this._codegenSourceModule(srcFileUrl, ngFactoryOutputCtx));
-        generatedFiles.push(this._codegenSourceModule(srcFileUrl, jitSummaryOutputCtx));
+        var /** @type {?} */ partialJitStubRequired = false;
+        var /** @type {?} */ partialFactoryStubRequired = false;
         // create stubs for external stylesheets (always empty, as users should not import anything from
         // the generated code)
         directives.forEach(function (dirType) {
             var /** @type {?} */ compMeta = _this._metadataResolver.getDirectiveMetadata(/** @type {?} */ (dirType));
+            partialJitStubRequired = true;
             if (!compMeta.isComponent) {
                 return;
             } /** @type {?} */
             ((
             // Note: compMeta is a component and therefore template is non null.
             compMeta.template)).externalStylesheets.forEach(function (stylesheetMeta) {
-                generatedFiles.push(_this._codegenSourceModule(/** @type {?} */ ((stylesheetMeta.moduleUrl)), _this._createOutputContext(_stylesModuleUrl(/** @type {?} */ ((stylesheetMeta.moduleUrl)), _this._styleCompiler.needsStyleShim(compMeta), fileSuffix))));
+                var /** @type {?} */ styleContext = _this._createOutputContext(_stylesModuleUrl(/** @type {?} */ ((stylesheetMeta.moduleUrl)), _this._styleCompiler.needsStyleShim(compMeta), fileSuffix));
+                _createTypeReferenceStub(styleContext, Identifiers.ComponentFactory);
+                generatedFiles.push(_this._codegenSourceModule(/** @type {?} */ ((stylesheetMeta.moduleUrl)), styleContext));
             });
+            partialFactoryStubRequired = true;
         });
+        // If we need all the stubs to be generated then insert an arbitrary reference into the stub
+        if ((partialFactoryStubRequired || !partial) && ngFactoryOutputCtx.statements.length <= 0) {
+            _createTypeReferenceStub(ngFactoryOutputCtx, Identifiers.ComponentFactory);
+        }
+        if ((partialJitStubRequired || !partial || (pipes && pipes.length > 0)) &&
+            jitSummaryOutputCtx.statements.length <= 0) {
+            _createTypeReferenceStub(jitSummaryOutputCtx, Identifiers.ComponentFactory);
+        }
+        // Note: we are creating stub ngfactory/ngsummary for all source files,
+        // as the real calculation requires almost the same logic as producing the real content for
+        // them. Our pipeline will filter out empty ones at the end. Because of this filter, however,
+        // stub references to the reference type needs to be generated even if the user cannot
+        // refer to type from the `.d.ts` file to prevent the file being elided from the emit.
+        generatedFiles.push(this._codegenSourceModule(srcFileUrl, ngFactoryOutputCtx));
+        if (this._enableSummariesForJit) {
+            generatedFiles.push(this._codegenSourceModule(srcFileUrl, jitSummaryOutputCtx));
+        }
         return generatedFiles;
     };
     /**
@@ -49431,6 +49547,10 @@ var AotCompiler = (function () {
             var /** @type {?} */ arity = _this._symbolResolver.getTypeArity(symbol) || 0;
             var _a = _this._symbolResolver.getImportAs(symbol) || symbol, filePath = _a.filePath, name = _a.name, members = _a.members;
             var /** @type {?} */ importModule = _this._symbolResolver.fileNameToModuleName(filePath, genFilePath);
+            // It should be good enough to compare filePath to genFilePath and if they are equal
+            // there is a self reference. However, ngfactory files generate to .ts but their
+            // symbols have .d.ts so a simple compare is insufficient. They should be canonical
+            // and is tracked by #17705.
             var /** @type {?} */ selfReference = _this._symbolResolver.fileNameToModuleName(genFilePath, genFilePath);
             var /** @type {?} */ moduleName = importModule === selfReference ? null : importModule;
             // If we are in a type expression that refers to a generic type then supply
@@ -49468,6 +49588,14 @@ var AotCompiler = (function () {
     };
     return AotCompiler;
 }());
+/**
+ * @param {?} outputCtx
+ * @param {?} reference
+ * @return {?}
+ */
+function _createTypeReferenceStub(outputCtx, reference) {
+    outputCtx.statements.push(importExpr(reference).toStmt());
+}
 /**
  * @param {?} symbolResolver
  * @param {?} compileResult
@@ -49639,10 +49767,14 @@ function _createNgModules(programStaticSymbols, host, metadataResolver) {
  * found in the LICENSE file at https://angular.io/license
  */
 var ANGULAR_CORE = '@angular/core';
+var ANGULAR_ROUTER = '@angular/router';
 var HIDDEN_KEY = /^\$.*\$$/;
 var IGNORE = {
     __symbolic: 'ignore'
 };
+var USE_VALUE = 'useValue';
+var PROVIDE = 'provide';
+var REFERENCE_SET = new Set([USE_VALUE, 'useFactory', 'data']);
 /**
  * @param {?} value
  * @return {?}
@@ -49717,6 +49849,15 @@ var StaticReflector = (function () {
      */
     StaticReflector.prototype.findDeclaration = function (moduleUrl, name, containingFile) {
         return this.findSymbolDeclaration(this.symbolResolver.getSymbolByModule(moduleUrl, name, containingFile));
+    };
+    /**
+     * @param {?} moduleUrl
+     * @param {?} name
+     * @return {?}
+     */
+    StaticReflector.prototype.tryFindDeclaration = function (moduleUrl, name) {
+        var _this = this;
+        return this.symbolResolver.ignoreErrorsFor(function () { return _this.findDeclaration(moduleUrl, name); });
     };
     /**
      * @param {?} symbol
@@ -49927,6 +50068,9 @@ var StaticReflector = (function () {
     StaticReflector.prototype.initializeConversionMap = function () {
         this.injectionToken = this.findDeclaration(ANGULAR_CORE, 'InjectionToken');
         this.opaqueToken = this.findDeclaration(ANGULAR_CORE, 'OpaqueToken');
+        this.ROUTES = this.tryFindDeclaration(ANGULAR_ROUTER, 'ROUTES');
+        this.ANALYZE_FOR_ENTRY_COMPONENTS =
+            this.findDeclaration(ANGULAR_CORE, 'ANALYZE_FOR_ENTRY_COMPONENTS');
         this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'Host'), __WEBPACK_IMPORTED_MODULE_1__angular_core__["Host"]);
         this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'Injectable'), __WEBPACK_IMPORTED_MODULE_1__angular_core__["Injectable"]);
         this._registerDecoratorOrConstructor(this.findDeclaration(ANGULAR_CORE, 'Self'), __WEBPACK_IMPORTED_MODULE_1__angular_core__["Self"]);
@@ -50014,9 +50158,10 @@ var StaticReflector = (function () {
          * @param {?} context
          * @param {?} value
          * @param {?} depth
+         * @param {?} references
          * @return {?}
          */
-        function simplifyInContext(context, value, depth) {
+        function simplifyInContext(context, value, depth, references) {
             /**
              * @param {?} staticSymbol
              * @return {?}
@@ -50042,7 +50187,7 @@ var StaticReflector = (function () {
                         if (value_1 && (depth != 0 || value_1.__symbolic != 'error')) {
                             var /** @type {?} */ parameters = targetFunction['parameters'];
                             var /** @type {?} */ defaults = targetFunction.defaults;
-                            args = args.map(function (arg) { return simplifyInContext(context, arg, depth + 1); })
+                            args = args.map(function (arg) { return simplifyInContext(context, arg, depth + 1, references); })
                                 .map(function (arg) { return shouldIgnore(arg) ? undefined : arg; });
                             if (defaults && defaults.length > args.length) {
                                 args.push.apply(args, defaults.slice(args.length).map(function (value) { return simplify(value); }));
@@ -50055,7 +50200,7 @@ var StaticReflector = (function () {
                             var /** @type {?} */ result_1;
                             try {
                                 scope = functionScope.done();
-                                result_1 = simplifyInContext(functionSymbol, value_1, depth + 1);
+                                result_1 = simplifyInContext(functionSymbol, value_1, depth + 1, references);
                             }
                             finally {
                                 scope = oldScope;
@@ -50107,16 +50252,16 @@ var StaticReflector = (function () {
                     return result_2;
                 }
                 if (expression instanceof StaticSymbol) {
-                    // Stop simplification at builtin symbols
+                    // Stop simplification at builtin symbols or if we are in a reference context
                     if (expression === self.injectionToken || expression === self.opaqueToken ||
-                        self.conversionMap.has(expression)) {
+                        self.conversionMap.has(expression) || references > 0) {
                         return expression;
                     }
                     else {
                         var /** @type {?} */ staticSymbol = expression;
                         var /** @type {?} */ declarationValue = resolveReferenceValue(staticSymbol);
                         if (declarationValue) {
-                            return simplifyInContext(staticSymbol, declarationValue, depth + 1);
+                            return simplifyInContext(staticSymbol, declarationValue, depth + 1, references);
                         }
                         else {
                             return staticSymbol;
@@ -50212,14 +50357,14 @@ var StaticReflector = (function () {
                                         self.getStaticSymbol(selectTarget.filePath, selectTarget.name, members);
                                     var /** @type {?} */ declarationValue = resolveReferenceValue(selectContext);
                                     if (declarationValue) {
-                                        return simplifyInContext(selectContext, declarationValue, depth + 1);
+                                        return simplifyInContext(selectContext, declarationValue, depth + 1, references);
                                     }
                                     else {
                                         return selectContext;
                                     }
                                 }
                                 if (selectTarget && isPrimitive(member))
-                                    return simplifyInContext(selectContext, selectTarget[member], depth + 1);
+                                    return simplifyInContext(selectContext, selectTarget[member], depth + 1, references);
                                 return null;
                             case 'reference':
                                 // Note: This only has to deal with variable references,
@@ -50238,7 +50383,7 @@ var StaticReflector = (function () {
                             case 'new':
                             case 'call':
                                 // Determine if the function is a built-in conversion
-                                staticSymbol = simplifyInContext(context, expression['expression'], depth + 1);
+                                staticSymbol = simplifyInContext(context, expression['expression'], depth + 1, /* references */ 0);
                                 if (staticSymbol instanceof StaticSymbol) {
                                     if (staticSymbol === self.injectionToken || staticSymbol === self.opaqueToken) {
                                         // if somebody calls new InjectionToken, don't create an InjectionToken,
@@ -50248,7 +50393,8 @@ var StaticReflector = (function () {
                                     var /** @type {?} */ argExpressions = expression['arguments'] || [];
                                     var /** @type {?} */ converter = self.conversionMap.get(staticSymbol);
                                     if (converter) {
-                                        var /** @type {?} */ args = argExpressions.map(function (arg) { return simplifyInContext(context, arg, depth + 1); })
+                                        var /** @type {?} */ args = argExpressions
+                                            .map(function (arg) { return simplifyInContext(context, arg, depth + 1, references); })
                                             .map(function (arg) { return shouldIgnore(arg) ? undefined : arg; });
                                         return converter(context, args);
                                     }
@@ -50275,7 +50421,20 @@ var StaticReflector = (function () {
                         }
                         return null;
                     }
-                    return mapStringMap(expression, function (value, name) { return simplify(value); });
+                    return mapStringMap(expression, function (value, name) {
+                        if (REFERENCE_SET.has(name)) {
+                            if (name === USE_VALUE && PROVIDE in expression) {
+                                // If this is a provider expression, check for special tokens that need the value
+                                // during analysis.
+                                var /** @type {?} */ provide = simplify(expression.provide);
+                                if (provide === self.ROUTES || provide == self.ANALYZE_FOR_ENTRY_COMPONENTS) {
+                                    return simplify(value);
+                                }
+                            }
+                            return simplifyInContext(context, value, depth, references + 1);
+                        }
+                        return simplify(value);
+                    });
                 }
                 return IGNORE;
             }
@@ -50291,16 +50450,16 @@ var StaticReflector = (function () {
                 throw syntaxError(message);
             }
         }
-        var /** @type {?} */ recordedSimplifyInContext = function (context, value, depth) {
+        var /** @type {?} */ recordedSimplifyInContext = function (context, value) {
             try {
-                return simplifyInContext(context, value, depth);
+                return simplifyInContext(context, value, 0, 0);
             }
             catch (e) {
                 _this.reportError(e, context);
             }
         };
-        var /** @type {?} */ result = this.errorRecorder ? recordedSimplifyInContext(context, value, 0) :
-            simplifyInContext(context, value, 0);
+        var /** @type {?} */ result = this.errorRecorder ? recordedSimplifyInContext(context, value) :
+            simplifyInContext(context, value, 0, 0);
         if (shouldIgnore(result)) {
             return undefined;
         }
@@ -50620,6 +50779,21 @@ var StaticSymbolResolver = (function () {
                 this.importAs.delete(symbol);
                 this.symbolResourcePaths.delete(symbol);
             }
+        }
+    };
+    /**
+     * @template T
+     * @param {?} cb
+     * @return {?}
+     */
+    StaticSymbolResolver.prototype.ignoreErrorsFor = function (cb) {
+        var /** @type {?} */ recorder = this.errorRecorder;
+        this.errorRecorder = function () { };
+        try {
+            return cb();
+        }
+        finally {
+            this.errorRecorder = recorder;
         }
     };
     /**
@@ -51887,7 +52061,7 @@ function evalExpression(sourceUrl$$1, ctx, vars) {
         fnArgNames.push(argName);
         fnArgValues.push(vars[argName]);
     }
-    if (__WEBPACK_IMPORTED_MODULE_1__angular_core__["isDevMode"]()) {
+    if (Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["isDevMode"])()) {
         // using `new Function(...)` generates a header, 1 line of no arguments, 2 lines otherwise
         // E.g. ```
         // function anonymous(a,b,c
@@ -51950,7 +52124,7 @@ var JitEmitterVisitor = (function (_super) {
             id = this._evalArgValues.length;
             this._evalArgValues.push(value);
             var /** @type {?} */ name = identifierName({ reference: ast.value.runtime }) || 'val';
-            this._evalArgNames.push("jit_" + name + id);
+            this._evalArgNames.push("jit_" + name + "_" + id);
         }
         ctx.print(ast, this._evalArgNames[id]);
         return null;
@@ -52082,7 +52256,7 @@ var JitCompiler = (function () {
         this._console.warn('Compiler.getNgContentSelectors is deprecated. Use ComponentFactory.ngContentSelectors instead!');
         var /** @type {?} */ template = this._compiledTemplateCache.get(component);
         if (!template) {
-            throw new Error("The component " + __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](component) + " is not yet compiled!");
+            throw new Error("The component " + Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(component) + " is not yet compiled!");
         }
         return ((template.compMeta.template)).ngContentSelectors;
     };
@@ -52272,7 +52446,7 @@ var JitCompiler = (function () {
      */
     JitCompiler.prototype._createCompiledHostTemplate = function (compType, ngModule) {
         if (!ngModule) {
-            throw new Error("Component " + __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](compType) + " is not part of any NgModule or the module has not been imported into your module.");
+            throw new Error("Component " + Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(compType) + " is not part of any NgModule or the module has not been imported into your module.");
         }
         var /** @type {?} */ compiledTemplate = this._compiledHostTemplateCache.get(compType);
         if (!compiledTemplate) {
@@ -52280,7 +52454,7 @@ var JitCompiler = (function () {
             assertComponent(compMeta);
             var /** @type {?} */ componentFactory = (compMeta.componentFactory);
             var /** @type {?} */ hostClass = this._metadataResolver.getHostComponentType(compType);
-            var /** @type {?} */ hostMeta = createHostComponentMeta(hostClass, compMeta, /** @type {?} */ (__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵgetComponentViewDefinitionFactory"](componentFactory)));
+            var /** @type {?} */ hostMeta = createHostComponentMeta(hostClass, compMeta, /** @type {?} */ (Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵgetComponentViewDefinitionFactory"])(componentFactory)));
             compiledTemplate =
                 new CompiledTemplate(true, compMeta.type, hostMeta, ngModule, [compMeta.type]);
             this._compiledHostTemplateCache.set(compType, compiledTemplate);
@@ -52752,10 +52926,10 @@ var JitReflector = (function () {
             return scheme ? moduleId : "package:" + moduleId + MODULE_SUFFIX;
         }
         else if (moduleId !== null && moduleId !== void 0) {
-            throw syntaxError("moduleId should be a string in \"" + __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](type) + "\". See https://goo.gl/wIDDiL for more information.\n" +
+            throw syntaxError("moduleId should be a string in \"" + Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(type) + "\". See https://goo.gl/wIDDiL for more information.\n" +
                 "If you're using Webpack you should inline the template and the styles, see https://goo.gl/X2J8zc.");
         }
-        return "./" + __WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"](type);
+        return "./" + Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["ɵstringify"])(type);
     };
     /**
      * @param {?} typeOrFunc
@@ -52868,7 +53042,7 @@ var JitCompilerFactory = (function () {
      */
     function JitCompilerFactory(defaultOptions) {
         var compilerOptions = {
-            useDebug: __WEBPACK_IMPORTED_MODULE_1__angular_core__["isDevMode"](),
+            useDebug: Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["isDevMode"])(),
             useJit: true,
             defaultEncapsulation: __WEBPACK_IMPORTED_MODULE_1__angular_core__["ViewEncapsulation"].Emulated,
             missingTranslation: __WEBPACK_IMPORTED_MODULE_1__angular_core__["MissingTranslationStrategy"].Warning,
@@ -52919,7 +53093,7 @@ JitCompilerFactory.ctorParameters = function () { return [
  *
  * \@experimental
  */
-var platformCoreDynamic = __WEBPACK_IMPORTED_MODULE_1__angular_core__["createPlatformFactory"](__WEBPACK_IMPORTED_MODULE_1__angular_core__["platformCore"], 'coreDynamic', [
+var platformCoreDynamic = Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["createPlatformFactory"])(__WEBPACK_IMPORTED_MODULE_1__angular_core__["platformCore"], 'coreDynamic', [
     { provide: __WEBPACK_IMPORTED_MODULE_1__angular_core__["COMPILER_OPTIONS"], useValue: {}, multi: true },
     { provide: __WEBPACK_IMPORTED_MODULE_1__angular_core__["CompilerFactory"], useClass: JitCompilerFactory },
 ]);
@@ -56067,20 +56241,31 @@ var Zone$1 = (function (global) {
             this.cancelFn = cancelFn;
             this.callback = callback;
             var self = this;
-            this.invoke = function () {
-                _numberOfNestedTaskFrames++;
-                try {
-                    self.runCount++;
-                    return self.zone.runTask(self, this, arguments);
-                }
-                finally {
-                    if (_numberOfNestedTaskFrames == 1) {
-                        drainMicroTaskQueue();
-                    }
-                    _numberOfNestedTaskFrames--;
-                }
-            };
+            if (type === eventTask && options && options.isUsingGlobalCallback) {
+                this.invoke = ZoneTask.invokeTask;
+            }
+            else {
+                this.invoke = function () {
+                    return ZoneTask.invokeTask.apply(global, [self, this, arguments]);
+                };
+            }
         }
+        ZoneTask.invokeTask = function (task, target, args) {
+            if (!task) {
+                task = this;
+            }
+            _numberOfNestedTaskFrames++;
+            try {
+                task.runCount++;
+                return task.zone.runTask(task, target, args);
+            }
+            finally {
+                if (_numberOfNestedTaskFrames == 1) {
+                    drainMicroTaskQueue();
+                }
+                _numberOfNestedTaskFrames--;
+            }
+        };
         Object.defineProperty(ZoneTask.prototype, "zone", {
             get: function () {
                 return this._zone;
@@ -56197,9 +56382,9 @@ var Zone$1 = (function (global) {
         microtaskDrainDone: noop,
         scheduleMicroTask: scheduleMicroTask,
         showUncaughtError: function () { return !Zone[__symbol__('ignoreConsoleErrorUncaughtError')]; },
-        patchEventTargetMethods: function () { return false; },
+        patchEventTarget: function () { return []; },
         patchOnProperties: noop,
-        patchMethod: function () { return noop; }
+        patchMethod: function () { return noop; },
     };
     var _currentZoneFrame = { parent: null, zone: new Zone(null, null) };
     var _currentTask = null;
@@ -56230,7 +56415,9 @@ Zone.__load_patch('ZoneAwarePromise', function (global, Zone, api) {
             if (rejection) {
                 console.error('Unhandled Promise rejection:', rejection instanceof Error ? rejection.message : rejection, '; Zone:', e.zone.name, '; Task:', e.task && e.task.source, '; Value:', rejection, rejection instanceof Error ? rejection.stack : undefined);
             }
-            console.error(e);
+            else {
+                console.error(e);
+            }
         }
     };
     api.microtaskDrainDone = function () {
@@ -56559,7 +56746,7 @@ Zone.__load_patch('ZoneAwarePromise', function (global, Zone, api) {
  * @fileoverview
  * @suppress {undefinedVars,globalThis}
  */
-var zoneSymbol = function (n) { return "__zone_symbol__" + n; };
+var zoneSymbol = Zone.__symbol__;
 var _global = typeof window === 'object' && window || typeof self === 'object' && self || global;
 function bindArguments(args, source) {
     for (var i = args.length - 1; i >= 0; i--) {
@@ -56707,224 +56894,6 @@ function patchOnProperties(obj, properties, prototype) {
         }
     }
 }
-var EVENT_TASKS = zoneSymbol('eventTasks');
-// For EventTarget
-var ADD_EVENT_LISTENER = 'addEventListener';
-var REMOVE_EVENT_LISTENER = 'removeEventListener';
-// compare the EventListenerOptionsOrCapture
-// 1. if the options is usCapture: boolean, compare the useCpature values directly
-// 2. if the options is EventListerOptions, only compare the capture
-function compareEventListenerOptions(left, right) {
-    var leftCapture = (typeof left === 'boolean') ?
-        left :
-        ((typeof left === 'object') ? (left && left.capture) : false);
-    var rightCapture = (typeof right === 'boolean') ?
-        right :
-        ((typeof right === 'object') ? (right && right.capture) : false);
-    return !!leftCapture === !!rightCapture;
-}
-function findExistingRegisteredTask(target, handler, name, options, remove) {
-    var eventTasks = target[EVENT_TASKS];
-    if (eventTasks) {
-        for (var i = 0; i < eventTasks.length; i++) {
-            var eventTask = eventTasks[i];
-            var data = eventTask.data;
-            var listener = data.handler;
-            if ((data.handler === handler || listener.listener === handler) &&
-                compareEventListenerOptions(data.options, options) && data.eventName === name) {
-                if (remove) {
-                    eventTasks.splice(i, 1);
-                }
-                return eventTask;
-            }
-        }
-    }
-    return null;
-}
-function attachRegisteredEvent(target, eventTask, isPrepend) {
-    var eventTasks = target[EVENT_TASKS];
-    if (!eventTasks) {
-        eventTasks = target[EVENT_TASKS] = [];
-    }
-    if (isPrepend) {
-        eventTasks.unshift(eventTask);
-    }
-    else {
-        eventTasks.push(eventTask);
-    }
-}
-var defaultListenerMetaCreator = function (self, args) {
-    return {
-        options: args[2],
-        eventName: args[0],
-        handler: args[1],
-        target: self || _global,
-        name: args[0],
-        crossContext: false,
-        invokeAddFunc: function (addFnSymbol, delegate) {
-            // check if the data is cross site context, if it is, fallback to
-            // remove the delegate directly and try catch error
-            if (!this.crossContext) {
-                if (delegate && delegate.invoke) {
-                    return this.target[addFnSymbol](this.eventName, delegate.invoke, this.options);
-                }
-                else {
-                    return this.target[addFnSymbol](this.eventName, delegate, this.options);
-                }
-            }
-            else {
-                // add a if/else branch here for performance concern, for most times
-                // cross site context is false, so we don't need to try/catch
-                try {
-                    return this.target[addFnSymbol](this.eventName, delegate, this.options);
-                }
-                catch (err) {
-                    // do nothing here is fine, because objects in a cross-site context are unusable
-                }
-            }
-        },
-        invokeRemoveFunc: function (removeFnSymbol, delegate) {
-            // check if the data is cross site context, if it is, fallback to
-            // remove the delegate directly and try catch error
-            if (!this.crossContext) {
-                if (delegate && delegate.invoke) {
-                    return this.target[removeFnSymbol](this.eventName, delegate.invoke, this.options);
-                }
-                else {
-                    return this.target[removeFnSymbol](this.eventName, delegate, this.options);
-                }
-            }
-            else {
-                // add a if/else branch here for performance concern, for most times
-                // cross site context is false, so we don't need to try/catch
-                try {
-                    return this.target[removeFnSymbol](this.eventName, delegate, this.options);
-                }
-                catch (err) {
-                    // do nothing here is fine, because objects in a cross-site context are unusable
-                }
-            }
-        }
-    };
-};
-function makeZoneAwareAddListener(addFnName, removeFnName, useCapturingParam, allowDuplicates, isPrepend, metaCreator) {
-    if (useCapturingParam === void 0) { useCapturingParam = true; }
-    if (allowDuplicates === void 0) { allowDuplicates = false; }
-    if (isPrepend === void 0) { isPrepend = false; }
-    if (metaCreator === void 0) { metaCreator = defaultListenerMetaCreator; }
-    var addFnSymbol = zoneSymbol(addFnName);
-    var removeFnSymbol = zoneSymbol(removeFnName);
-    var defaultUseCapturing = useCapturingParam ? false : undefined;
-    function scheduleEventListener(eventTask) {
-        var meta = eventTask.data;
-        attachRegisteredEvent(meta.target, eventTask, isPrepend);
-        return meta.invokeAddFunc(addFnSymbol, eventTask);
-    }
-    function cancelEventListener(eventTask) {
-        var meta = eventTask.data;
-        findExistingRegisteredTask(meta.target, eventTask.invoke, meta.eventName, meta.options, true);
-        return meta.invokeRemoveFunc(removeFnSymbol, eventTask);
-    }
-    return function zoneAwareAddListener(self, args) {
-        var data = metaCreator(self, args);
-        data.options = data.options || defaultUseCapturing;
-        // - Inside a Web Worker, `this` is undefined, the context is `global`
-        // - When `addEventListener` is called on the global context in strict mode, `this` is undefined
-        // see https://github.com/angular/zone.js/issues/190
-        var delegate = null;
-        if (typeof data.handler == 'function') {
-            delegate = data.handler;
-        }
-        else if (data.handler && data.handler.handleEvent) {
-            delegate = function (event) { return data.handler.handleEvent(event); };
-        }
-        var validZoneHandler = false;
-        try {
-            // In cross site contexts (such as WebDriver frameworks like Selenium),
-            // accessing the handler object here will cause an exception to be thrown which
-            // will fail tests prematurely.
-            validZoneHandler = data.handler && data.handler.toString() === '[object FunctionWrapper]';
-        }
-        catch (error) {
-            // we can still try to add the data.handler even we are in cross site context
-            data.crossContext = true;
-            return data.invokeAddFunc(addFnSymbol, data.handler);
-        }
-        // Ignore special listeners of IE11 & Edge dev tools, see
-        // https://github.com/angular/zone.js/issues/150
-        if (!delegate || validZoneHandler) {
-            return data.invokeAddFunc(addFnSymbol, data.handler);
-        }
-        if (!allowDuplicates) {
-            var eventTask = findExistingRegisteredTask(data.target, data.handler, data.eventName, data.options, false);
-            if (eventTask) {
-                // we already registered, so this will have noop.
-                return data.invokeAddFunc(addFnSymbol, eventTask);
-            }
-        }
-        var zone = Zone.current;
-        var source = data.target.constructor['name'] + '.' + addFnName + ':' + data.eventName;
-        zone.scheduleEventTask(source, delegate, data, scheduleEventListener, cancelEventListener);
-    };
-}
-function makeZoneAwareRemoveListener(fnName, useCapturingParam, metaCreator) {
-    if (useCapturingParam === void 0) { useCapturingParam = true; }
-    if (metaCreator === void 0) { metaCreator = defaultListenerMetaCreator; }
-    var symbol = zoneSymbol(fnName);
-    var defaultUseCapturing = useCapturingParam ? false : undefined;
-    return function zoneAwareRemoveListener(self, args) {
-        var data = metaCreator(self, args);
-        data.options = data.options || defaultUseCapturing;
-        // - Inside a Web Worker, `this` is undefined, the context is `global`
-        // - When `addEventListener` is called on the global context in strict mode, `this` is undefined
-        // see https://github.com/angular/zone.js/issues/190
-        var delegate = null;
-        if (typeof data.handler == 'function') {
-            delegate = data.handler;
-        }
-        else if (data.handler && data.handler.handleEvent) {
-            delegate = function (event) { return data.handler.handleEvent(event); };
-        }
-        var validZoneHandler = false;
-        try {
-            // In cross site contexts (such as WebDriver frameworks like Selenium),
-            // accessing the handler object here will cause an exception to be thrown which
-            // will fail tests prematurely.
-            validZoneHandler = data.handler && data.handler.toString() === '[object FunctionWrapper]';
-        }
-        catch (error) {
-            data.crossContext = true;
-            return data.invokeRemoveFunc(symbol, data.handler);
-        }
-        // Ignore special listeners of IE11 & Edge dev tools, see
-        // https://github.com/angular/zone.js/issues/150
-        if (!delegate || validZoneHandler) {
-            return data.invokeRemoveFunc(symbol, data.handler);
-        }
-        var eventTask = findExistingRegisteredTask(data.target, data.handler, data.eventName, data.options, true);
-        if (eventTask) {
-            eventTask.zone.cancelTask(eventTask);
-        }
-        else {
-            data.invokeRemoveFunc(symbol, data.handler);
-        }
-    };
-}
-
-
-function patchEventTargetMethods(obj, addFnName, removeFnName, metaCreator) {
-    if (addFnName === void 0) { addFnName = ADD_EVENT_LISTENER; }
-    if (removeFnName === void 0) { removeFnName = REMOVE_EVENT_LISTENER; }
-    if (metaCreator === void 0) { metaCreator = defaultListenerMetaCreator; }
-    if (obj && obj[addFnName]) {
-        patchMethod(obj, addFnName, function () { return makeZoneAwareAddListener(addFnName, removeFnName, true, false, false, metaCreator); });
-        patchMethod(obj, removeFnName, function () { return makeZoneAwareRemoveListener(removeFnName, true, metaCreator); });
-        return true;
-    }
-    else {
-        return false;
-    }
-}
 var originalInstanceKey = zoneSymbol('originalInstance');
 // wrap some native API on `window`
 function patchClass(className) {
@@ -57041,23 +57010,26 @@ function patchMacroTask(obj, funcName, metaCreator) {
     }; });
 }
 
-function findEventTask(target, evtName) {
-    var eventTasks = target[zoneSymbol('eventTasks')];
-    var result = [];
-    if (eventTasks) {
-        for (var i = 0; i < eventTasks.length; i++) {
-            var eventTask = eventTasks[i];
-            var data = eventTask.data;
-            var eventName = data && data.eventName;
-            if (eventName === evtName) {
-                result.push(eventTask);
-            }
-        }
-    }
-    return result;
-}
 function attachOriginToPatched(patched, original) {
     patched[zoneSymbol('OriginalDelegate')] = original;
+}
+var isDetectedIEOrEdge = false;
+var ieOrEdge = false;
+function isIEOrEdge() {
+    if (isDetectedIEOrEdge) {
+        return ieOrEdge;
+    }
+    isDetectedIEOrEdge = true;
+    try {
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf('MSIE ');
+        if (ua.indexOf('MSIE ') !== -1 || ua.indexOf('Trident/') !== -1 || ua.indexOf('Edge/') !== -1) {
+            ieOrEdge = true;
+        }
+        return ieOrEdge;
+    }
+    catch (error) {
+    }
 }
 
 /**
@@ -57071,7 +57043,8 @@ function attachOriginToPatched(patched, original) {
 // look like native function
 Zone.__load_patch('toString', function (global, Zone, api) {
     // patch Func.prototype.toString to let them look like native
-    var originalFunctionToString = Function.prototype.toString;
+    var originalFunctionToString = Zone['__zone_symbol__originalToString'] =
+        Function.prototype.toString;
     Function.prototype.toString = function () {
         if (typeof this === 'function') {
             var originalDelegate = this[zoneSymbol('OriginalDelegate')];
@@ -57107,6 +57080,490 @@ Zone.__load_patch('toString', function (global, Zone, api) {
         return originalObjectToString.apply(this, arguments);
     };
 });
+
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+var TRUE_STR = 'true';
+var FALSE_STR = 'false';
+// an identifier to tell ZoneTask do not create a new invoke closure
+var OPTIMIZED_ZONE_EVENT_TASK_DATA = {
+    isUsingGlobalCallback: true
+};
+var zoneSymbolEventNames = {};
+var globalSources = {};
+var CONSTRUCTOR_NAME = 'name';
+var FUNCTION_TYPE = 'function';
+var OBJECT_TYPE = 'object';
+var ZONE_SYMBOL_PREFIX = '__zone_symbol__';
+var EVENT_NAME_SYMBOL_REGX = /^__zone_symbol__(\w+)(true|false)$/;
+function patchEventTarget(_global, apis, patchOptions) {
+    var ADD_EVENT_LISTENER = (patchOptions && patchOptions.addEventListenerFnName) || 'addEventListener';
+    var REMOVE_EVENT_LISTENER = (patchOptions && patchOptions.removeEventListenerFnName) || 'removeEventListener';
+    var LISTENERS_EVENT_LISTENER = (patchOptions && patchOptions.listenersFnName) || 'eventListeners';
+    var REMOVE_ALL_LISTENERS_EVENT_LISTENER = (patchOptions && patchOptions.removeAllFnName) || 'removeAllListeners';
+    var zoneSymbolAddEventListener = zoneSymbol(ADD_EVENT_LISTENER);
+    var ADD_EVENT_LISTENER_SOURCE = '.' + ADD_EVENT_LISTENER + ':';
+    var PREPEND_EVENT_LISTENER = 'prependListener';
+    var PREPEND_EVENT_LISTENER_SOURCE = '.' + PREPEND_EVENT_LISTENER + ':';
+    var invokeTask = function (task, target, event) {
+        // for better performance, check isRemoved which is set
+        // by removeEventListener
+        if (task.isRemoved) {
+            return;
+        }
+        var delegate = task.callback;
+        if (typeof delegate === OBJECT_TYPE && delegate.handleEvent) {
+            // create the bind version of handleEvent when invoke
+            task.callback = function (event) { return delegate.handleEvent(event); };
+            task.originalDelegate = delegate;
+        }
+        // invoke static task.invoke
+        task.invoke(task, target, [event]);
+        var options = task.options;
+        if (options && typeof options === 'object' && options.once) {
+            // if options.once is true, after invoke once remove listener here
+            // only browser need to do this, nodejs eventEmitter will cal removeListener
+            // inside EventEmitter.once
+            var delegate_1 = task.originalDelegate ? task.originalDelegate : task.callback;
+            target[REMOVE_EVENT_LISTENER].apply(target, [event.type, delegate_1, options]);
+        }
+    };
+    // global shared zoneAwareCallback to handle all event callback with capture = false
+    var globalZoneAwareCallback = function (event) {
+        var target = this || _global;
+        var tasks = target[zoneSymbolEventNames[event.type][FALSE_STR]];
+        if (tasks) {
+            // invoke all tasks which attached to current target with given event.type and capture = false
+            // for performance concern, if task.length === 1, just invoke
+            if (tasks.length === 1) {
+                invokeTask(tasks[0], target, event);
+            }
+            else {
+                // https://github.com/angular/zone.js/issues/836
+                // copy the tasks array before invoke, to avoid
+                // the callback will remove itself or other listener
+                var copyTasks = tasks.slice();
+                for (var i = 0; i < copyTasks.length; i++) {
+                    invokeTask(copyTasks[i], target, event);
+                }
+            }
+        }
+    };
+    // global shared zoneAwareCallback to handle all event callback with capture = true
+    var globalZoneAwareCaptureCallback = function (event) {
+        var target = this || _global;
+        var tasks = target[zoneSymbolEventNames[event.type][TRUE_STR]];
+        if (tasks) {
+            // invoke all tasks which attached to current target with given event.type and capture = false
+            // for performance concern, if task.length === 1, just invoke
+            if (tasks.length === 1) {
+                invokeTask(tasks[0], target, event);
+            }
+            else {
+                // https://github.com/angular/zone.js/issues/836
+                // copy the tasks array before invoke, to avoid
+                // the callback will remove itself or other listener
+                var copyTasks = tasks.slice();
+                for (var i = 0; i < copyTasks.length; i++) {
+                    invokeTask(copyTasks[i], target, event);
+                }
+            }
+        }
+    };
+    function patchEventTargetMethods(obj, patchOptions) {
+        if (!obj) {
+            return false;
+        }
+        var useGlobalCallback = true;
+        if (patchOptions && patchOptions.useGlobalCallback !== undefined) {
+            useGlobalCallback = patchOptions.useGlobalCallback;
+        }
+        var validateHandler = patchOptions && patchOptions.validateHandler;
+        var checkDuplicate = true;
+        if (patchOptions && patchOptions.checkDuplicate !== undefined) {
+            checkDuplicate = patchOptions.checkDuplicate;
+        }
+        var returnTarget = false;
+        if (patchOptions && patchOptions.returnTarget !== undefined) {
+            returnTarget = patchOptions.returnTarget;
+        }
+        var proto = obj;
+        while (proto && !proto.hasOwnProperty(ADD_EVENT_LISTENER)) {
+            proto = Object.getPrototypeOf(proto);
+        }
+        if (!proto && obj[ADD_EVENT_LISTENER]) {
+            // somehow we did not find it, but we can see it. This happens on IE for Window properties.
+            proto = obj;
+        }
+        if (!proto) {
+            return false;
+        }
+        if (proto[zoneSymbolAddEventListener]) {
+            return false;
+        }
+        // a shared global taskData to pass data for scheduleEventTask
+        // so we do not need to create a new object just for pass some data
+        var taskData = {};
+        var nativeAddEventListener = proto[zoneSymbolAddEventListener] = proto[ADD_EVENT_LISTENER];
+        var nativeRemoveEventListener = proto[zoneSymbol(REMOVE_EVENT_LISTENER)] =
+            proto[REMOVE_EVENT_LISTENER];
+        var nativeListeners = proto[zoneSymbol(LISTENERS_EVENT_LISTENER)] =
+            proto[LISTENERS_EVENT_LISTENER];
+        var nativeRemoveAllListeners = proto[zoneSymbol(REMOVE_ALL_LISTENERS_EVENT_LISTENER)] =
+            proto[REMOVE_ALL_LISTENERS_EVENT_LISTENER];
+        var nativePrependEventListener;
+        if (patchOptions && patchOptions.prependEventListenerFnName) {
+            nativePrependEventListener = proto[zoneSymbol(patchOptions.prependEventListenerFnName)] =
+                proto[patchOptions.prependEventListenerFnName];
+        }
+        var customScheduleGlobal = function (task) {
+            // if there is already a task for the eventName + capture,
+            // just return, because we use the shared globalZoneAwareCallback here.
+            if (taskData.isExisting) {
+                return;
+            }
+            return nativeAddEventListener.apply(taskData.target, [
+                taskData.eventName,
+                taskData.capture ? globalZoneAwareCaptureCallback : globalZoneAwareCallback,
+                taskData.options
+            ]);
+        };
+        var customCancelGlobal = function (task) {
+            // if task is not marked as isRemoved, this call is directly
+            // from Zone.prototype.cancelTask, we should remove the task
+            // from tasksList of target first
+            if (!task.isRemoved) {
+                var symbolEventNames = zoneSymbolEventNames[task.eventName];
+                var symbolEventName = void 0;
+                if (symbolEventNames) {
+                    symbolEventName = symbolEventNames[task.capture ? TRUE_STR : FALSE_STR];
+                }
+                var existingTasks = symbolEventName && task.target[symbolEventName];
+                if (existingTasks) {
+                    for (var i = 0; i < existingTasks.length; i++) {
+                        var existingTask = existingTasks[i];
+                        if (existingTask === task) {
+                            existingTasks.splice(i, 1);
+                            // set isRemoved to data for faster invokeTask check
+                            task.isRemoved = true;
+                            if (existingTasks.length === 0) {
+                                // all tasks for the eventName + capture have gone,
+                                // remove globalZoneAwareCallback and remove the task cache from target
+                                task.allRemoved = true;
+                                task.target[symbolEventName] = null;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            // if all tasks for the eventName + capture have gone,
+            // we will really remove the global event callback,
+            // if not, return
+            if (!task.allRemoved) {
+                return;
+            }
+            return nativeRemoveEventListener.apply(task.target, [
+                task.eventName, task.capture ? globalZoneAwareCaptureCallback : globalZoneAwareCallback,
+                task.options
+            ]);
+        };
+        var customScheduleNonGlobal = function (task) {
+            return nativeAddEventListener.apply(taskData.target, [taskData.eventName, task.invoke, taskData.options]);
+        };
+        var customSchedulePrepend = function (task) {
+            return nativePrependEventListener.apply(taskData.target, [taskData.eventName, task.invoke, taskData.options]);
+        };
+        var customCancelNonGlobal = function (task) {
+            return nativeRemoveEventListener.apply(task.target, [task.eventName, task.invoke, task.options]);
+        };
+        var customSchedule = useGlobalCallback ? customScheduleGlobal : customScheduleNonGlobal;
+        var customCancel = useGlobalCallback ? customCancelGlobal : customCancelNonGlobal;
+        var compareTaskCallbackVsDelegate = function (task, delegate) {
+            var typeOfDelegate = typeof delegate;
+            if ((typeOfDelegate === FUNCTION_TYPE && task.callback === delegate) ||
+                (typeOfDelegate === OBJECT_TYPE && task.originalDelegate === delegate)) {
+                // same callback, same capture, same event name, just return
+                return true;
+            }
+            return false;
+        };
+        var compare = (patchOptions && patchOptions.compareTaskCallbackVsDelegate) ?
+            patchOptions.compareTaskCallbackVsDelegate :
+            compareTaskCallbackVsDelegate;
+        var makeAddListener = function (nativeListener, addSource, customScheduleFn, customCancelFn, returnTarget, prepend) {
+            if (returnTarget === void 0) { returnTarget = false; }
+            if (prepend === void 0) { prepend = false; }
+            return function () {
+                var target = this || _global;
+                var targetZone = Zone.current;
+                var delegate = arguments[1];
+                if (!delegate) {
+                    return nativeListener.apply(this, arguments);
+                }
+                // don't create the bind delegate function for handleEvent
+                // case here to improve addEventListener performance
+                // we will create the bind delegate when invoke
+                var isHandleEvent = false;
+                if (typeof delegate !== FUNCTION_TYPE) {
+                    if (!delegate.handleEvent) {
+                        return nativeListener.apply(this, arguments);
+                    }
+                    isHandleEvent = true;
+                }
+                if (validateHandler && !validateHandler(nativeListener, delegate, target, arguments)) {
+                    return;
+                }
+                var eventName = arguments[0];
+                var options = arguments[2];
+                var capture;
+                var once = false;
+                if (options === undefined) {
+                    capture = false;
+                }
+                else if (options === true) {
+                    capture = true;
+                }
+                else if (options === false) {
+                    capture = false;
+                }
+                else {
+                    capture = options ? !!options.capture : false;
+                    once = options ? !!options.once : false;
+                }
+                var zone = Zone.current;
+                var symbolEventNames = zoneSymbolEventNames[eventName];
+                var symbolEventName;
+                if (!symbolEventNames) {
+                    // the code is duplicate, but I just want to get some better performance
+                    var falseEventName = eventName + FALSE_STR;
+                    var trueEventName = eventName + TRUE_STR;
+                    var symbol = ZONE_SYMBOL_PREFIX + falseEventName;
+                    var symbolCapture = ZONE_SYMBOL_PREFIX + trueEventName;
+                    zoneSymbolEventNames[eventName] = {};
+                    zoneSymbolEventNames[eventName][FALSE_STR] = symbol;
+                    zoneSymbolEventNames[eventName][TRUE_STR] = symbolCapture;
+                    symbolEventName = capture ? symbolCapture : symbol;
+                }
+                else {
+                    symbolEventName = symbolEventNames[capture ? TRUE_STR : FALSE_STR];
+                }
+                var existingTasks = target[symbolEventName];
+                var isExisting = false;
+                if (existingTasks) {
+                    // already have task registered
+                    isExisting = true;
+                    if (checkDuplicate) {
+                        for (var i = 0; i < existingTasks.length; i++) {
+                            if (compare(existingTasks[i], delegate)) {
+                                // same callback, same capture, same event name, just return
+                                return;
+                            }
+                        }
+                    }
+                }
+                else {
+                    existingTasks = target[symbolEventName] = [];
+                }
+                var source;
+                var constructorName = target.constructor[CONSTRUCTOR_NAME];
+                var targetSource = globalSources[constructorName];
+                if (targetSource) {
+                    source = targetSource[eventName];
+                }
+                if (!source) {
+                    source = constructorName + addSource + eventName;
+                }
+                // do not create a new object as task.data to pass those things
+                // just use the global shared one
+                taskData.options = options;
+                if (once) {
+                    // if addEventListener with once options, we don't pass it to
+                    // native addEventListener, instead we keep the once setting
+                    // and handle ourselves.
+                    taskData.options.once = false;
+                }
+                taskData.target = target;
+                taskData.capture = capture;
+                taskData.eventName = eventName;
+                taskData.isExisting = isExisting;
+                var data = useGlobalCallback ? OPTIMIZED_ZONE_EVENT_TASK_DATA : null;
+                var task = zone.scheduleEventTask(source, delegate, data, customScheduleFn, customCancelFn);
+                // have to save those information to task in case
+                // application may call task.zone.cancelTask() directly
+                if (once) {
+                    options.once = true;
+                }
+                task.options = options;
+                task.target = target;
+                task.capture = capture;
+                task.eventName = eventName;
+                if (isHandleEvent) {
+                    // save original delegate for compare to check duplicate
+                    task.originalDelegate = delegate;
+                }
+                if (!prepend) {
+                    existingTasks.push(task);
+                }
+                else {
+                    existingTasks.unshift(task);
+                }
+                if (returnTarget) {
+                    return target;
+                }
+            };
+        };
+        proto[ADD_EVENT_LISTENER] = makeAddListener(nativeAddEventListener, ADD_EVENT_LISTENER_SOURCE, customSchedule, customCancel, returnTarget);
+        if (nativePrependEventListener) {
+            proto[PREPEND_EVENT_LISTENER] = makeAddListener(nativePrependEventListener, PREPEND_EVENT_LISTENER_SOURCE, customSchedulePrepend, customCancel, returnTarget, true);
+        }
+        proto[REMOVE_EVENT_LISTENER] = function () {
+            var target = this || _global;
+            var eventName = arguments[0];
+            var options = arguments[2];
+            var capture;
+            if (options === undefined) {
+                capture = false;
+            }
+            else if (options === true) {
+                capture = true;
+            }
+            else if (options === false) {
+                capture = false;
+            }
+            else {
+                capture = options ? !!options.capture : false;
+            }
+            var delegate = arguments[1];
+            if (!delegate) {
+                return nativeRemoveEventListener.apply(this, arguments);
+            }
+            if (validateHandler &&
+                !validateHandler(nativeRemoveEventListener, delegate, target, arguments)) {
+                return;
+            }
+            var symbolEventNames = zoneSymbolEventNames[eventName];
+            var symbolEventName;
+            if (symbolEventNames) {
+                symbolEventName = symbolEventNames[capture ? TRUE_STR : FALSE_STR];
+            }
+            var existingTasks = symbolEventName && target[symbolEventName];
+            if (existingTasks) {
+                for (var i = 0; i < existingTasks.length; i++) {
+                    var existingTask = existingTasks[i];
+                    var typeOfDelegate = typeof delegate;
+                    if (compare(existingTask, delegate)) {
+                        existingTasks.splice(i, 1);
+                        // set isRemoved to data for faster invokeTask check
+                        existingTask.isRemoved = true;
+                        if (existingTasks.length === 0) {
+                            // all tasks for the eventName + capture have gone,
+                            // remove globalZoneAwareCallback and remove the task cache from target
+                            existingTask.allRemoved = true;
+                            target[symbolEventName] = null;
+                        }
+                        existingTask.zone.cancelTask(existingTask);
+                        return;
+                    }
+                }
+            }
+        };
+        proto[LISTENERS_EVENT_LISTENER] = function () {
+            var target = this || _global;
+            var eventName = arguments[0];
+            var listeners = [];
+            var tasks = findEventTasks(target, eventName);
+            for (var i = 0; i < tasks.length; i++) {
+                var task = tasks[i];
+                var delegate = task.originalDelegate ? task.originalDelegate : task.callback;
+                listeners.push(delegate);
+            }
+            return listeners;
+        };
+        proto[REMOVE_ALL_LISTENERS_EVENT_LISTENER] = function () {
+            var target = this || _global;
+            var eventName = arguments[0];
+            if (!eventName) {
+                var keys = Object.keys(target);
+                for (var i = 0; i < keys.length; i++) {
+                    var prop = keys[i];
+                    var match = EVENT_NAME_SYMBOL_REGX.exec(prop);
+                    var evtName = match && match[1];
+                    // in nodejs EventEmitter, removeListener event is
+                    // used for monitoring the removeListener call,
+                    // so just keep removeListener eventListener until
+                    // all other eventListeners are removed
+                    if (evtName && evtName !== 'removeListener') {
+                        this[REMOVE_ALL_LISTENERS_EVENT_LISTENER].apply(this, [evtName]);
+                    }
+                }
+                // remove removeListener listener finally
+                this[REMOVE_ALL_LISTENERS_EVENT_LISTENER].apply(this, ['removeListener']);
+            }
+            else {
+                var symbolEventNames = zoneSymbolEventNames[eventName];
+                if (symbolEventNames) {
+                    var symbolEventName = symbolEventNames[FALSE_STR];
+                    var symbolCaptureEventName = symbolEventNames[TRUE_STR];
+                    var tasks = target[symbolEventName];
+                    var captureTasks = target[symbolCaptureEventName];
+                    if (tasks) {
+                        var removeTasks = tasks.slice();
+                        for (var i = 0; i < removeTasks.length; i++) {
+                            var task = removeTasks[i];
+                            var delegate = task.originalDelegate ? task.originalDelegate : task.callback;
+                            this[REMOVE_EVENT_LISTENER].apply(this, [eventName, delegate, task.options]);
+                        }
+                    }
+                    if (captureTasks) {
+                        var removeTasks = captureTasks.slice();
+                        for (var i = 0; i < removeTasks.length; i++) {
+                            var task = removeTasks[i];
+                            var delegate = task.originalDelegate ? task.originalDelegate : task.callback;
+                            this[REMOVE_EVENT_LISTENER].apply(this, [eventName, delegate, task.options]);
+                        }
+                    }
+                }
+            }
+        };
+        // for native toString patch
+        attachOriginToPatched(proto[ADD_EVENT_LISTENER], nativeAddEventListener);
+        attachOriginToPatched(proto[REMOVE_EVENT_LISTENER], nativeRemoveEventListener);
+        if (nativeRemoveAllListeners) {
+            attachOriginToPatched(proto[REMOVE_ALL_LISTENERS_EVENT_LISTENER], nativeRemoveAllListeners);
+        }
+        if (nativeListeners) {
+            attachOriginToPatched(proto[LISTENERS_EVENT_LISTENER], nativeListeners);
+        }
+        return true;
+    }
+    var results = [];
+    for (var i = 0; i < apis.length; i++) {
+        results[i] = patchEventTargetMethods(apis[i], patchOptions);
+    }
+    return results;
+}
+function findEventTasks(target, eventName) {
+    var foundTasks = [];
+    for (var prop in target) {
+        var match = EVENT_NAME_SYMBOL_REGX.exec(prop);
+        var evtName = match && match[1];
+        if (evtName && (!eventName || evtName === eventName)) {
+            var tasks = target[prop];
+            if (tasks) {
+                for (var i = 0; i < tasks.length; i++) {
+                    foundTasks.push(tasks[i]);
+                }
+            }
+        }
+    }
+    return foundTasks;
+}
 
 /**
  * @license
@@ -57306,53 +57763,26 @@ function _tryDefineProperty(obj, prop, desc, originalConfigurableFlag) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-var WTF_ISSUE_555 = 'Anchor,Area,Audio,BR,Base,BaseFont,Body,Button,Canvas,Content,DList,Directory,Div,Embed,FieldSet,Font,Form,Frame,FrameSet,HR,Head,Heading,Html,IFrame,Image,Input,Keygen,LI,Label,Legend,Link,Map,Marquee,Media,Menu,Meta,Meter,Mod,OList,Object,OptGroup,Option,Output,Paragraph,Pre,Progress,Quote,Script,Select,Source,Span,Style,TableCaption,TableCell,TableCol,Table,TableRow,TableSection,TextArea,Title,Track,UList,Unknown,Video';
-var NO_EVENT_TARGET = 'ApplicationCache,EventSource,FileReader,InputMethodContext,MediaController,MessagePort,Node,Performance,SVGElementInstance,SharedWorker,TextTrack,TextTrackCue,TextTrackList,WebKitNamedFlow,Window,Worker,WorkerGlobalScope,XMLHttpRequest,XMLHttpRequestEventTarget,XMLHttpRequestUpload,IDBRequest,IDBOpenDBRequest,IDBDatabase,IDBTransaction,IDBCursor,DBIndex,WebSocket'
-    .split(',');
-var EVENT_TARGET = 'EventTarget';
-function eventTargetPatch(_global) {
-    var apis = [];
-    var isWtf = _global['wtf'];
-    if (isWtf) {
-        // Workaround for: https://github.com/google/tracing-framework/issues/555
-        apis = WTF_ISSUE_555.split(',').map(function (v) { return 'HTML' + v + 'Element'; }).concat(NO_EVENT_TARGET);
-    }
-    else if (_global[EVENT_TARGET]) {
-        apis.push(EVENT_TARGET);
-    }
-    else {
-        // Note: EventTarget is not available in all browsers,
-        // if it's not available, we instead patch the APIs in the IDL that inherit from EventTarget
-        apis = NO_EVENT_TARGET;
-    }
-    for (var i = 0; i < apis.length; i++) {
-        var type = _global[apis[i]];
-        patchEventTargetMethods(type && type.prototype);
-    }
-}
-
-/**
- * @license
- * Copyright Google Inc. All Rights Reserved.
- *
- * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
- */
 // we have to patch the instance since the proto is non-configurable
-function apply(_global) {
+function apply(api, _global) {
     var WS = _global.WebSocket;
     // On Safari window.EventTarget doesn't exist so need to patch WS add/removeEventListener
     // On older Chrome, no need since EventTarget was already patched
     if (!_global.EventTarget) {
-        patchEventTargetMethods(WS.prototype);
+        patchEventTarget(api, _global, [WS.prototype]);
     }
     _global.WebSocket = function (a, b) {
         var socket = arguments.length > 1 ? new WS(a, b) : new WS(a);
         var proxySocket;
+        var proxySocketProto;
         // Safari 7.0 has non-configurable own 'onmessage' and friends properties on the socket instance
         var onmessageDesc = Object.getOwnPropertyDescriptor(socket, 'onmessage');
         if (onmessageDesc && onmessageDesc.configurable === false) {
             proxySocket = Object.create(socket);
+            // socket have own property descriptor 'onopen', 'onmessage', 'onclose', 'onerror'
+            // but proxySocket not, so we will keep socket as prototype and pass it to
+            // patchOnProperties method
+            proxySocketProto = socket;
             ['addEventListener', 'removeEventListener', 'send', 'close'].forEach(function (propName) {
                 proxySocket[propName] = function () {
                     return socket[propName].apply(socket, arguments);
@@ -57363,7 +57793,7 @@ function apply(_global) {
             // we can patch the real socket
             proxySocket = socket;
         }
-        patchOnProperties(proxySocket, ['close', 'error', 'message', 'open']);
+        patchOnProperties(proxySocket, ['close', 'error', 'message', 'open'], proxySocketProto);
         return proxySocket;
     };
     for (var prop in WS) {
@@ -57587,7 +58017,7 @@ var XMLHttpRequestEventNames = [
 var IDBIndexEventNames = ['upgradeneeded', 'complete', 'abort', 'success', 'error', 'blocked', 'versionchange', 'close'];
 var websocketEventNames = ['close', 'error', 'open', 'message'];
 var eventNames = globalEventHandlersEventNames.concat(webglEventNames, formEventNames, detailEventNames, documentEventNames, windowEventNames, htmlElementEventNames, ieElementEventNames);
-function propertyDescriptorPatch(_global) {
+function propertyDescriptorPatch(api, _global) {
     if (isNode && !isMix) {
         return;
     }
@@ -57636,7 +58066,7 @@ function propertyDescriptorPatch(_global) {
         patchViaCapturingAllTheEvents();
         patchClass('XMLHttpRequest');
         if (supportsWebSocket) {
-            apply(_global);
+            apply(api, _global);
         }
     }
 }
@@ -57728,6 +58158,103 @@ function patchViaCapturingAllTheEvents() {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+function eventTargetPatch(_global, api) {
+    var WTF_ISSUE_555 = 'Anchor,Area,Audio,BR,Base,BaseFont,Body,Button,Canvas,Content,DList,Directory,Div,Embed,FieldSet,Font,Form,Frame,FrameSet,HR,Head,Heading,Html,IFrame,Image,Input,Keygen,LI,Label,Legend,Link,Map,Marquee,Media,Menu,Meta,Meter,Mod,OList,Object,OptGroup,Option,Output,Paragraph,Pre,Progress,Quote,Script,Select,Source,Span,Style,TableCaption,TableCell,TableCol,Table,TableRow,TableSection,TextArea,Title,Track,UList,Unknown,Video';
+    var NO_EVENT_TARGET = 'ApplicationCache,EventSource,FileReader,InputMethodContext,MediaController,MessagePort,Node,Performance,SVGElementInstance,SharedWorker,TextTrack,TextTrackCue,TextTrackList,WebKitNamedFlow,Window,Worker,WorkerGlobalScope,XMLHttpRequest,XMLHttpRequestEventTarget,XMLHttpRequestUpload,IDBRequest,IDBOpenDBRequest,IDBDatabase,IDBTransaction,IDBCursor,DBIndex,WebSocket'
+        .split(',');
+    var EVENT_TARGET = 'EventTarget';
+    var apis = [];
+    var isWtf = _global['wtf'];
+    var WTF_ISSUE_555_ARRAY = WTF_ISSUE_555.split(',');
+    if (isWtf) {
+        // Workaround for: https://github.com/google/tracing-framework/issues/555
+        apis = WTF_ISSUE_555_ARRAY.map(function (v) { return 'HTML' + v + 'Element'; }).concat(NO_EVENT_TARGET);
+    }
+    else if (_global[EVENT_TARGET]) {
+        apis.push(EVENT_TARGET);
+    }
+    else {
+        // Note: EventTarget is not available in all browsers,
+        // if it's not available, we instead patch the APIs in the IDL that inherit from EventTarget
+        apis = NO_EVENT_TARGET;
+    }
+    var isDisableIECheck = _global['__Zone_disable_IE_check'] || false;
+    var isEnableCrossContextCheck = _global['__Zone_enable_cross_context_check'] || false;
+    var ieOrEdge = isIEOrEdge();
+    var ADD_EVENT_LISTENER_SOURCE = '.addEventListener:';
+    var FUNCTION_WRAPPER = '[object FunctionWrapper]';
+    var BROWSER_TOOLS = 'function __BROWSERTOOLS_CONSOLE_SAFEFUNC() { [native code] }';
+    //  predefine all __zone_symbol__ + eventName + true/false string
+    for (var i = 0; i < eventNames.length; i++) {
+        var eventName = eventNames[i];
+        var falseEventName = eventName + FALSE_STR;
+        var trueEventName = eventName + TRUE_STR;
+        var symbol = ZONE_SYMBOL_PREFIX + falseEventName;
+        var symbolCapture = ZONE_SYMBOL_PREFIX + trueEventName;
+        zoneSymbolEventNames[eventName] = {};
+        zoneSymbolEventNames[eventName][FALSE_STR] = symbol;
+        zoneSymbolEventNames[eventName][TRUE_STR] = symbolCapture;
+    }
+    //  predefine all task.source string
+    for (var i = 0; i < WTF_ISSUE_555.length; i++) {
+        var target = WTF_ISSUE_555_ARRAY[i];
+        var targets = globalSources[target] = {};
+        for (var j = 0; j < eventNames.length; j++) {
+            var eventName = eventNames[j];
+            targets[eventName] = target + ADD_EVENT_LISTENER_SOURCE + eventName;
+        }
+    }
+    var checkIEAndCrossContext = function (nativeDelegate, delegate, target, args) {
+        if (!isDisableIECheck && ieOrEdge) {
+            if (isEnableCrossContextCheck) {
+                try {
+                    var testString = delegate.toString();
+                    if ((testString === FUNCTION_WRAPPER || testString == BROWSER_TOOLS)) {
+                        nativeDelegate.apply(target, args);
+                        return false;
+                    }
+                }
+                catch (error) {
+                    nativeDelegate.apply(target, args);
+                    return false;
+                }
+            }
+            else {
+                var testString = delegate.toString();
+                if ((testString === FUNCTION_WRAPPER || testString == BROWSER_TOOLS)) {
+                    nativeDelegate.apply(target, args);
+                    return false;
+                }
+            }
+        }
+        else if (isEnableCrossContextCheck) {
+            try {
+                delegate.toString();
+            }
+            catch (error) {
+                nativeDelegate.apply(target, args);
+                return false;
+            }
+        }
+        return true;
+    };
+    var apiTypes = [];
+    for (var i = 0; i < apis.length; i++) {
+        var type = _global[apis[i]];
+        apiTypes.push(type && type.prototype);
+    }
+    patchEventTarget(_global, apiTypes, { validateHandler: checkIEAndCrossContext });
+    api.patchEventTarget = patchEventTarget;
+    return true;
+}
+
+/**
+ * @license
+ * Copyright Google Inc. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 function registerElementPatch(_global) {
     if ((!isBrowser && !isMix) || !('registerElement' in _global.document)) {
         return;
@@ -57787,18 +58314,18 @@ Zone.__load_patch('blocking', function (global, Zone, api) {
     }
 });
 Zone.__load_patch('EventTarget', function (global, Zone, api) {
-    eventTargetPatch(global);
+    eventTargetPatch(global, api);
     // patch XMLHttpRequestEventTarget's addEventListener/removeEventListener
     var XMLHttpRequestEventTarget = global['XMLHttpRequestEventTarget'];
     if (XMLHttpRequestEventTarget && XMLHttpRequestEventTarget.prototype) {
-        patchEventTargetMethods(XMLHttpRequestEventTarget.prototype);
+        api.patchEventTarget(global, [XMLHttpRequestEventTarget.prototype]);
     }
     patchClass('MutationObserver');
     patchClass('WebKitMutationObserver');
     patchClass('FileReader');
 });
 Zone.__load_patch('on_property', function (global, Zone, api) {
-    propertyDescriptorPatch(global);
+    propertyDescriptorPatch(api, global);
     propertyPatch();
     registerElementPatch(global);
 });
@@ -57903,7 +58430,7 @@ Zone.__load_patch('PromiseRejectionEvent', function (global, Zone, api) {
     // handle unhandled promise rejection
     function findPromiseRejectionHandler(evtName) {
         return function (e) {
-            var eventTasks = findEventTask(global, evtName);
+            var eventTasks = findEventTasks(global, evtName);
             eventTasks.forEach(function (eventTask) {
                 // windows has added unhandledrejection event listener
                 // trigger the event listener
@@ -57923,7 +58450,6 @@ Zone.__load_patch('PromiseRejectionEvent', function (global, Zone, api) {
     }
 });
 Zone.__load_patch('util', function (global, Zone, api) {
-    api.patchEventTargetMethods = patchEventTargetMethods;
     api.patchOnProperties = patchOnProperties;
     api.patchMethod = patchMethod;
 });

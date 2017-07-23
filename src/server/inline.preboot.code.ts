@@ -1,6 +1,8 @@
 import { getNodeKeyForPreboot, PrebootRecordOptions } from '../common';
 import * as eventRecorder from './event.recorder';
 
+declare var require: any;
+
 // exporting default options in case developer wants to use these + custom on
 // top
 export const defaultOptions = <PrebootRecordOptions>{
