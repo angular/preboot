@@ -50,7 +50,7 @@ export class AppModule { }
 ```
 
 The key part here for preboot is to include `ServerPrebootModule.recordEvents({ appRoot: 'app-root' })` where the `appRoot`
-is the selector to find the root of your application. The options you can pass into `recordEvents()` are in the (PrebootRecordOptions)[#PrebootRecordOptions] section below. In most cases, however, you will only need to specify the `appRoot`.
+is the selector to find the root of your application. The options you can pass into `recordEvents()` are in the [PrebootRecordOptions](#PrebootRecordOptions) section below. In most cases, however, you will only need to specify the `appRoot`.
 
 #### Angular Browser Configuration
 
@@ -71,7 +71,7 @@ import { AppComponent } from './app.component';
 export class AppModule { }
 ```
 
-The key part here for preboot is to include `BrowserPrebootModule.replayEvents()`. You can optionally pass an object into `replayEvents()` that is detailed in the (PrebootReplayOptions)[#PrebootReplayOptions] section further below. In most cases, however, you can just rely on the preset defaults.
+The key part here for preboot is to include `BrowserPrebootModule.replayEvents()`. You can optionally pass an object into `replayEvents()` that is detailed in the [PrebootReplayOptions](#PrebootReplayOptions) section further below. In most cases, however, you can just rely on the preset defaults.
 
 #### Non-Angular Server Configuration
 
