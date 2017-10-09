@@ -18,7 +18,7 @@ export class EventReplayer {
    * in non-browser environments
    */
   getWindow(): Window {
-    return (this.win ? this.win : window) as Window;
+    return (this.win || typeof window === 'undefined' ? this.win : window) as Window;
   }
 
   /**
@@ -26,7 +26,7 @@ export class EventReplayer {
    * if called multiple times, will only do something once
    */
   replayAll() {
-    if (this.replayStarted) {
+    if (this.replayStarted || typeof window === 'undefined') {
       return;
     } else {
       this.replayStarted = true;
@@ -169,7 +169,7 @@ export class EventReplayer {
 
     // sent event to documernt that signals preboot complete
     const completeEvent = new Event('PrebootComplete');
-    this.win.document.dispatchEvent(completeEvent);
+    this.getWindow().document.dispatchEvent(completeEvent);
   }
 
   setFocus(activeNode: NodeContext) {

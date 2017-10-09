@@ -1,6 +1,6 @@
 {
   "name": "preboot",
-  "version": "5.1.1",
+  "version": "5.1.4",
   "description": "Record server view events and play back to Angular client view",
   "scripts": {
     "inline": "rm -rf dist && mkdir dist && node src/build/inline.preboot.builder || true",
