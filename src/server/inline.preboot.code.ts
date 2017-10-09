@@ -61,7 +61,7 @@ export function getEventRecorderCode(): string {
   const eventRecorderFunctions: string[] = [];
 
   for (const funcName in eventRecorder) {
-    if (eventRecorder.hasOwnProperty(funcName)) {
+    if (eventRecorder.hasOwnProperty && eventRecorder.hasOwnProperty(funcName)) {
       const fn = (<any>eventRecorder)[funcName].toString();
       const fnCleaned = fn.replace('common_1.', '');
       eventRecorderFunctions.push(fnCleaned);
@@ -134,7 +134,7 @@ export function assign(target: Object, ...optionSets: any[]): Object {
     const source = optionSets[index];
     if (source !== undefined && source !== null) {
       for (const nextKey in source) {
-        if (source.hasOwnProperty(nextKey)) {
+        if (source.hasOwnProperty && source.hasOwnProperty(nextKey)) {
           output[nextKey] = source[nextKey];
         }
       }

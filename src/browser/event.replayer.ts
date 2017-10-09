@@ -160,7 +160,7 @@ export class EventReplayer {
     // remove the freeze overlay if it exists
     const prebootOverlay = this.getWindow().document.body.querySelector('#prebootOverlay');
     if (prebootOverlay) {
-      prebootOverlay.style.display = 'none';
+      prebootOverlay.remove ? prebootOverlay.remove() : (prebootOverlay.style.display = 'none');
     }
 
     // clear out the data stored for each app

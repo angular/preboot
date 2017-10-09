@@ -9,11 +9,8 @@ const filePath = path.join(distDir, 'preboot.js');
 const fileMinPath = path.join(distDir, 'preboot.min.js');
 const eventRecorderCode = getEventRecorderCode();
 const eventRecorderModule = `module.exports = function () {
-
   ${eventRecorderCode}
-
 };
-
 `;
 const eventRecorderCodeMin = minify(eventRecorderCode).code;
 const eventRecorderModuleMin = `module.exports = function(){${eventRecorderCodeMin}}`;
