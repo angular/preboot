@@ -1,15 +1,15 @@
 import {
-    EventSelector,
-    PrebootRecordOptions,
-    PrebootAppData,
-    PrebootData,
-    Element,
-    DomEvent,
-    Window,
-    Document,
-    Selection,
-    ServerClientRoot,
-    getNodeKeyForPreboot
+  EventSelector,
+  PrebootRecordOptions,
+  PrebootAppData,
+  PrebootData,
+  Element,
+  DomEvent,
+  Window,
+  Document,
+  Selection,
+  ServerClientRoot,
+  getNodeKeyForPreboot
 } from '../common';
 
 /**
@@ -22,12 +22,12 @@ export function init(opts: PrebootRecordOptions, win?: Window) {
 
   // add the preboot options to the preboot data and then add the data to
   // the window so it can be used later by the client
-  const data = theWindow.prebootData = <PrebootData>{
+  const data = (theWindow.prebootData = <PrebootData>{
     opts: opts,
     listening: true,
     apps: [],
     listeners: []
-  };
+  });
 
   // start up preboot listening as soon as the DOM is ready
   waitUntilReady(data);
@@ -72,7 +72,7 @@ export function start(prebootData: PrebootData, win?: Window) {
   }
 
   const document = <Document>(theWindow.document || {});
-  const opts = prebootData.opts || {} as PrebootRecordOptions;
+  const opts = prebootData.opts || ({} as PrebootRecordOptions);
   const eventSelectors = opts.eventSelectors || [];
 
   // create an overlay that can be used later if a freeze event occurs
@@ -83,10 +83,9 @@ export function start(prebootData: PrebootData, win?: Window) {
 
   // for each app root
   appRoots.forEach(function(root) {
-
     // we track all events for each app in the prebootData object which is on
     // the global scope
-    const appData = <PrebootAppData>{root: root, events: []};
+    const appData = <PrebootAppData>{ root: root, events: [] };
     prebootData.apps.push(appData);
 
     // loop through all the eventSelectors and create event handlers
@@ -104,9 +103,10 @@ export function start(prebootData: PrebootData, win?: Window) {
 export function createOverlay(document: Document): Element {
   const overlay = document.createElement('div');
   overlay.setAttribute('id', 'prebootOverlay');
-  overlay.setAttribute('style',
-      'display:none;position:absolute;left:0;' +
-      'top:0;width:100%;height:100%;z-index:999999;background:black;opacity:.3');
+  overlay.setAttribute(
+    'style',
+    'display:none;position:absolute;left:0;' + 'top:0;width:100%;height:100%;z-index:999999;background:black;opacity:.3'
+  );
   document.body.appendChild(overlay);
   return overlay;
 }
@@ -138,11 +138,9 @@ export function getAppRoots(document: Document, opts: PrebootRecordOptions): Ser
     if (root.clientSelector !== root.serverSelector) {
       // if diff selectors, then just get the client node
       root.clientNode = document.querySelector(root.clientSelector);
-
     } else if (opts.buffer) {
       // if we are doing buffering, we need to create the buffer for the client
       root.clientNode = createBuffer(root);
-
     } else {
       // else the client root is the same as the server
       root.clientNode = root.serverNode;
@@ -183,15 +181,13 @@ export function handleEvents(prebootData: PrebootData, appData: PrebootAppData, 
   // we want to add an event listener for each node and each event
   for (const node of nodes) {
     eventSelector.events.forEach(function(eventName: string) {
-
       // get the appropriate handler and add it as an event listener
       const handler = createListenHandler(prebootData, eventSelector, appData, node);
       node.addEventListener(eventName, handler);
 
       // need to keep track of listeners so we can do node.removeEventListener()
       // when preboot done
-      prebootData.listeners.push(
-          {node: node, eventName: eventName, handler: handler});
+      prebootData.listeners.push({ node: node, eventName: eventName, handler: handler });
     });
   }
 }
@@ -200,12 +196,11 @@ export function handleEvents(prebootData: PrebootData, appData: PrebootAppData, 
  * Create handler for events that we will record
  */
 export function createListenHandler(
-    prebootData: PrebootData,
-    eventSelector: EventSelector,
-    appData: PrebootAppData,
-    node: Element
+  prebootData: PrebootData,
+  eventSelector: EventSelector,
+  appData: PrebootAppData,
+  node: Element
 ): Function {
-
   const CARET_EVENTS = ['keyup', 'keydown', 'focusin', 'mouseup', 'mousedown'];
   const CARET_NODES = ['INPUT', 'TEXTAREA'];
 
@@ -222,8 +217,7 @@ export function createListenHandler(
     // doesn't include key
     const keyCodes = eventSelector.keyCodes;
     if (keyCodes && keyCodes.length) {
-      const matchingKeyCodes =
-          keyCodes.filter((keyCode) => event.which === keyCode);
+      const matchingKeyCodes = keyCodes.filter(keyCode => event.which === keyCode);
 
       // if there are not matches (i.e. key entered NOT one of the key codes)
       // then don't do anything
@@ -243,11 +237,10 @@ export function createListenHandler(
     }
 
     // get the node key for a given node
-    const nodeKey = getNodeKeyForPreboot({root: root, node: node});
+    const nodeKey = getNodeKeyForPreboot({ root: root, node: node });
 
     // if event on input or text area, record active node
-    if (CARET_EVENTS.indexOf(eventName) >= 0 &&
-        CARET_NODES.indexOf(node.tagName) >= 0) {
+    if (CARET_EVENTS.indexOf(eventName) >= 0 && CARET_NODES.indexOf(node.tagName) >= 0) {
       prebootData.activeNode = {
         root: root,
         node: node,
@@ -255,7 +248,6 @@ export function createListenHandler(
         selection: getSelection(node)
       };
     } else if (eventName !== 'change' && eventName !== 'focusout') {
-      ;
       prebootData.activeNode = null;
     }
 
@@ -276,8 +268,7 @@ export function createListenHandler(
     // we will record events for later replay unless explicitly marked as
     // doNotReplay
     if (!eventSelector.noReplay) {
-      appData.events.push(
-          {node: node, nodeKey: nodeKey, event: event, name: eventName});
+      appData.events.push({ node: node, nodeKey: nodeKey, event: event, name: eventName });
     }
   };
 }
@@ -319,8 +310,7 @@ export function createBuffer(root: ServerClientRoot): Element {
 
   // if no rootServerNode OR the selector is on the entire html doc or the body
   // OR no parentNode, don't buffer
-  if (!serverNode || !serverNode.parentNode || root.serverSelector === 'html' ||
-      root.serverSelector === 'body') {
+  if (!serverNode || !serverNode.parentNode || root.serverSelector === 'html' || root.serverSelector === 'body') {
     return serverNode;
   }
 

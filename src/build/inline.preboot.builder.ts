@@ -16,7 +16,7 @@ const eventRecorderModule = `module.exports = function () {
 
 `;
 const eventRecorderCodeMin = minify(eventRecorderCode).code;
-const eventRecorderModuleMin = `module.exports = function(){${eventRecorderCodeMin}}`
+const eventRecorderModuleMin = `module.exports = function(){${eventRecorderCodeMin}}`;
 
 fs.writeFileSync(filePath, eventRecorderModule);
 fs.writeFileSync(fileMinPath, eventRecorderModuleMin);

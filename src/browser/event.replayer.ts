@@ -1,17 +1,7 @@
-
-import {
-    ServerClientRoot,
-    PrebootAppData,
-    PrebootData,
-    PrebootEvent,
-    Window,
-    Element,
-    NodeContext,
-    getNodeKeyForPreboot
-} from '../common';
+import { ServerClientRoot, PrebootAppData, PrebootData, PrebootEvent, Window, Element, NodeContext, getNodeKeyForPreboot } from '../common';
 
 export class EventReplayer {
-  clientNodeCache: { [key: string]: Element; } = {};
+  clientNodeCache: { [key: string]: Element } = {};
   replayStarted = false;
   win: Window;
 
@@ -36,7 +26,6 @@ export class EventReplayer {
    * if called multiple times, will only do something once
    */
   replayAll() {
-
     if (this.replayStarted) {
       return;
     } else {
@@ -100,9 +89,8 @@ export class EventReplayer {
     // if client node can't be found, log a warning
     if (!clientNode) {
       console.warn(
-          'Trying to dispatch event ' + event.type + ' to node ' + nodeKey +
-          ' but could not find client node. ' +
-          'Server node is: ');
+        'Trying to dispatch event ' + event.type + ' to node ' + nodeKey + ' but could not find client node. ' + 'Server node is: '
+      );
       console.log(serverNode);
       return;
     }
@@ -128,23 +116,23 @@ export class EventReplayer {
 
     // if no client view or the server view is the body or client
     // and server view are the same, then don't do anything and return
-    if (!clientView || !serverView || serverView === clientView ||
-        serverView.nodeName === 'BODY') {
+    if (!clientView || !serverView || serverView === clientView || serverView.nodeName === 'BODY') {
       return;
     }
 
     // do a try-catch just in case something messed up
     try {
       // get the server view display mode
-      const display = this.getWindow().getComputedStyle(serverView).getPropertyValue('display') || 'block';
+      const display =
+        this.getWindow()
+          .getComputedStyle(serverView)
+          .getPropertyValue('display') || 'block';
 
       // first remove the server view
-      serverView.remove ? serverView.remove() :
-                          serverView.style.display = 'none';
+      serverView.remove ? serverView.remove() : (serverView.style.display = 'none');
 
       // now add the client view
       clientView.style.display = display;
-
     } catch (ex) {
       console.error(ex);
     }
@@ -175,9 +163,13 @@ export class EventReplayer {
       prebootOverlay.style.display = 'none';
     }
 
-    // finally clear out the data stored for each app
+    // clear out the data stored for each app
     prebootData.apps = [];
     this.clientNodeCache = {};
+
+    // sent event to documernt that signals preboot complete
+    const completeEvent = new Event('PrebootComplete');
+    this.win.document.dispatchEvent(completeEvent);
   }
 
   setFocus(activeNode: NodeContext) {
@@ -259,9 +251,11 @@ export class EventReplayer {
     }
 
     for (const clientNode of clientNodes) {
-
       // get the key for the client node
-      const clientNodeKey = getNodeKeyForPreboot({ root: root, node: clientNode });
+      const clientNodeKey = getNodeKeyForPreboot({
+        root: root,
+        node: clientNode
+      });
 
       // if the client node key is exact match for the server node key, then we
       // found the client node
@@ -280,8 +274,8 @@ export class EventReplayer {
     // if we get here it means we couldn't find the client node so give the user
     // a warning
     console.warn(
-        'No matching client node found for ' + serverNodeKey +
-        '. You can fix this by assigning this element a unique id attribute.');
+      'No matching client node found for ' + serverNodeKey + '. You can fix this by assigning this element a unique id attribute.'
+    );
     return null;
   }
 }

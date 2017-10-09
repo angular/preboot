@@ -1,13 +1,12 @@
-
 // basically this is used to identify which events to listen for and what we do with them
 export interface EventSelector {
-  selector: string;                 // same as jQuery; selector for nodes
-  events: [string];                 // array of event names to listen for
-  keyCodes?: [number];              // key codes to watch out for
-  preventDefault?: boolean;         // will prevent default handlers if true
-  freeze?: boolean;                 // if  true, the UI will freeze when this event occurs
-  action?: Function;                // custom action to take with this event
-  noReplay?: boolean;               // if true, no replay will occur
+  selector: string; // same as jQuery; selector for nodes
+  events: [string]; // array of event names to listen for
+  keyCodes?: [number]; // key codes to watch out for
+  preventDefault?: boolean; // will prevent default handlers if true
+  freeze?: boolean; // if  true, the UI will freeze when this event occurs
+  action?: Function; // custom action to take with this event
+  noReplay?: boolean; // if true, no replay will occur
 }
 
 export interface PrebootReplayOptions {
@@ -23,10 +22,10 @@ export interface ServerClientRoot {
 
 // interface for the options that can be passed into preboot
 export interface PrebootRecordOptions {
-  minify?: boolean;                 // if true, client code generated will be uglified
-  buffer?: boolean;                 // if true, attempt to buffer client rendering to hidden div
+  minify?: boolean; // if true, client code generated will be uglified
+  buffer?: boolean; // if true, attempt to buffer client rendering to hidden div
   eventSelectors?: EventSelector[]; // when any of these events occur, they are recorded
-  appRoot: string | string[];       // define selectors for one or more server roots
+  appRoot: string | string[]; // define selectors for one or more server roots
 }
 
 // our wrapper around DOM events in preboot
@@ -64,9 +63,9 @@ export interface NodeContext {
   node: Element;
   nodeKey?: string;
   selection?: {
-    start: number,
-    end: number,
-    direction: string
+    start: number;
+    end: number;
+    direction: string;
   };
 }
 
@@ -134,6 +133,9 @@ export interface Document {
   querySelector?(selector?: string): Element;
   querySelectorAll?(selector?: string): Element[];
   createElement?(elementName?: string): Element;
+  dispatchEvent(event: Event): boolean;
 }
 
-export interface ComputedStyle { getPropertyValue(prop: string): string; }
+export interface ComputedStyle {
+  getPropertyValue(prop: string): string;
+}

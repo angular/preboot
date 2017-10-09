@@ -30,7 +30,7 @@ export function getNodeKeyForPreboot(nodeContext: NodeContext): string {
   let key = name + '_' + root.serverSelector;
   const len = ancestors.length;
 
-  for (let i = (len - 1); i >= 0; i--) {
+  for (let i = len - 1; i >= 0; i--) {
     temp = ancestors[i];
 
     if (temp.childNodes && i > 0) {

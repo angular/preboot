@@ -12,13 +12,12 @@ export const defaultOptions = <PrebootRecordOptions>{
   // these are the default events are are listening for an transfering from
   // server view to client view
   eventSelectors: [
-
     // for recording changes in form elements
     {
       selector: 'input,textarea',
       events: ['keypress', 'keyup', 'keydown', 'input', 'change']
     },
-    {selector: 'select,option', events: ['change']},
+    { selector: 'select,option', events: ['change'] },
 
     // when user hits return button in an input box
     {
@@ -90,15 +89,13 @@ export function getInlinePrebootCode(customOptions?: PrebootRecordOptions): stri
   validateOptions(opts);
 
   const optsStr = stringifyWithFunctions(opts);
-  const eventRecorderFn = opts.minify ?
-    require('../../dist/preboot.min.js') :
-    require('../../dist/preboot.js');
+  const eventRecorderFn = opts.minify ? require('../../dist/preboot.min.js') : require('../../dist/preboot.js');
 
   // remove the function() {} wrapper so we have the bare functions
   const eventRecorderFnStr = eventRecorderFn.toString();
   const openSquiggle = eventRecorderFnStr.indexOf('{');
   let eventRecorderCode = eventRecorderFnStr.substring(openSquiggle + 1);
-  eventRecorderCode = eventRecorderCode.substring(0, eventRecorderCode.length - 1)
+  eventRecorderCode = eventRecorderCode.substring(0, eventRecorderCode.length - 1);
 
   // wrap inline preboot code with a self executing function in order to create scope
   return `(function(){${eventRecorderCode}init(${optsStr})})()`;
@@ -111,9 +108,10 @@ export function getInlinePrebootCode(customOptions?: PrebootRecordOptions): stri
 export function validateOptions(opts: PrebootRecordOptions) {
   if (!opts.appRoot || !opts.appRoot.length) {
     throw new Error(
-        'The appRoot is missing from preboot options. ' +
+      'The appRoot is missing from preboot options. ' +
         'This is needed to find the root of your application. ' +
-        'Set this value in the preboot options to be a selector for the root element of your app.');
+        'Set this value in the preboot options to be a selector for the root element of your app.'
+    );
   }
 }
 
@@ -161,7 +159,6 @@ export function stringifyWithFunctions(obj: Object): string {
 
   // first stringify except mark off functions with markers
   let str = JSON.stringify(obj, function(_key, value) {
-
     // if the value is a function, we want to wrap it with markers
     if (!!(value && value.constructor && value.call && value.apply)) {
       return FUNC_START + value.toString() + FUNC_STOP;
@@ -181,8 +178,7 @@ export function stringifyWithFunctions(obj: Object): string {
     fn = str.substring(startFuncIdx + FUNC_START.length, stopFuncIdx);
     fn = fn.replace(/\\n/g, '\n');
 
-    str = str.substring(0, startFuncIdx - 1) + fn +
-        str.substring(stopFuncIdx + FUNC_STOP.length + 1);
+    str = str.substring(0, startFuncIdx - 1) + fn + str.substring(stopFuncIdx + FUNC_STOP.length + 1);
     startFuncIdx = str.indexOf(FUNC_START);
   }
 

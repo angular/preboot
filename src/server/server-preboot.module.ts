@@ -11,12 +11,8 @@ import { PlatformState } from '@angular/platform-server';
 import { PrebootRecordOptions } from '../common';
 import { getInlinePrebootCode } from './inline.preboot.code';
 
-export function loadPrebootFactory(
-  state: PlatformState,
-  rendererFactory: RendererFactory2,
-  opts: PrebootRecordOptions
-) {
-  return function () {
+export function loadPrebootFactory(state: PlatformState, rendererFactory: RendererFactory2, opts: PrebootRecordOptions) {
+  return function() {
     const doc = state.getDocument();
     const inlinePrebootCode = getInlinePrebootCode(opts);
     addInlineCodeToDocument(inlinePrebootCode, doc, rendererFactory);
@@ -28,7 +24,6 @@ export const PREBOOT_RECORD_OPTIONS = new InjectionToken<PrebootRecordOptions>('
 // only thing this does is modify the document
 @NgModule()
 export class ServerPrebootModule {
-
   // user can override the default preboot options by passing them in here
   static recordEvents(opts: PrebootRecordOptions = { appRoot: 'app-root' }): ModuleWithProviders {
     return {
@@ -36,7 +31,6 @@ export class ServerPrebootModule {
       providers: [
         { provide: PREBOOT_RECORD_OPTIONS, useValue: opts },
         {
-
           // this likely will never be injected but need something to run the
           // factory function
           provide: APP_BOOTSTRAP_LISTENER,

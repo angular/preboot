@@ -18,7 +18,7 @@ a server view is visible until the client view takes over control of the page.
 cd into your app root and run the following command:
 
 ```
-npm i preboot@5.0.0 --save
+npm i preboot --save
 ```
 
 There are two parts of preboot (server configuration and browser configuration). For each part of preboot, there is a slightly different API for Angular and non-Angular apps. The following sections covers these 4 different configurations:
@@ -176,4 +176,16 @@ class Foo {
     this.replayer.replayAll();
   }
 }
+```
+
+#### PrebootComplete
+
+When you are manually replaying events, you often will want to know when Preboot
+is done replaying events and switching the buffers. To do this, use the following
+code in your app:
+
+```
+window.document.addEventListener('PrebootComplete', () => {
+  // put your code here that you want to run once preboot is complete
+});
 ```
