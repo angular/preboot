@@ -10,12 +10,14 @@ import {
 import { PlatformState } from '@angular/platform-server';
 import { PrebootRecordOptions } from '../common';
 import { getInlinePrebootCode } from './inline.preboot.code';
+import {PREBOOT_NONCE} from '../tokens';
 
-export function loadPrebootFactory(state: PlatformState, rendererFactory: RendererFactory2, opts: PrebootRecordOptions) {
+export function loadPrebootFactory(state: PlatformState, rendererFactory: RendererFactory2, opts: PrebootRecordOptions,
+                                   nonce: string) {
   return function() {
     const doc = state.getDocument();
     const inlinePrebootCode = getInlinePrebootCode(opts);
-    addInlineCodeToDocument(inlinePrebootCode, doc, rendererFactory);
+    addInlineCodeToDocument(inlinePrebootCode, doc, rendererFactory, nonce);
   };
 }
 
@@ -41,17 +43,19 @@ export class ServerPrebootModule {
           multi: true,
 
           // we need access to the document and renderer
-          deps: [PlatformState, RendererFactory2, PREBOOT_RECORD_OPTIONS]
+          deps: [PlatformState, RendererFactory2, PREBOOT_RECORD_OPTIONS, PREBOOT_NONCE]
         }
       ]
     };
   }
 }
 
-export function addInlineCodeToDocument(inlineCode: string, doc: Document, rendererFactory: RendererFactory2) {
+export function addInlineCodeToDocument(inlineCode: string, doc: Document, rendererFactory: RendererFactory2,
+                                        nonce: string) {
   const renderType: RendererType2 = { id: '-1', encapsulation: ViewEncapsulation.None, styles: [], data: {} };
   const renderer = rendererFactory.createRenderer(doc, renderType);
   const script = renderer.createElement('script');
+  renderer.setProperty(script, 'nonce', nonce);
   renderer.setValue(script, inlineCode);
   renderer.insertBefore(doc.head, script, doc.head.firstChild);
 }
