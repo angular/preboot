@@ -10,10 +10,8 @@ import {
 import { PlatformState } from '@angular/platform-server';
 import { PrebootRecordOptions } from '../common';
 import { getInlinePrebootCode } from './inline.preboot.code';
-import {PREBOOT_NONCE} from '../tokens';
 
-export function loadPrebootFactory(state: PlatformState, rendererFactory: RendererFactory2, opts: PrebootRecordOptions,
-                                   nonce: string) {
+export function loadPrebootFactory(state: PlatformState, rendererFactory: RendererFactory2, opts: PrebootRecordOptions, nonce: string) {
   return function() {
     const doc = state.getDocument();
     const inlinePrebootCode = getInlinePrebootCode(opts);
@@ -21,6 +19,7 @@ export function loadPrebootFactory(state: PlatformState, rendererFactory: Render
   };
 }
 
+export const PREBOOT_NONCE = new InjectionToken<string>('PrebootNonce');
 export const PREBOOT_RECORD_OPTIONS = new InjectionToken<PrebootRecordOptions>('PrebootRecordOptions');
 
 // only thing this does is modify the document
@@ -32,6 +31,7 @@ export class ServerPrebootModule {
       ngModule: ServerPrebootModule,
       providers: [
         { provide: PREBOOT_RECORD_OPTIONS, useValue: opts },
+        { provide: PREBOOT_NONCE, useValue: Math.floor(Math.random() * 10000) + '' },
         {
           // this likely will never be injected but need something to run the
           // factory function
@@ -50,8 +50,7 @@ export class ServerPrebootModule {
   }
 }
 
-export function addInlineCodeToDocument(inlineCode: string, doc: Document, rendererFactory: RendererFactory2,
-                                        nonce: string) {
+export function addInlineCodeToDocument(inlineCode: string, doc: Document, rendererFactory: RendererFactory2, nonce: string) {
   const renderType: RendererType2 = { id: '-1', encapsulation: ViewEncapsulation.None, styles: [], data: {} };
   const renderer = rendererFactory.createRenderer(doc, renderType);
   const script = renderer.createElement('script');
