@@ -189,3 +189,63 @@ window.document.addEventListener('PrebootComplete', () => {
   // put your code here that you want to run once preboot is complete
 });
 ```
+
+#### Adding a nonce
+
+If you're using a CSP, you'll need to add a `nonce` property to preboot's inline script.
+Preboot allows you to configure this by exporting an optional `PREBOOT_NONCE` token.
+Example usage is as follows (for an Express server):
+
+```typescript
+import {PREBOOT_NONCE} from 'preboot/src';
+import * as express from 'express';
+import {v4} from 'uuid';
+import * as csp from 'helmet-csp';
+
+const app = express();
+
+app.use((req, res, next) => {
+  res.locals.nonce = v4();
+  next();
+});
+
+app.use(csp({
+  directives: {
+    scriptSrc: [`'self'`, (req, res) => `'nonce-${ res.locals.nonce }'`],
+    ...
+  }
+});
+
+... express boilerplate ...
+
+/* when it comes time to render the request, we can inject our new token */
+
+app.get('*', (req, res) => {
+  res.render('index', {
+    req,
+    res,
+    providers: [
+      {
+	  provide: PREBOOT_NONCE,
+	  useValue: res.locals.nonce
+      }
+    ]
+  });
+});
+
+... other express route handling (see Universal guide for details) ...
+```
+
+Please note that only the nonce tag will appear on the script,
+**the value is not rendered in modern browsers**. If you want to make
+sure your nonce is generating correctly, you can add a callback
+onto your render method to examine the resultant HTML as follows:
+
+```typescript
+res.render('index', (req, res) => {
+  ...
+}, function(error, html) {
+  console.log(html.substring(0, 50)); // we only care about the top part
+  res.send(html);
+});
+```
