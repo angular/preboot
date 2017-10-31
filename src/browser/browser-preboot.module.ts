@@ -1,23 +1,7 @@
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/first';
 import { APP_BOOTSTRAP_LISTENER, ModuleWithProviders, NgModule, InjectionToken, ApplicationRef } from '@angular/core';
 import { PrebootReplayOptions } from '../common';
 import { EventReplayer } from './event.replayer';
-
-export function eventReplayerFactory(appRef: ApplicationRef, replayer: EventReplayer, opts: PrebootReplayOptions) {
-  return function() {
-    // if noReplay it means user is going to call replayAll() manually
-    if (!opts.noReplay) {
-      // we will wait until the application is stable, then replay
-      appRef.isStable
-        .filter(stable => stable)
-        .first()
-        .subscribe(() => {
-          replayer.replayAll();
-        });
-    }
-  };
-}
+import {eventReplayerFactory} from './event.replayer.factory';
 
 export const PREBOOT_REPLAY_OPTIONS = new InjectionToken<PrebootReplayOptions>('PrebootReplayOptions');
 

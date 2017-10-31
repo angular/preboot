@@ -4,3 +4,16 @@
 .DS_Store
 *.pid
 *.seed
+
+# top-level files
+CONTRIBUTING.md
+package-lock.json
+prettier.config.js
+protractor.conf.js
+tsconfig.json
+tslint.json
+
+# top-level directories
+build
+src
+test
