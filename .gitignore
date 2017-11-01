@@ -5,6 +5,7 @@ logs
 .vscode
 .DS_Store
 **/.DS_Store
+lib
 
 # Runtime data
 pids
@@ -56,3 +57,5 @@ test/coverage
 /record.d.ts
 /replay.js
 /replay.d.ts
+
+*.ngfactory.ts

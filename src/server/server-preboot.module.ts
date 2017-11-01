@@ -3,8 +3,6 @@ import {
     ModuleWithProviders,
     NgModule,
     RendererFactory2,
-    RendererType2,
-    ViewEncapsulation,
     APP_BOOTSTRAP_LISTENER,
     Inject,
     Optional,
@@ -12,15 +10,8 @@ import {
 } from '@angular/core';
 import { PlatformState } from '@angular/platform-server';
 import { PrebootRecordOptions } from '../common';
-import { getInlinePrebootCode } from './inline.preboot.code';
+import {loadPrebootFactory} from './server.factory';
 
-export function loadPrebootFactory(state: PlatformState, rendererFactory: RendererFactory2, opts: PrebootRecordOptions, nonceOp: NonceOp) {
-  return function() {
-    const doc = state.getDocument();
-    const inlinePrebootCode = getInlinePrebootCode(opts);
-    addInlineCodeToDocument(inlinePrebootCode, doc, rendererFactory, nonceOp.nonce);
-  };
-}
 
 export class NonceOp {
   constructor(@Optional() @Inject(forwardRef(() => PREBOOT_NONCE)) public nonce: string) { }
@@ -55,15 +46,4 @@ export class ServerPrebootModule {
       ]
     };
   }
-}
-
-export function addInlineCodeToDocument(inlineCode: string, doc: Document, rendererFactory: RendererFactory2, nonce: string) {
-  const renderType: RendererType2 = { id: '-1', encapsulation: ViewEncapsulation.None, styles: [], data: {} };
-  const renderer = rendererFactory.createRenderer(doc, renderType);
-  const script = renderer.createElement('script');
-  if (nonce) {
-      renderer.setProperty(script, 'nonce', nonce);
-  }
-  renderer.setValue(script, inlineCode);
-  renderer.insertBefore(doc.head, script, doc.head.firstChild);
 }

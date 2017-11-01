@@ -1,27 +1,34 @@
 {
   "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "moduleResolution": "node",
     "declaration": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "inlineSourceMap": true,
     "noEmitOnError": true,
     "noImplicitAny": true,
-    "rootDir": ".",
-    "inlineSourceMap": true,
-    "target": "es5",
+    "outDir": "./lib",
     "lib": [
       "es6",
       "dom"
     ],
-    "baseUrl": ""
+    "baseUrl": "."
   },
   "include": [
-    "src",
+    "src/**/*.ts"
+  ],
+  "exclude": [
     "test",
-    "record.ts",
-    "replay.ts",
-    "browser.ts",
-    "server.ts"
-  ]
+    "node_modules"
+  ],
+  "files": [
+    "src/index.ts"
+  ],
+  "angularCompilerOptions": {
+    "skipTemplateCodegen": true,
+    "flatModuleId": "preboot",
+    "strictMetadataEmit": true
+  }
 }
