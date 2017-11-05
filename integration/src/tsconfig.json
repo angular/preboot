@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "stripInternal": false,
+    "experimentalDecorators": true,
+    "noUnusedParameters": false,
+    "strictNullChecks": false,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noImplicitAny": true,
+    "inlineSources": true,
+    "outDir": "../out-tsc/e2e/",
+    "rootDir": ".",
+    "sourceMap": true,
+    "target": "es5",
+    "lib": ["es2015", "dom"],
+    "skipLibCheck": true,
+    "typeRoots": [
+      "../../node_modules/@types/!(node)"
+    ],
+    "baseUrl": "./"
+  },
+  "files": [
+    "main.ts"
+  ],
+  "angularCompilerOptions": {
+    "annotateForClosureCompiler": true,
+    "skipMetadataEmit": true
+  }
+}

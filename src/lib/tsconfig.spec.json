@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.lib",
+  "compilerOptions": {
+    "importHelpers": false,
+    "module": "commonjs",
+    "target": "es5",
+    "types": ["jasmine"],
+    "paths": {
+      "preboot/*": ["./*"]
+    },
+    "experimentalDecorators": true,
+    "strictNullChecks": false,
+    "outDir": "../../out-tsc/spec/"
+  },
+  "include": [
+    "**/*.spec.ts",
+    "index.ts"
+  ]
+}
