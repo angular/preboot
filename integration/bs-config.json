@@ -1,0 +1,11 @@
+{
+  "open": false,
+  "logLevel": "silent",
+  "port": 9393,
+  "server": {
+    "baseDir": "dist",
+    "middleware": {
+      "0": null
+    }
+  }
+}

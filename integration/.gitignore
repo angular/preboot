@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+src/**/*.js
+*.js.map
+e2e/**/*.js
+e2e/**/*.js.map
+out-tsc/*
+dist/*

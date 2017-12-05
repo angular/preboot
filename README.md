@@ -21,62 +21,38 @@ cd into your app root and run the following command:
 npm i preboot --save
 ```
 
-There are two parts of preboot (server configuration and browser configuration). For each part of preboot, there is a slightly different API for Angular and non-Angular apps. The following sections covers these 4 different configurations:
+The following sections covers the three different configurations of preboot:
 
-- Angular Server Configuration
-- Angular Browser Configuration
+- Angular Configuration
 - Non-Angular Server Configuration
 - Non-Angular Browser Configuration
 
-#### Angular Server Configuration
+#### Angular Configuration
 
-```
+```typescript
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ServerModule } from '@angular/platform-server';
-import { ServerPrebootModule } from 'preboot/server';
+import { PrebootModule } from 'preboot';
 import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule.withServerTransition({ appId: 'foo' }),
-    ServerModule,
-    ServerPrebootModule.recordEvents({ appRoot: 'app-root' })
+    PrebootModule.withConfig({ appRoot: 'app-root' })
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
 ```
 
-The key part here for preboot is to include `ServerPrebootModule.recordEvents({ appRoot: 'app-root' })` where the `appRoot`
-is the selector to find the root of your application. The options you can pass into `recordEvents()` are in the [PrebootRecordOptions](#PrebootRecordOptions) section below. In most cases, however, you will only need to specify the `appRoot`.
-
-#### Angular Browser Configuration
-
-```
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserPrebootModule } from 'preboot/browser';
-import { AppComponent } from './app.component';
-
-@NgModule({
-  declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    BrowserPrebootModule.replayEvents()
-  ],
-  bootstrap: [AppComponent]
-})
-export class AppModule { }
-```
-
-The key part here for preboot is to include `BrowserPrebootModule.replayEvents()`. You can optionally pass an object into `replayEvents()` that is detailed in the [PrebootReplayOptions](#PrebootReplayOptions) section further below. In most cases, however, you can just rely on the preset defaults.
+The key part here for preboot is to include `PrebootModule.withConfig({ appRoot: 'app-root' })` where the `appRoot`
+is the selector(s) to find the root of your application. The options you can pass into `withConfig()` are in the [PrebootOptions](#PrebootOptions) section below. In most cases, however, you will only need to specify the `appRoot`.
 
 #### Non-Angular Server Configuration
 
 ```
-import { getInlinePrebootCode } from 'preboot/record';
+import { getInlinePrebootCode } from 'preboot';
 
 const prebootOptions = {};  // see PrebootRecordOptions section below
 const inlineCode = getInlinePrebootCode(prebootOptions);
@@ -88,7 +64,7 @@ const inlineCode = getInlinePrebootCode(prebootOptions);
 #### Non-Angular Browser Configuration
 
 ```
-import { EventReplayer } from 'preboot/replay';
+import { EventReplayer } from 'preboot';
 
 const replayer = new EventReplayer();
 
@@ -96,17 +72,42 @@ const replayer = new EventReplayer();
 replayer.replayAll();
 ```
 
-#### PrebootRecordOptions
+#### PrebootOptions
  
 * `appRoot` (**required**) - One or more selectors for apps in the page (i.e. so one string or an array of strings).
 * `buffer` (default true) - If true, preboot will attempt to buffer client rendering to an extra hidden div. In most
 cases you will want to leave the default (i.e. true) but may turn off if you are debugging an issue.
-* `minify` (default true) - If true, the inline code for recording will be minified in the server view. We recommend
-only setting this to false if you are debugging an issue.
+* `minify` (deprecated) - minification has been removed in v6. Minification should be handled by the end-user
 * `eventSelectors` (defaults below) - This is an array of objects which specify what events preboot should be listening for 
 on the server view and how preboot should replay those events to the client view. 
 See Event Selector section below for more details but note that in most cases, you can just rely on the defaults
 and you don't need to explicitly set anything here.
+* `noReplay` (default false) - The only reason why you would want to set this to true is if you want to
+manually trigger the replay yourself. This contrasts with the event selector `noReplay`, because this option is global
+
+This comes in handy for situations where you want to hold off
+on the replay and buffer switch until AFTER some async events occur (i.e. route loading, http calls, etc.). By
+default, replay occurs right after bootstrap is complete. In some apps, there are more events after bootstrap
+however where the page continues to change in significant ways. Basically if you are making major changes to
+the page after bootstrap then you will see some jank unless you set `noReplay` to `true` and then trigger replay
+yourself once you know that all async events are complete.
+
+To manually trigger replay, simply inject the EventReplayer like this:
+
+```
+import { Injectable } from '@angular/core';
+import { EventReplayer } from 'preboot';
+
+@Injectable()
+class Foo {
+  constructor(private replayer: EventReplayer) {}
+
+  // you decide when to call this based on what your app is doing
+  manualReplay() {
+    this.replayer.replayAll();
+  }
+}
+```
 
 **Event Selectors**
 
@@ -147,37 +148,6 @@ var eventSelectors = [
 ];
 ```
 
-#### PrebootReplayOptions
-
-This is only used with the Angular browser configuration for preboot.
-
-* `noReplay` (default false) - The only reason why you would want to set this to true is if you want to
-manually trigger the replay yourself. 
-
-This comes in handy for situations where you want to hold off
-on the replay and buffer switch until AFTER some async events occur (i.e. route loading, http calls, etc.). By
-default, replay occurs right after bootstrap is complete. In some apps, there are more events after bootstrap
-however where the page continues to change in significant ways. Basically if you are making major changes to
-the page after bootstrap then you will see some jank unless you set `noReplay` to `true` and then trigger replay
-yourself once you know that all async events are complete.
-
-To manually trigger replay, simply inject the EventReplayer like this:
-
-```
-import { Injectable } from '@angular/core';
-import { EventReplayer } from 'preboot/browser';
-
-@Injectable()
-class Foo {
-  constructor(private replayer: EventReplayer) {}
-
-  // you decide when to call this based on what your app is doing
-  manualReplay() {
-    this.replayer.replayAll();
-  }
-}
-```
-
 #### PrebootComplete
 
 When you are manually replaying events, you often will want to know when Preboot
@@ -197,7 +167,7 @@ Preboot allows you to configure this by exporting an optional `PREBOOT_NONCE` to
 Example usage is as follows (for an Express server):
 
 ```typescript
-import {PREBOOT_NONCE} from 'preboot/src';
+import {PREBOOT_NONCE} from 'preboot';
 import * as express from 'express';
 import {v4} from 'uuid';
 import * as csp from 'helmet-csp';
@@ -226,8 +196,8 @@ app.get('*', (req, res) => {
     res,
     providers: [
       {
-	  provide: PREBOOT_NONCE,
-	  useValue: res.locals.nonce
+        provide: PREBOOT_NONCE,
+        useValue: res.locals.nonce
       }
     ]
   });

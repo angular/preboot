@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/lib-es2015/",
+    "target": "es2015",
+    "module": "es2015",
+    "rootDir": "./",
+    "baseUrl": ".",
+    "types": []
+  },
+  "files": [
+    "./public-api.ts",
+    "./typings.d.ts"
+  ],
+  "angularCompilerOptions": {
+    "annotateForClosureCompiler": true,
+    "strictMetadataEmit": true,
+    "skipTemplateCodegen": true,
+    "flatModuleOutFile": "index.js",
+    "flatModuleId": "preboot",
+    "genDir": "../../out-tsc/lib-gen-dir/"
+  }
+}

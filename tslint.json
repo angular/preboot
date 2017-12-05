@@ -94,6 +94,7 @@
       "check-operator",
       "check-separator",
       "check-type"
-    ]
+    ],
+    "import-blacklist": [true, "rxjs", "rxjs/operators"]
   }
 }

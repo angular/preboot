@@ -1,27 +1,17 @@
 {
   "compilerOptions": {
     "declaration": true,
+    "stripInternal": false,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "module": "commonjs",
+    "noUnusedParameters": true,
+    "strictNullChecks": true,
+    "importHelpers": true,
+    "newLine": "lf",
     "moduleResolution": "node",
-    "noEmitOnError": true,
-    "noImplicitAny": true,
-    "rootDir": ".",
-    "inlineSourceMap": true,
-    "target": "es5",
-    "lib": [
-      "es6",
-      "dom"
-    ],
-    "baseUrl": ""
-  },
-  "include": [
-    "src",
-    "test",
-    "record.ts",
-    "replay.ts",
-    "browser.ts",
-    "server.ts"
-  ]
+    "sourceMap": true,
+    "inlineSources": true,
+    "lib": ["es2015", "dom"],
+    "skipLibCheck": true,
+    "noImplicitAny": true
+  }
 }
