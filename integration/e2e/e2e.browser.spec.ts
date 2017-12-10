@@ -1,18 +1,18 @@
-import { browser, element, by } from 'protractor';
+import {browser, $} from 'protractor';
 import { loadServerView, loadClientView } from './e2e.utils';
 
 describe('e2e test preboot', function () {
 
   it('should validate server view', function () {
     loadServerView()
-      .then(() => element(by.css('h1')).getText())
+      .then(() => $('h1').getText())
       .then(text => expect(text).toEqual('server view'));
   });
 
   it('should validate basic client view', function () {
     loadServerView()
       .then(() => loadClientView())
-      .then(() => element(by.css('h1')).getText())
+      .then(() => $('h1').getText())
       .then(text => expect(text).toEqual('client view'));
   });
 
@@ -20,10 +20,10 @@ describe('e2e test preboot', function () {
     const input = 'foo man choo';
 
     loadServerView()
-      .then(() => element(by.css('#myTextBox')).click())
+      .then(() => $('#myTextBox').click())
       .then(() => browser.actions().sendKeys(input).perform())
       .then(() => loadClientView())
-      .then(() => element(by.css('#myTextBox')).getAttribute('value'))
+      .then(() => $('#myTextBox').getAttribute('value'))
       .then(actual => expect(actual).toEqual(input));
   });
 
@@ -31,10 +31,10 @@ describe('e2e test preboot', function () {
     const expected = 'foo';
 
     loadServerView()
-      .then(() => element(by.css('#mySelect')).click())
-      .then(() => element(by.css('#myVal')).click())
+      .then(() => $('#mySelect').click())
+      .then(() => $('#myVal').click())
       .then(() => loadClientView())
-      .then(() => element(by.css('#mySelect')).element(by.css('option:checked')).getText())
+      .then(() => $('#mySelect').$('option:checked').getText())
       .then(actual => expect(actual).toEqual(expected));
   });
 });

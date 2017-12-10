@@ -110,9 +110,7 @@ export class EventReplayer {
 
     // if client node can't be found, log a warning
     if (!clientNode) {
-      console.warn(
-        'Trying to dispatch event ' + event.type + ' to node ' + nodeKey + ' but could not find client node. ' + 'Server node is: '
-      );
+      console.warn(`Trying to dispatch event ${event.type} to node ${nodeKey} but could not find client node. Server node is: `);
       console.log(serverNode);
       return;
     }
@@ -152,9 +150,7 @@ export class EventReplayer {
       serverView.remove ? serverView.remove() : (serverView.style.display = 'none');
 
       // now add the client view
-      if (clientView.style) {
-        clientView.style.display = display;
-      }
+      clientView.style.display = display;
     } catch (ex) {
       console.error(ex);
     }
@@ -183,10 +179,10 @@ export class EventReplayer {
     }
 
     // remove the freeze overlay if it exists
-    const body = this.getWindow().document.body;
-    const prebootOverlay = body.querySelector('#prebootOverlay') as HTMLElement;
+    const doc = this.getWindow().document;
+    const prebootOverlay = doc.body.querySelector('#prebootOverlay') as HTMLElement;
     if (prebootOverlay) {
-      prebootOverlay.remove ? prebootOverlay.remove() : (prebootOverlay.style.display = 'none');
+      prebootOverlay.remove();
     }
 
     // clear out the data stored for each app
@@ -195,7 +191,7 @@ export class EventReplayer {
 
     // sent event to documernt that signals preboot complete
     const completeEvent = new Event('PrebootComplete');
-    this.getWindow().document.dispatchEvent(completeEvent);
+    doc.dispatchEvent(completeEvent);
   }
 
   setFocus(activeNode: NodeContext) {
@@ -269,7 +265,6 @@ export class EventReplayer {
     // match
     const rootClientNode = root.clientNode;
     let clientNodes = rootClientNode.querySelectorAll(selector);
-    console.warn('clientNodes', JSON.stringify(rootClientNode), JSON.stringify(rootClientNode.children), selector);
 
     // if nothing found, then just try the tag name as a final option
     if (!clientNodes.length) {

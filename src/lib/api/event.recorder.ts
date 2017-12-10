@@ -41,9 +41,9 @@ export function init(opts: PrebootOptions, win?: PrebootWindow) {
  */
 export function waitUntilReady(data: PrebootData, win?: PrebootWindow) {
   const theWindow = <PrebootWindow>(win || window);
-  const document = <Document>(theWindow.document || {});
+  const doc = <Document>(theWindow.document || {});
 
-  if (document.body) {
+  if (doc.body) {
     start(data);
   } else {
     setTimeout(function() {
@@ -106,17 +106,12 @@ export function createOverlay(document: Document): Element | undefined {
   let overlay = undefined;
   if (document.createElement) {
     overlay = document.createElement('div');
-    if (overlay.setAttribute) {
-      overlay.setAttribute('id', 'prebootOverlay');
-      overlay.setAttribute(
-        'style',
-        'display:none;position:absolute;left:0;' + 'top:0;width:100%;height:100%;z-index:999999;background:black;opacity:.3'
-      );
-      if (document.body && document.body.appendChild) {
-        document.body.appendChild(overlay);
-      }
-    }
-
+    overlay.setAttribute('id', 'prebootOverlay');
+    overlay.setAttribute(
+      'style',
+      'display:none;position:absolute;left:0;' + 'top:0;width:100%;height:100%;z-index:999999;background:black;opacity:.3'
+    );
+    document.body.appendChild(overlay);
   }
 
   return overlay;
@@ -132,8 +127,8 @@ export function createOverlay(document: Document): Element | undefined {
  * @param opts Options passed in by the user to init()
  * @returns ServerClientRoot[] An array of root info for each app
  */
-export function getAppRoots(document: Document, opts: PrebootOptions): ServerClientRoot[] {
-  const roots: ServerClientRoot[] = [];
+export function getAppRoots(doc: Document, opts: PrebootOptions): ServerClientRoot[] {
+  let roots: ServerClientRoot[] = [];
 
   // loop through any appRoot selectors to add them to the list of roots
   if (opts.appRoot && opts.appRoot.length) {
@@ -142,33 +137,26 @@ export function getAppRoots(document: Document, opts: PrebootOptions): ServerCli
     appRootSelectors.forEach((selector: any) => roots.push({ serverSelector: selector }));
   }
 
-  // now loop through the roots to get the nodes for each root
-  roots.forEach(function(root) {
-    if (document.querySelector) {
-      root.serverNode = document.querySelector(root.serverSelector) as HTMLElement;
-    }
+  return roots.map(root => {
+    root.serverNode = doc.querySelector(root.serverSelector) as HTMLElement;
     root.clientSelector = root.clientSelector || root.serverSelector;
 
     if (root.clientSelector !== root.serverSelector) {
       // if diff selectors, then just get the client node
-      if (document.querySelector) {
-        root.clientNode = document.querySelector(root.clientSelector) as HTMLElement;
-      }
-    } else if (opts.buffer) {
-      // if we are doing buffering, we need to create the buffer for the client
-      root.clientNode = createBuffer(root);
+      root.clientNode = doc.querySelector(root.clientSelector) as HTMLElement;
     } else {
+      // if we are doing buffering, we need to create the buffer for the client
       // else the client root is the same as the server
-      root.clientNode = root.serverNode;
+      root.clientNode = opts.buffer ? createBuffer(root) : root.serverNode;
     }
 
     // if no server node found, log error
     if (!root.serverNode) {
-      console.log('No server node found for selector: ' + root.serverSelector);
+      console.log(`No server node found for selector: ${root.serverSelector}`);
     }
-  });
 
-  return roots;
+    return root;
+  });
 }
 
 /**
@@ -196,12 +184,10 @@ export function handleEvents(prebootData: PrebootData, appData: PrebootAppData, 
 
   // we want to add an event listener for each node and each event
   for (const node of Array.from(nodes)) {
-    eventSelector.events.forEach(function(eventName: string) {
+    eventSelector.events.forEach((eventName: string) => {
       // get the appropriate handler and add it as an event listener
       const handler = createListenHandler(prebootData, eventSelector, appData, node);
-      if (node.addEventListener) {
-        node.addEventListener(eventName, handler);
-      }
+      node.addEventListener(eventName, handler);
 
       // need to keep track of listeners so we can do node.removeEventListener()
       // when preboot done
@@ -260,7 +246,7 @@ export function createListenHandler(
     const nodeKey = getNodeKeyForPreboot({ root: root, node: node });
 
     // if event on input or text area, record active node
-    if (CARET_EVENTS.indexOf(eventName) >= 0 && CARET_NODES.indexOf(node.tagName ? node.tagName : '') >= 0) {
+    if (CARET_EVENTS.indexOf(eventName) >= 0 && CARET_NODES.indexOf(node.tagName) >= 0) {
       prebootData.activeNode = {
         root: root,
         node: node,
@@ -276,16 +262,12 @@ export function createListenHandler(
       const overlay = prebootData.overlay as HTMLElement;
 
       // show the overlay
-      if (overlay && overlay.style) {
-        overlay.style.display = 'block';
-      }
+      overlay.style.display = 'block';
 
       // hide the overlay after 10 seconds just in case preboot.complete() never
       // called
-      setTimeout(function() {
-        if (overlay && overlay.style) {
-          overlay.style.display = 'none';
-        }
+      setTimeout(() => {
+        overlay.style.display = 'none';
       }, 10000);
     }
 
@@ -315,8 +297,8 @@ export function getSelection(node: HTMLInputElement): PrebootSelection {
   try {
     if (node.selectionStart || node.selectionStart === 0) {
       selection.start = node.selectionStart;
-      selection.end = node.selectionEnd ? node.selectionEnd : 0;
-      selection.direction = node.selectionDirection ? node.selectionDirection : '';
+      selection.end = node.selectionEnd;
+      selection.direction = node.selectionDirection;
     }
   } catch (ex) {}
 
@@ -340,18 +322,13 @@ export function createBuffer(root: ServerClientRoot): HTMLElement {
 
   // create shallow clone of server root
   const rootClientNode = serverNode.cloneNode(false) as HTMLElement;
-  if (rootClientNode) {
-    // we want the client to write to a hidden div until the time for switching
-    // the buffers
-    if (rootClientNode.style) {
-      rootClientNode.style.display = 'none';
-    }
 
-    // insert the client node before the server and return it
-    if (serverNode.parentNode.insertBefore) {
-      serverNode.parentNode.insertBefore(rootClientNode, serverNode);
-    }
-  }
+  // we want the client to write to a hidden div until the time for switching
+  // the buffers
+  rootClientNode.style.display = 'none';
+
+  // insert the client node before the server and return it
+  serverNode.parentNode.insertBefore(rootClientNode, serverNode);
 
   // return the rootClientNode
   return rootClientNode;
