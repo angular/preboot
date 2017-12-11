@@ -9,15 +9,12 @@ import {
   ViewEncapsulation,
   InjectionToken,
   APP_BOOTSTRAP_LISTENER,
-  ApplicationRef,
 } from '@angular/core';
 import {EventReplayer} from './api/event.replayer';
 import {DOCUMENT, isPlatformBrowser, isPlatformServer} from '@angular/common';
 import {getInlinePrebootCode} from './api/inline.preboot.code';
 import {PrebootOptions} from './common/preboot.interfaces';
 import {PREBOOT_NONCE} from './common/tokens';
-import {filter} from 'rxjs/operators/filter';
-import {take} from 'rxjs/operators/take';
 
 export const PREBOOT_OPTIONS = new InjectionToken<PrebootOptions>('PrebootOptions');
 
@@ -41,20 +38,13 @@ export function addScript(doc: Document, rendererFactory: RendererFactory2, reco
 
 }
 
-export function replay(appRef: ApplicationRef, eventReplayer: EventReplayer, replayOpts: PrebootOptions, platformId: Object) {
+export function replay(eventReplayer: EventReplayer, replayOpts: PrebootOptions, platformId: Object) {
   // necessary because of angular/angular/issues/14485
-  const res = () => new Promise((resolve) => {
+  const res = () => {
     if (isPlatformBrowser(platformId) && !replayOpts.noReplay) {
-      appRef.isStable
-        .pipe(
-          filter(stable => stable),
-          take(1)
-        ).subscribe(() => {
-          eventReplayer.replayAll();
-        });
+      eventReplayer.replayAll();
     }
-    resolve();
-  });
+  };
   return res;
 }
 
@@ -81,7 +71,7 @@ export class PrebootModule {
         {
           provide: APP_BOOTSTRAP_LISTENER,
           useFactory: replay,
-          deps: [ApplicationRef, EventReplayer, PREBOOT_OPTIONS, PLATFORM_ID],
+          deps: [EventReplayer, PREBOOT_OPTIONS, PLATFORM_ID],
           multi: true
         }
       ]

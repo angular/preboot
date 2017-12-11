@@ -18,7 +18,8 @@ export interface ServerClientRoot {
 
 // interface for the options that can be passed into preboot
 export interface PrebootOptions {
-  minify?: boolean; /** @deprecated minification has been removed in v6. Minification should be handled by the end-user */
+  /** @deprecated minification has been removed in v6. Minification should be handled by the end-user */
+  minify?: boolean;
   buffer?: boolean; // if true, attempt to buffer client rendering to hidden div
   eventSelectors?: EventSelector[]; // when any of these events occur, they are recorded
   appRoot: string | string[]; // define selectors for one or more server roots
