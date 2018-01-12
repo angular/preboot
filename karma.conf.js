@@ -22,9 +22,9 @@ module.exports = function (config) {
     customLaunchers: {
       // From the CLI. Not used here but interesting
       // chrome setup for travis CI using chromium
-      Chrome_travis_ci: {
-        base: 'Chrome',
-        flags: ['--no-sandbox']
+      CustomChrome: {
+        base: 'ChromeHeadless',
+        flags: process.env.TRAVIS && ['--no-sandbox']
       }
     },
 
@@ -56,7 +56,7 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: false,
-    browsers: ['Chrome'],
+    browsers: ['CustomChrome'],
     singleRun: false
   })
 };

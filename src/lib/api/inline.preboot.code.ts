@@ -1,5 +1,12 @@
-import { PrebootOptions } from '../common/preboot.interfaces';
-import { getNodeKeyForPreboot } from '../common/get-node-key';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+import {PrebootOptions} from '../common/preboot.interfaces';
+import {getNodeKeyForPreboot} from '../common/get-node-key';
 
 import {
   init,
@@ -23,8 +30,6 @@ const eventRecorder = {
   getSelection,
   createBuffer
 };
-
-declare var require: any;
 
 // exporting default options in case developer wants to use these + custom on
 // top
@@ -203,7 +208,8 @@ export function stringifyWithFunctions(obj: Object): string {
     fn = str.substring(startFuncIdx + FUNC_START.length, stopFuncIdx);
     fn = fn.replace(/\\n/g, '\n');
 
-    str = str.substring(0, startFuncIdx - 1) + fn + str.substring(stopFuncIdx + FUNC_STOP.length + 1);
+    str = str.substring(0, startFuncIdx - 1) + fn +
+      str.substring(stopFuncIdx + FUNC_STOP.length + 1);
     startFuncIdx = str.indexOf(FUNC_START);
   }
 

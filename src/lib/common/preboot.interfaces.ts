@@ -1,4 +1,11 @@
-// basically this is used to identify which events to listen for and what we do with them
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+// This is used to identify which events to listen for and what we do with them
 export interface EventSelector {
   selector: string; // same as jQuery; selector for nodes
   events: [string]; // array of event names to listen for
@@ -18,7 +25,7 @@ export interface ServerClientRoot {
 
 // interface for the options that can be passed into preboot
 export interface PrebootOptions {
-  /** @deprecated minification has been removed in v6. Minification should be handled by the end-user */
+  /** @deprecated minification has been removed in v6 */
   minify?: boolean;
   buffer?: boolean; // if true, attempt to buffer client rendering to hidden div
   eventSelectors?: EventSelector[]; // when any of these events occur, they are recorded
@@ -48,7 +55,8 @@ export interface PrebootAppData {
   events: PrebootEvent[];
 }
 
-// object that is used to keep track of all the preboot listeners (so we can remove the listeners later)
+// object that is used to keep track of all the preboot
+// listeners (so we can remove the listeners later)
 export interface PrebootEventListener {
   node: HTMLElement;
   eventName: string;
@@ -66,7 +74,7 @@ export interface NodeContext {
   root: ServerClientRoot;
   node: Element;
   nodeKey?: string;
-  selection?: PrebootSelection
+  selection?: PrebootSelection;
 }
 
 // interface for global object that contains all preboot data
@@ -79,8 +87,8 @@ export interface PrebootData {
 }
 
 export interface PrebootWindow {
-  prebootData: PrebootData,
-  prebootStarted: boolean,
+  prebootData: PrebootData;
+  prebootStarted: boolean;
   getComputedStyle: (elt: Element, pseudoElt?: string) => CSSStyleDeclaration;
-  document: Document
+  document: Document;
 }

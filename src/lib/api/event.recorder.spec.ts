@@ -1,6 +1,18 @@
-import { getMockElement } from '../common/preboot.mocks';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+import {getMockElement} from '../common/preboot.mocks';
 import {createBuffer, createListenHandler, getSelection} from './event.recorder';
-import {EventSelector, PrebootAppData, PrebootData, ServerClientRoot} from '../common/preboot.interfaces';
+import {
+  EventSelector,
+  PrebootAppData,
+  PrebootData,
+  ServerClientRoot,
+} from '../common/preboot.interfaces';
 
 describe('UNIT TEST event.recorder', function() {
   describe('createBuffer()', function() {

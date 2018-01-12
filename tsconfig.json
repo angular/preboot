@@ -10,8 +10,18 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "inlineSources": true,
-    "lib": ["es2015", "dom"],
+    "lib": [
+      "es2015",
+      "dom"
+    ],
     "skipLibCheck": true,
     "noImplicitAny": true
-  }
+  },
+  "include": [
+    "src/**/*.ts",
+    "tools/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules/"
+  ]
 }
