@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import {
   EventSelector,
   PrebootOptions,
@@ -6,7 +13,7 @@ import {
   DomEvent,
   PrebootWindow,
   ServerClientRoot,
-  PrebootSelection
+  PrebootSelection,
 } from '../common/preboot.interfaces';
 import {getNodeKeyForPreboot} from '../common/get-node-key';
 
@@ -41,9 +48,9 @@ export function init(opts: PrebootOptions, win?: PrebootWindow) {
  */
 export function waitUntilReady(data: PrebootData, win?: PrebootWindow) {
   const theWindow = <PrebootWindow>(win || window);
-  const doc = <Document>(theWindow.document || {});
+  const _document = <Document>(theWindow.document || {});
 
-  if (doc.body) {
+  if (_document.body) {
     start(data);
   } else {
     setTimeout(function() {
@@ -71,15 +78,15 @@ export function start(prebootData: PrebootData, win?: PrebootWindow) {
     theWindow.prebootStarted = true;
   }
 
-  const document = <Document>(theWindow.document || {});
+  const _document = <Document>(theWindow.document || {});
   const opts = prebootData.opts || ({} as PrebootOptions);
   const eventSelectors = opts.eventSelectors || [];
 
   // create an overlay that can be used later if a freeze event occurs
-  prebootData.overlay = createOverlay(document);
+  prebootData.overlay = createOverlay(_document);
 
   // get an array of all the root info
-  const appRoots = prebootData.opts ? getAppRoots(document, prebootData.opts) : [];
+  const appRoots = prebootData.opts ? getAppRoots(_document, prebootData.opts) : [];
 
   // for each app root
   appRoots.forEach(function(root) {
@@ -99,20 +106,18 @@ export function start(prebootData: PrebootData, win?: PrebootWindow) {
  * Create an overlay div and add it to the DOM so it can be used
  * if a freeze event occurs
  *
- * @param document The global document object (passed in for testing purposes)
+ * @param _document The global document object (passed in for testing purposes)
  * @returns Element The overlay node is returned
  */
-export function createOverlay(document: Document): Element | undefined {
-  let overlay = undefined;
-  if (document.createElement) {
-    overlay = document.createElement('div');
-    overlay.setAttribute('id', 'prebootOverlay');
-    overlay.setAttribute(
-      'style',
-      'display:none;position:absolute;left:0;' + 'top:0;width:100%;height:100%;z-index:999999;background:black;opacity:.3'
-    );
-    document.body.appendChild(overlay);
-  }
+export function createOverlay(_document: Document): Element | undefined {
+  let overlay = _document.createElement('div');
+  overlay.setAttribute('id', 'prebootOverlay');
+  overlay.setAttribute(
+    'style',
+    'display:none;position:absolute;left:0;' +
+    'top:0;width:100%;height:100%;z-index:999999;background:black;opacity:.3'
+  );
+  _document.body.appendChild(overlay);
 
   return overlay;
 }
@@ -123,12 +128,12 @@ export function createOverlay(document: Document): Element | undefined {
  * selectors for apps. This section option is useful for people that are doing their own
  * buffering (i.e. they have their own client and server view)
  *
- * @param document The global document object passed in for testing purposes
+ * @param _document The global document object passed in for testing purposes
  * @param opts Options passed in by the user to init()
  * @returns ServerClientRoot[] An array of root info for each app
  */
-export function getAppRoots(doc: Document, opts: PrebootOptions): ServerClientRoot[] {
-  let roots: ServerClientRoot[] = [];
+export function getAppRoots(_document: Document, opts: PrebootOptions): ServerClientRoot[] {
+  const roots: ServerClientRoot[] = [];
 
   // loop through any appRoot selectors to add them to the list of roots
   if (opts.appRoot && opts.appRoot.length) {
@@ -137,13 +142,14 @@ export function getAppRoots(doc: Document, opts: PrebootOptions): ServerClientRo
     appRootSelectors.forEach((selector: any) => roots.push({ serverSelector: selector }));
   }
 
-  return roots.map(root => {
-    root.serverNode = doc.querySelector(root.serverSelector) as HTMLElement;
+  // now loop through the roots to get the nodes for each root
+  roots.forEach(root => {
+    root.serverNode = _document.querySelector(root.serverSelector) as HTMLElement;
     root.clientSelector = root.clientSelector || root.serverSelector;
 
     if (root.clientSelector !== root.serverSelector) {
       // if diff selectors, then just get the client node
-      root.clientNode = doc.querySelector(root.clientSelector) as HTMLElement;
+      root.clientNode = _document.querySelector(root.clientSelector) as HTMLElement;
     } else {
       // if we are doing buffering, we need to create the buffer for the client
       // else the client root is the same as the server
@@ -154,9 +160,9 @@ export function getAppRoots(doc: Document, opts: PrebootOptions): ServerClientRo
     if (!root.serverNode) {
       console.log(`No server node found for selector: ${root.serverSelector}`);
     }
-
-    return root;
   });
+
+  return roots;
 }
 
 /**
@@ -166,7 +172,9 @@ export function getAppRoots(doc: Document, opts: PrebootOptions): ServerClientRo
  * @param appData
  * @param eventSelector
  */
-export function handleEvents(prebootData: PrebootData, appData: PrebootAppData, eventSelector: EventSelector) {
+export function handleEvents(prebootData: PrebootData,
+                             appData: PrebootAppData,
+                             eventSelector: EventSelector) {
   const serverRoot = appData.root.serverNode;
 
   // don't do anything if no server root
@@ -192,7 +200,11 @@ export function handleEvents(prebootData: PrebootData, appData: PrebootAppData, 
       // need to keep track of listeners so we can do node.removeEventListener()
       // when preboot done
       if (prebootData.listeners) {
-        prebootData.listeners.push({ node: node as HTMLElement, eventName: eventName, handler: handler });
+        prebootData.listeners.push({
+          node: node as HTMLElement,
+          eventName,
+          handler
+        });
       }
     });
   }
@@ -246,7 +258,8 @@ export function createListenHandler(
     const nodeKey = getNodeKeyForPreboot({ root: root, node: node });
 
     // if event on input or text area, record active node
-    if (CARET_EVENTS.indexOf(eventName) >= 0 && CARET_NODES.indexOf(node.tagName) >= 0) {
+    if (CARET_EVENTS.indexOf(eventName) >= 0 &&
+      CARET_NODES.indexOf(node.tagName ? node.tagName : '') >= 0) {
       prebootData.activeNode = {
         root: root,
         node: node,
@@ -274,7 +287,12 @@ export function createListenHandler(
     // we will record events for later replay unless explicitly marked as
     // doNotReplay
     if (!eventSelector.noReplay) {
-      appData.events.push({ node: node, nodeKey: nodeKey, event: event, name: eventName });
+      appData.events.push({
+        node,
+        nodeKey,
+        event,
+        name: eventName
+      });
     }
   };
 }
@@ -297,8 +315,8 @@ export function getSelection(node: HTMLInputElement): PrebootSelection {
   try {
     if (node.selectionStart || node.selectionStart === 0) {
       selection.start = node.selectionStart;
-      selection.end = node.selectionEnd;
-      selection.direction = node.selectionDirection;
+      selection.end = node.selectionEnd ? node.selectionEnd : 0;
+      selection.direction = node.selectionDirection ? node.selectionDirection : '';
     }
   } catch (ex) {}
 
@@ -316,13 +334,13 @@ export function createBuffer(root: ServerClientRoot): HTMLElement {
 
   // if no rootServerNode OR the selector is on the entire html doc or the body
   // OR no parentNode, don't buffer
-  if (!serverNode || !serverNode.parentNode || root.serverSelector === 'html' || root.serverSelector === 'body') {
+  if (!serverNode || !serverNode.parentNode ||
+    root.serverSelector === 'html' || root.serverSelector === 'body') {
     return serverNode as HTMLElement;
   }
 
   // create shallow clone of server root
   const rootClientNode = serverNode.cloneNode(false) as HTMLElement;
-
   // we want the client to write to a hidden div until the time for switching
   // the buffers
   rootClientNode.style.display = 'none';

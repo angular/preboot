@@ -1,10 +1,18 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 import {
   NodeContext,
   PrebootAppData,
   PrebootData,
   PrebootEvent,
   PrebootWindow,
-  ServerClientRoot} from '../common/preboot.interfaces';
+  ServerClientRoot,
+} from '../common/preboot.interfaces';
 import {getNodeKeyForPreboot} from '../common/get-node-key';
 
 export function _window(): PrebootWindow {
@@ -110,8 +118,10 @@ export class EventReplayer {
 
     // if client node can't be found, log a warning
     if (!clientNode) {
-      console.warn(`Trying to dispatch event ${event.type} to node ${nodeKey} but could not find client node. Server node is: `);
-      console.log(serverNode);
+      console.warn(
+        `Trying to dispatch event ${event.type} to node ${nodeKey}
+        but could not find client node. Server node is: ${serverNode}`
+      );
       return;
     }
 
@@ -182,7 +192,10 @@ export class EventReplayer {
     const doc = this.getWindow().document;
     const prebootOverlay = doc.body.querySelector('#prebootOverlay') as HTMLElement;
     if (prebootOverlay) {
-      prebootOverlay.remove();
+      prebootOverlay.remove ?
+        prebootOverlay.remove() : prebootOverlay.parentNode !== null ?
+        prebootOverlay.parentNode.removeChild(prebootOverlay) :
+        prebootOverlay.style.display = 'none';
     }
 
     // clear out the data stored for each app
@@ -196,7 +209,8 @@ export class EventReplayer {
       const completeEvent = new CustomEvent('PrebootComplete');
       doc.dispatchEvent(completeEvent);
     } else {
-      console.warn('Could not dispatch PrebootComplete event. You can fix this by including a polyfill for CustomEvent.');
+      console.warn(`Could not dispatch PrebootComplete event.
+       You can fix this by including a polyfill for CustomEvent.`);
     }
   }
 
@@ -216,7 +230,8 @@ export class EventReplayer {
       const selection = activeNode.selection;
       if ((clientNode as HTMLInputElement).setSelectionRange && selection) {
         try {
-          (clientNode as HTMLInputElement).setSelectionRange(selection.start, selection.end, selection.direction);
+          (clientNode as HTMLInputElement)
+            .setSelectionRange(selection.start, selection.end, selection.direction);
         } catch (ex) {}
       }
     }
@@ -262,9 +277,9 @@ export class EventReplayer {
     let selector = serverNode.tagName;
 
     if (serverNode.id) {
-      selector += '#' + serverNode.id;
+      selector += `#${serverNode.id}`;
     } else if (className) {
-      selector += '.' + className.replace(/ /g, '.');
+      selector += `.${className.replace(/ /g, '.')}`;
     }
 
     // select all possible client nodes and look through them to try and find a
@@ -274,11 +289,14 @@ export class EventReplayer {
 
     // if nothing found, then just try the tag name as a final option
     if (!clientNodes.length) {
-      console.log('nothing found for ' + selector + ' so using ' + serverNode.tagName);
+      console.log(`nothing found for ${selector} so using ${serverNode.tagName}`);
       clientNodes = rootClientNode.querySelectorAll(serverNode.tagName);
     }
 
-    for (const clientNode of Array.from(clientNodes)) {
+    const length = clientNodes.length;
+    for (let i = 0; i < length; i++) {
+      const clientNode = clientNodes.item(i);
+
       // get the key for the client node
       const clientNodeKey = getNodeKeyForPreboot({
         root: root,
@@ -302,7 +320,8 @@ export class EventReplayer {
     // if we get here it means we couldn't find the client node so give the user
     // a warning
     console.warn(
-      'No matching client node found for ' + serverNodeKey + '. You can fix this by assigning this element a unique id attribute.'
+      `No matching client node found for ${serverNodeKey}.
+       You can fix this by assigning this element a unique id attribute.`
     );
     return null;
   }
