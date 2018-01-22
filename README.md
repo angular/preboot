@@ -219,3 +219,7 @@ res.render('index', (req, res) => {
   res.send(html);
 });
 ```
+
+#### Browser support
+
+If you wish to support Internet Explorer 9-11, you will need to include a [Polyfill](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent#Polyfill) for `CustomEvent`.
