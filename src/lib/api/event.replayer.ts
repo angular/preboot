@@ -189,9 +189,15 @@ export class EventReplayer {
     prebootData.apps = [];
     this.clientNodeCache = {};
 
-    // sent event to documernt that signals preboot complete
-    const completeEvent = new Event('PrebootComplete');
-    doc.dispatchEvent(completeEvent);
+    // send event to document that signals preboot complete
+    // constructor is not supported by older browsers ( i.e. IE9-11 )
+    // in these browsers, the type of CustomEvent will be "object"
+    if (typeof CustomEvent === 'function') {
+      const completeEvent = new CustomEvent('PrebootComplete');
+      doc.dispatchEvent(completeEvent);
+    } else {
+      console.warn('Could not dispatch PrebootComplete event. You can fix this by including a polyfill for CustomEvent.');
+    }
   }
 
   setFocus(activeNode: NodeContext) {
