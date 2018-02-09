@@ -148,6 +148,56 @@ var eventSelectors = [
 ];
 ```
 
+#### Using with manual bootstrap (e.g. with ngUpgrade)
+
+Preboot registers its reply code at the `APP_BOOTSTRAP_LISTENER` token which is called by Angular for every component that is bootstrapped. If you don't have the `bootstrap` property defined in your `AppModule`'s `NgModule` but you instead use the `ngDoBootrap` method (which is done e.g. when using ngUpgrade) this code will not run at all.
+
+To make Preboot work correctly in such a case you need to specify `noReplay: true` in the Preboot options and replay the events yourself. That is, import `PrebootModule` like this:
+
+```typescript
+PrebootModule.withConfig({
+  appRoot: 'app-root',
+  noReplay: true,
+})
+```
+
+and replay events in `AppComponent` like this:
+
+```typescript
+import { isPlatformBrowser } from '@angular/common';
+import { Component, OnInit, PLATFORM_ID, Inject, ApplicationRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { filter, take } from 'rxjs/operators';
+import { EventReplayer } from 'preboot';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+})
+export class AppComponent implements OnInit {
+  constructor(
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: string,
+    private appRef: ApplicationRef,
+    private replayer: EventReplayer,
+  ) {}
+
+  ngOnInit() {
+    this.router.initialNavigation();
+    if (isPlatformBrowser(this.platformId)) {
+      this.appRef.isStable
+        .pipe(
+          filter(stable => stable),
+          take(1),
+        ).subscribe(() => {
+        this.replayer.replayAll();
+      });
+    }
+  }
+}
+``` 
+
 #### PrebootComplete
 
 When you are manually replaying events, you often will want to know when Preboot

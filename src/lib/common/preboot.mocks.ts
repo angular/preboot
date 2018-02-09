@@ -16,9 +16,22 @@ export function getMockOptions(): PrebootOptions {
 
 export function getMockElement(): Element {
   return {
+    ___attributes: new Map<string, string>(),
     cloneNode: () => { return { style: {} }; },
     parentNode: {
       insertBefore: function () {}
+    },
+    hasAttribute(key: string) {
+      return this.___attributes.has(key);
+    },
+    getAttribute(key: string) {
+      return this.___attributes.get(key);
+    },
+    setAttribute(key: string, value: string) {
+      this.___attributes.set(key, value);
+    },
+    removeAttribute(key: string) {
+      this.___attributes.delete(key);
     }
   } as any as Element;
 }

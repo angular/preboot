@@ -32,6 +32,16 @@ describe('UNIT TEST event.recorder', function() {
       const actual = createBuffer(root);
       expect(actual).toBe(clientNode as HTMLElement);
     });
+
+    it('should add the "ng-non-bindable" attribute to serverNode', function () {
+      const root = <ServerClientRoot> {
+        serverSelector: 'div',
+        serverNode: getMockElement()
+      };
+
+      createBuffer(root);
+      expect(root.serverNode!.hasAttribute('ng-non-bindable')).toBe(true);
+    });
   });
 
   describe('getSelection()', function () {

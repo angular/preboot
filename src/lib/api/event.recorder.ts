@@ -330,6 +330,9 @@ export function createBuffer(root: ServerClientRoot): HTMLElement {
   // insert the client node before the server and return it
   serverNode.parentNode.insertBefore(rootClientNode, serverNode);
 
+  // mark server node as not to be touched by AngularJS - needed for ngUpgrade
+  serverNode.setAttribute('ng-non-bindable', '');
+
   // return the rootClientNode
   return rootClientNode;
 }
