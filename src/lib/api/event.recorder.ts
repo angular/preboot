@@ -191,7 +191,8 @@ export function handleEvents(prebootData: PrebootData,
   }
 
   // we want to add an event listener for each node and each event
-  for (const node of Array.from(nodes)) {
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes.item(i);
     eventSelector.events.forEach((eventName: string) => {
       // get the appropriate handler and add it as an event listener
       const handler = createListenHandler(prebootData, eventSelector, appData, node);
