@@ -75,21 +75,21 @@ replayer.replayAll();
 #### PrebootOptions
  
 * `appRoot` (**required**) - One or more selectors for apps in the page (i.e. so one string or an array of strings).
-* `buffer` (default true) - If true, preboot will attempt to buffer client rendering to an extra hidden div. In most
+* `buffer` (default `true`) - If true, preboot will attempt to buffer client rendering to an extra hidden div. In most
 cases you will want to leave the default (i.e. true) but may turn off if you are debugging an issue.
 * `minify` (deprecated) - minification has been removed in v6. Minification should be handled by the end-user
 * `eventSelectors` (defaults below) - This is an array of objects which specify what events preboot should be listening for 
 on the server view and how preboot should replay those events to the client view. 
 See Event Selector section below for more details but note that in most cases, you can just rely on the defaults
 and you don't need to explicitly set anything here.
-* `noReplay` (default false) - The only reason why you would want to set this to true is if you want to
-manually trigger the replay yourself. This contrasts with the event selector `noReplay`, because this option is global
+* `replay` (default `true`) - The only reason why you would want to set this to `false` is if you want to
+manually trigger the replay yourself. This contrasts with the event selector `replay`, because this option is global
 
 This comes in handy for situations where you want to hold off
 on the replay and buffer switch until AFTER some async events occur (i.e. route loading, http calls, etc.). By
 default, replay occurs right after bootstrap is complete. In some apps, there are more events after bootstrap
 however where the page continues to change in significant ways. Basically if you are making major changes to
-the page after bootstrap then you will see some jank unless you set `noReplay` to `true` and then trigger replay
+the page after bootstrap then you will see some jank unless you set `replay` to `false` and then trigger replay
 yourself once you know that all async events are complete.
 
 To manually trigger replay, simply inject the EventReplayer like this:
@@ -118,12 +118,12 @@ Each event selector has the following properties:
 * `events` - An array of event names to listen for (ex. `['focusin', 'keyup', 'click']`)
 * `keyCodes` - Only do something IF event includes a key pressed that matches the given key codes.
 Useful for doing something when user hits return in a input box or something similar.
-* `preventDefault` - If true, `event.preventDefault()` will be called to prevent any further event propagation.
-* `freeze` - If true, the UI will freeze which means displaying a translucent overlay which prevents
+* `preventDefault` - If `true`, `event.preventDefault()` will be called to prevent any further event propagation.
+* `freeze` - If `true`, the UI will freeze which means displaying a translucent overlay which prevents
 any further user action until preboot is complete.
 * `action` - This is a function callback for any custom code you want to run when this event occurs 
 in the server view.
-* `noReplay` - If true, the event won't be recorded or replayed. Useful when you utilize one of the other options above.
+* `replay` - If `false`, the event won't be recorded or replayed. Useful when you utilize one of the other options above.
 
 Here are some examples of event selectors from the defaults:
 
@@ -141,7 +141,7 @@ var eventSelectors = [
   { selector: 'form', events: ['submit'], preventDefault: true, freeze: true },
 
   // for tracking focus (no need to replay)
-  { selector: 'input,textarea', events: ['focusin', 'focusout', 'mousedown', 'mouseup'], noReplay: true },
+  { selector: 'input,textarea', events: ['focusin', 'focusout', 'mousedown', 'mouseup'], replay: false },
 
   // user clicks on a button
   { selector: 'button', events: ['click'], preventDefault: true, freeze: true }
@@ -152,12 +152,12 @@ var eventSelectors = [
 
 Preboot registers its reply code at the `APP_BOOTSTRAP_LISTENER` token which is called by Angular for every component that is bootstrapped. If you don't have the `bootstrap` property defined in your `AppModule`'s `NgModule` but you instead use the `ngDoBootrap` method (which is done e.g. when using ngUpgrade) this code will not run at all.
 
-To make Preboot work correctly in such a case you need to specify `noReplay: true` in the Preboot options and replay the events yourself. That is, import `PrebootModule` like this:
+To make Preboot work correctly in such a case you need to specify `replay: false` in the Preboot options and replay the events yourself. That is, import `PrebootModule` like this:
 
 ```typescript
 PrebootModule.withConfig({
   appRoot: 'app-root',
-  noReplay: true,
+  replay: false,
 })
 ```
 

@@ -35,6 +35,7 @@ export function prebootHook(doc: Document,
                             eventReplayer: EventReplayer) {
   // necessary because of angular/angular/issues/14485
   const res = () => {
+
     if (isPlatformServer(platformId)) {
       const inlineCode = getInlinePrebootCode(prebootOpts);
       const script = doc.createElement('script');
@@ -44,14 +45,17 @@ export function prebootHook(doc: Document,
       script.textContent = inlineCode;
       doc.head.appendChild(script);
     }
-    if (isPlatformBrowser(platformId) && !prebootOpts.noReplay) {
-      appRef.isStable
-        .pipe(
-          filter(stable => stable),
-          take(1)
-        ).subscribe(() => {
+    if (isPlatformBrowser(platformId)) {
+      const replay = prebootOpts.replay != null ? prebootOpts.replay : true;
+      if (replay) {
+        appRef.isStable
+          .pipe(
+            filter(stable => stable),
+            take(1)
+          ).subscribe(() => {
           eventReplayer.replayAll();
         });
+      }
     }
   };
 
