@@ -13,7 +13,7 @@ export interface EventSelector {
   preventDefault?: boolean; // will prevent default handlers if true
   freeze?: boolean; // if  true, the UI will freeze when this event occurs
   action?: Function; // custom action to take with this event
-  noReplay?: boolean; // if true, no replay will occur
+  replay?: boolean; // if false, no replay will occur
 }
 
 export interface ServerClientRoot {
@@ -30,7 +30,7 @@ export interface PrebootOptions {
   buffer?: boolean; // if true, attempt to buffer client rendering to hidden div
   eventSelectors?: EventSelector[]; // when any of these events occur, they are recorded
   appRoot: string | string[]; // define selectors for one or more server roots
-  noReplay?: boolean;
+  replay?: boolean;
 }
 
 // our wrapper around DOM events in preboot

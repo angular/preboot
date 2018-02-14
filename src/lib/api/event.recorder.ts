@@ -80,7 +80,7 @@ export function start(prebootData: PrebootData, win?: PrebootWindow) {
 
   const _document = <Document>(theWindow.document || {});
   const opts = prebootData.opts || ({} as PrebootOptions);
-  const eventSelectors = opts.eventSelectors || [];
+  let eventSelectors = opts.eventSelectors || [];
 
   // create an overlay that can be used later if a freeze event occurs
   prebootData.overlay = createOverlay(_document);
@@ -96,6 +96,13 @@ export function start(prebootData: PrebootData, win?: PrebootWindow) {
     if (prebootData.apps) {
       prebootData.apps.push(appData);
     }
+
+    eventSelectors = eventSelectors.map(eventSelector => {
+      if (!eventSelector.hasOwnProperty('replay')) {
+        eventSelector.replay = true;
+      }
+      return eventSelector;
+    });
 
     // loop through all the eventSelectors and create event handlers
     eventSelectors.forEach(eventSelector => handleEvents(prebootData, appData, eventSelector));
@@ -287,7 +294,7 @@ export function createListenHandler(
 
     // we will record events for later replay unless explicitly marked as
     // doNotReplay
-    if (!eventSelector.noReplay) {
+    if (eventSelector.replay) {
       appData.events.push({
         node,
         nodeKey,

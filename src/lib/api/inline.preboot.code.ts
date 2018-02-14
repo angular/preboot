@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {PrebootOptions} from '../common/preboot.interfaces';
+import {EventSelector, PrebootOptions} from '../common/preboot.interfaces';
 import {getNodeKeyForPreboot} from '../common/get-node-key';
 
 import {
@@ -36,6 +36,7 @@ const eventRecorder = {
 export const defaultOptions = <PrebootOptions>{
   buffer: true,
   minify: true,
+  replay: true,
 
   // these are the default events are are listening for an transfering from
   // server view to client view
@@ -68,7 +69,7 @@ export const defaultOptions = <PrebootOptions>{
     {
       selector: 'input,textarea',
       events: ['focusin', 'focusout', 'mousedown', 'mouseup'],
-      noReplay: true
+      replay: false
     },
 
     // user clicks on a button
