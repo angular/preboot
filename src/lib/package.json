@@ -1,6 +1,6 @@
 {
   "name": "preboot",
-  "version": "6.0.0-beta.2",
+  "version": "6.0.0-beta.3",
   "description": "Record server view events and play back to Angular client view",
   "main": "./bundles/preboot.umd.js",
   "module": "./esm5/preboot.es5.js",
