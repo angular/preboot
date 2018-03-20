@@ -30,7 +30,7 @@ export function getNodeKeyForPreboot(nodeContext: NodeContext): string {
   // now go backwards starting from the root, appending the appName to unique
   // identify the node later..
   const name = node.nodeName || 'unknown';
-  let key = name + '_' + root.serverSelector;
+  let key = name;
   const len = ancestors.length;
 
   for (let i = len - 1; i >= 0; i--) {

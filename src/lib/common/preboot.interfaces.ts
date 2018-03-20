@@ -17,16 +17,14 @@ export interface EventSelector {
 }
 
 export interface ServerClientRoot {
-  serverSelector: string;
   serverNode?: HTMLElement;
-  clientSelector?: string;
   clientNode?: HTMLElement;
+  overlay?: HTMLElement;
 }
 
 // interface for the options that can be passed into preboot
 export interface PrebootOptions {
   /** @deprecated minification has been removed in v6 */
-  minify?: boolean;
   buffer?: boolean; // if true, attempt to buffer client rendering to hidden div
   eventSelectors?: EventSelector[]; // when any of these events occur, they are recorded
   appRoot: string | string[]; // define selectors for one or more server roots
@@ -58,7 +56,7 @@ export interface PrebootAppData {
 // object that is used to keep track of all the preboot
 // listeners (so we can remove the listeners later)
 export interface PrebootEventListener {
-  node: HTMLElement;
+  node: Node;
   eventName: string;
   handler: EventListener;
 }
@@ -82,7 +80,6 @@ export interface NodeContext {
 // interface for global object that contains all preboot data
 export interface PrebootData {
   opts?: PrebootOptions;
-  overlay?: Element;
   activeNode?: NodeContext;
   apps?: PrebootAppData[];
   listeners?: PrebootEventListener[];
@@ -90,7 +87,6 @@ export interface PrebootData {
 
 export interface PrebootWindow {
   prebootData: PrebootData;
-  prebootStarted: boolean;
   getComputedStyle: (elt: Element, pseudoElt?: string) => CSSStyleDeclaration;
   document: Document;
 }

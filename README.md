@@ -46,24 +46,45 @@ import { AppComponent } from './app.component';
 export class AppModule { }
 ```
 
-The key part here for preboot is to include `PrebootModule.withConfig({ appRoot: 'app-root' })` where the `appRoot`
-is the selector(s) to find the root of your application. The options you can pass into `withConfig()` are in the [PrebootOptions](#PrebootOptions) section below. In most cases, however, you will only need to specify the `appRoot`.
+The key part here for preboot is to include `PrebootModule.withConfig({ appRoot: 'app-root' })` where the `appRoot` is the selector(s) to find the root of your application. The options you can pass into `withConfig()` are in the [PrebootOptions](#PrebootOptions) section below. In most cases, however, you will only need to specify the `appRoot`.
 
 #### Non-Angular Server Configuration
 
-```
-import { getInlinePrebootCode } from 'preboot';
+```ts
+import { getInlineDefinition, getInlineInvocation } from 'preboot';
 
 const prebootOptions = {};  // see PrebootRecordOptions section below
-const inlineCode = getInlinePrebootCode(prebootOptions);
+const inlineCodeDefinition = getInlineDefinition(prebootOptions);
+const inlineCodeInvocation = getInlineInvocation();
 
-// now simply insert the inlineCode into the HEAD section of your server view
+// now insert `inlineCodeDefinition` into a `<script>` tag in `<head>` and 
+// an `inlineCodeInvocation` copy just after the opening tag of each app root
 
+```
+
+```html
+<html>
+  <head>
+    <script><%= inlineCodeDefinition %></script>
+  </head>
+  <body>
+    <app1-root>
+      <script><%= inlineCodeInvocation %></script>
+      <h2>App1 header</h2>
+      <div>content</div>
+    </app1-root>
+    <app2-root>
+      <script><%= inlineCodeInvocation %></script>
+      <h2>App2 header</h2>
+      <span>content</span>
+    </app2-root>
+  </body>
+</html>
 ```
 
 #### Non-Angular Browser Configuration
 
-```
+```ts
 import { EventReplayer } from 'preboot';
 
 const replayer = new EventReplayer();
@@ -92,7 +113,7 @@ however where the page continues to change in significant ways. Basically if you
 the page after bootstrap then you will see some jank unless you set `replay` to `false` and then trigger replay
 yourself once you know that all async events are complete.
 
-To manually trigger replay, simply inject the EventReplayer like this:
+To manually trigger replay, inject the EventReplayer like this:
 
 ```
 import { Injectable } from '@angular/core';

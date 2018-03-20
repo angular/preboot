@@ -6,14 +6,12 @@ describe('UNIT TEST get-node-key', function() {
     it('should generate a default name', function() {
       const nodeContext = <NodeContext>{
         root: {
-          serverSelector: '#myApp',
-          clientSelector: '#myApp',
           serverNode: {},
           clientNode: {},
         },
         node: {}
       };
-      const expected = 'unknown_#myApp';
+      const expected = 'unknown';
       const actual = getNodeKeyForPreboot(nodeContext);
       expect(actual).toEqual(expected);
     });
@@ -40,14 +38,13 @@ describe('UNIT TEST get-node-key', function() {
 
       const nodeContext = {
         root: {
-          serverSelector: '#myApp',
           serverNode,
           clientNode: emptyNode
         },
         node
       };
 
-      const expected = 'FOO_#myApp_s3_s2_s4';
+      const expected = 'FOO_s3_s2_s4';
       const actual = getNodeKeyForPreboot(nodeContext);
       expect(actual).toEqual(expected);
     });

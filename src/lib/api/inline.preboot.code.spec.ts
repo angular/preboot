@@ -1,5 +1,9 @@
 import {
-  assign, getEventRecorderCode, getInlinePrebootCode, stringifyWithFunctions,
+  assign,
+  getEventRecorderCode,
+  getInlineDefinition,
+  getInlineInvocation,
+  stringifyWithFunctions,
   validateOptions
 } from './inline.preboot.code';
 import {PrebootOptions} from '../common/preboot.interfaces';
@@ -50,14 +54,16 @@ describe('UNIT TEST inline.preboot.code', function() {
     });
   });
 
-  describe('getInlinePrebootCode()', function () {
-    it('should generate valid JavaScript minified', function () {
-      const code = getInlinePrebootCode({ appRoot: 'foo' });
+  describe('getInlineDefinition()', function () {
+    it('should generate valid JavaScript', function () {
+      const code = getInlineDefinition({ appRoot: 'foo' });
       expect(code).toBeTruthy();
     });
+  });
 
-    it('should generate valid JavaScript not minified', function () {
-      const code = getInlinePrebootCode({ appRoot: 'foo', minify: false });
+  describe('getInlineInvocation()', function () {
+    it('should generate valid JavaScript', function () {
+      const code = getInlineInvocation();
       expect(code).toBeTruthy();
     });
   });

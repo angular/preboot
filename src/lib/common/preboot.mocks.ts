@@ -11,7 +11,6 @@ import {assign, defaultOptions} from '../api/inline.preboot.code';
 export function getMockWindow(): PrebootWindow {
   return {
     prebootData: {},
-    prebootStarted: false
   } as PrebootWindow;
 }
 
