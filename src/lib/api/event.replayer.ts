@@ -15,6 +15,8 @@ import {
 } from '../common/preboot.interfaces';
 import {getNodeKeyForPreboot} from '../common/get-node-key';
 
+type direction = 'none' | 'forward' | 'backward' | undefined;
+
 export function _window(): PrebootWindow {
   return {
     prebootData: (window as any)['prebootData'],
@@ -231,7 +233,7 @@ export class EventReplayer {
       if ((clientNode as HTMLInputElement).setSelectionRange && selection) {
         try {
           (clientNode as HTMLInputElement)
-            .setSelectionRange(selection.start, selection.end, selection.direction);
+            .setSelectionRange(selection.start, selection.end, selection.direction as direction);
         } catch (ex) {}
       }
     }

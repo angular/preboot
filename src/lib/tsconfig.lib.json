@@ -20,8 +20,11 @@
     "target": "es2015",
     "lib": ["es2015", "dom"],
     "skipLibCheck": true,
-    "types": [],
-    "baseUrl": "."
+    "types": ["jasmine", "tslib"],
+    "baseUrl": ".",
+    "paths": {
+      "preboot/*": ["../../out-tsc/lib-es2015/*"]
+    }
   },
   "files": [
     "./public-api.ts",
@@ -29,10 +32,11 @@
   ],
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,
-    "strictMetadataEmit": true,
-    "skipTemplateCodegen": true,
+    "strictMetadataEmit": false, // Workaround for Angular #22210
     "flatModuleOutFile": "index.js",
     "flatModuleId": "preboot",
-    "genDir": "../../out-tsc/lib-gen-dir/"
+    "genDir": "../../out-tsc/lib-gen-dir/",
+    "skipTemplateCodegen": true,
+    "fullTemplateTypeCheck": true
   }
 }

@@ -16,7 +16,7 @@ const distDir = path.join(__dirname, 'dist/');
 const outDir = path.join(__dirname, 'out-tsc/e2e/');
 const rollupConfig = {
   entry: `${outDir}main.js`,
-  sourceMap: false,
+  sourcemap: false,
   format: 'iife',
   onwarn: function (warning) {
     // Skip certain warnings

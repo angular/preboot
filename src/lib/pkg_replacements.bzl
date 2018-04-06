@@ -1,0 +1,7 @@
+NG_VERSION = "^6.0.0 || ^6.0.0-rc.1"
+RXJS_VERSION = "^6.0.0-rc.0"
+
+PKG_GROUP_REPLACEMENTS = {
+    "0.0.0-NG": NG_VERSION,
+    "0.0.0-RXJS": RXJS_VERSION
+}

@@ -5,6 +5,8 @@ logs
 .vscode
 .DS_Store
 **/.DS_Store
+bazel-out
+yarn.lock
 
 package-lock.json
 

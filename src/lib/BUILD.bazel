@@ -1,0 +1,47 @@
+package(default_visibility=["//visibility:public"])
+load("@build_bazel_rules_typescript//:defs.bzl", "ts_library", "ts_config", "ts_web_test")
+load("@angular//:index.bzl", "ng_package", "ng_module")
+load("//src/lib:rollup_globals.bzl", "PREBOOT_ROLLUP_GLOBALS")
+load("//src/lib:pkg_replacements.bzl", "PKG_GROUP_REPLACEMENTS")
+
+
+# Export the Preboot tsconfig so that subpackages can reference it directly.
+exports_files(["tsconfig.lib.json"])
+
+# Root "preboot" entry-point that does not re-export individual entry-points.
+ts_library(
+  name = "preboot",
+  srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts", "module/*.ts"]),
+  module_name = "preboot",
+  deps = [],
+  tsconfig = ":tsconfig.lib.json",
+)
+
+ng_module(
+  name = "preboot_module",
+  srcs = glob(["module/*.ts"], exclude=["**/*.spec.ts"]),
+  module_name = "preboot/module",
+  deps = [":preboot"],
+  tsconfig = ":tsconfig.lib.json",
+)
+
+# Creates the preboot package published to npm
+ng_package(
+  name = "npm_package",
+  srcs = ["package.json"],
+  entry_point = "src/lib/public_api.js",
+  globals = PREBOOT_ROLLUP_GLOBALS,
+  deps = [":preboot", ":preboot_module"],
+  replacements = PKG_GROUP_REPLACEMENTS,
+  readme_md = "//src:README.md",
+)
+
+ts_library(
+  name = "preboot_test_sources",
+  testonly = 1,
+  srcs = glob(["**/*.spec.ts"]),
+  deps = [
+    ":preboot"
+  ],
+  tsconfig = "//src/lib:tsconfig.lib.json",
+)
