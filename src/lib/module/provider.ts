@@ -8,22 +8,20 @@
 import {
   APP_BOOTSTRAP_LISTENER,
   ApplicationRef,
-  Inject,
   InjectionToken,
-  Optional,
   PLATFORM_ID
 } from '@angular/core';
 import {DOCUMENT, isPlatformBrowser, isPlatformServer} from '@angular/common';
-import {take} from 'rxjs/operators/take';
-import {filter} from 'rxjs/operators/filter';
+import {filter, take} from 'rxjs/operators';
 
-import {EventReplayer} from './api/event.replayer';
-import {PREBOOT_NONCE} from './common/tokens';
-import {getInlinePrebootCode} from './api/inline.preboot.code';
-import {PrebootOptions} from './common/preboot.interfaces';
+import {EventReplayer, getInlinePrebootCode, PrebootOptions} from 'preboot';
 
 const PREBOOT_SCRIPT_ID = 'preboot-inline-script';
 export const PREBOOT_OPTIONS = new InjectionToken<PrebootOptions>('PrebootOptions');
+export const PREBOOT_NONCE = new InjectionToken<string|null>('PrebootNonce', {
+  providedIn: 'root',
+  factory: () => null
+});
 
 export function PREBOOT_FACTORY(doc: Document,
                                 prebootOpts: PrebootOptions,
@@ -71,7 +69,7 @@ export const PREBOOT_PROVIDER = {
   deps: [
     DOCUMENT,
     PREBOOT_OPTIONS,
-    [new Optional(), new Inject(PREBOOT_NONCE)],
+    PREBOOT_NONCE,
     PLATFORM_ID,
     ApplicationRef,
     EventReplayer,
