@@ -13,9 +13,10 @@ import {
   PrebootData,
   ServerClientRoot,
 } from '../common/preboot.interfaces';
+import {PrebootSelection} from 'preboot/common/preboot.interfaces';
 
-describe('UNIT TEST event.recorder', function() {
-  describe('createBuffer()', function() {
+describe('UNIT TEST event.recorder', function () {
+  describe('createBuffer()', function () {
     it('should do nothing if serverNode empty', function () {
       const root = <ServerClientRoot> {
         serverSelector: 'body',
@@ -32,7 +33,7 @@ describe('UNIT TEST event.recorder', function() {
         serverNode: getMockElement()
       };
       const clientNode = {
-        style: { display: 'block' }
+        style: {display: 'block'}
       } as HTMLElement;
 
       if (root.serverNode) {
@@ -59,7 +60,7 @@ describe('UNIT TEST event.recorder', function() {
   describe('getSelection()', function () {
     it('should return default if no value', function () {
       const node = {};
-      const expected = {
+      const expected: PrebootSelection = {
         start: 0,
         end: 0,
         direction: 'forward'
@@ -70,8 +71,8 @@ describe('UNIT TEST event.recorder', function() {
     });
 
     it('should return selection for older browsers', function () {
-      const node = { value: 'foo' };
-      const expected = {
+      const node = {value: 'foo'};
+      const expected: PrebootSelection = {
         start: 3,
         end: 3,
         direction: 'forward'
@@ -86,12 +87,12 @@ describe('UNIT TEST event.recorder', function() {
         value: 'foo',
         selectionStart: 1,
         selectionEnd: 2,
-        selectionDirection: 'reverse'
+        selectionDirection: 'backward'
       };
-      const expected = {
+      const expected: PrebootSelection = {
         start: 1,
         end: 2,
-        direction: 'reverse'
+        direction: 'backward'
       };
 
       const actual = getSelection(node as HTMLInputElement);
@@ -118,7 +119,8 @@ describe('UNIT TEST event.recorder', function() {
         events: []
       };
       const event = {
-        preventDefault: function () {}
+        preventDefault: function () {
+        }
       };
       const node = <Element>{};
 
