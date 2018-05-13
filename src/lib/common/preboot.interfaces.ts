@@ -46,6 +46,7 @@ export interface DomEvent {
   which?: number;
   type?: string;
   target?: any;
+
   preventDefault(): void;
 }
 
@@ -66,7 +67,7 @@ export interface PrebootEventListener {
 export interface PrebootSelection {
   start: number;
   end: number;
-  direction: string;
+  direction: 'forward' | 'backward' | 'none';
 }
 
 // object that contains all data about the currently active node in the DOM (i.e. that has focus)

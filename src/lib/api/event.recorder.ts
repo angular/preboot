@@ -53,7 +53,7 @@ export function waitUntilReady(data: PrebootData, win?: PrebootWindow) {
   if (_document.body) {
     start(data);
   } else {
-    setTimeout(function() {
+    setTimeout(function () {
       waitUntilReady(data);
     }, 10);
   }
@@ -89,10 +89,10 @@ export function start(prebootData: PrebootData, win?: PrebootWindow) {
   const appRoots = prebootData.opts ? getAppRoots(_document, prebootData.opts) : [];
 
   // for each app root
-  appRoots.forEach(function(root) {
+  appRoots.forEach(function (root) {
     // we track all events for each app in the prebootData object which is on
     // the global scope
-    const appData = <PrebootAppData>{ root: root, events: [] };
+    const appData = <PrebootAppData>{root: root, events: []};
     if (prebootData.apps) {
       prebootData.apps.push(appData);
     }
@@ -146,7 +146,7 @@ export function getAppRoots(_document: Document, opts: PrebootOptions): ServerCl
   if (opts.appRoot && opts.appRoot.length) {
     const baseList: string[] = [];
     const appRootSelectors = baseList.concat(opts.appRoot);
-    appRootSelectors.forEach((selector: any) => roots.push({ serverSelector: selector }));
+    appRootSelectors.forEach((selector: any) => roots.push({serverSelector: selector}));
   }
 
   // now loop through the roots to get the nodes for each root
@@ -230,7 +230,7 @@ export function createListenHandler(
   const CARET_EVENTS = ['keyup', 'keydown', 'focusin', 'mouseup', 'mousedown'];
   const CARET_NODES = ['INPUT', 'TEXTAREA'];
 
-  return function(event: DomEvent) {
+  return function (event: DomEvent) {
     const root = appData.root;
     const eventName = event.type;
 
@@ -263,7 +263,7 @@ export function createListenHandler(
     }
 
     // get the node key for a given node
-    const nodeKey = getNodeKeyForPreboot({ root: root, node: node });
+    const nodeKey = getNodeKeyForPreboot({root: root, node: node});
 
     // if event on input or text area, record active node
     if (CARET_EVENTS.indexOf(eventName) >= 0 &&
@@ -313,7 +313,7 @@ export function getSelection(node: HTMLInputElement): PrebootSelection {
   node = node || {} as HTMLInputElement;
 
   const nodeValue = node.value || '';
-  const selection = {
+  const selection: PrebootSelection = {
     start: nodeValue.length,
     end: nodeValue.length,
     direction: 'forward'
@@ -324,9 +324,15 @@ export function getSelection(node: HTMLInputElement): PrebootSelection {
     if (node.selectionStart || node.selectionStart === 0) {
       selection.start = node.selectionStart;
       selection.end = node.selectionEnd ? node.selectionEnd : 0;
-      selection.direction = node.selectionDirection ? node.selectionDirection : '';
+
+      if (node.selectionDirection) {
+        selection.direction = <'forward' | 'backward' | 'none'>node.selectionDirection;
+      } else {
+        selection.direction = 'none';
+      }
     }
-  } catch (ex) {}
+  } catch (ex) {
+  }
 
   return selection;
 }
