@@ -11,6 +11,7 @@ import {
   EventSelector,
   PrebootAppData,
   PrebootData,
+  PrebootSelection,
   ServerClientRoot,
 } from '../common/preboot.interfaces';
 
@@ -59,7 +60,7 @@ describe('UNIT TEST event.recorder', function() {
   describe('getSelection()', function () {
     it('should return default if no value', function () {
       const node = {};
-      const expected = {
+      const expected: PrebootSelection = {
         start: 0,
         end: 0,
         direction: 'forward'
@@ -71,7 +72,7 @@ describe('UNIT TEST event.recorder', function() {
 
     it('should return selection for older browsers', function () {
       const node = { value: 'foo' };
-      const expected = {
+      const expected: PrebootSelection = {
         start: 3,
         end: 3,
         direction: 'forward'
@@ -86,12 +87,12 @@ describe('UNIT TEST event.recorder', function() {
         value: 'foo',
         selectionStart: 1,
         selectionEnd: 2,
-        selectionDirection: 'reverse'
+        selectionDirection: 'backward'
       };
-      const expected = {
+      const expected: PrebootSelection = {
         start: 1,
         end: 2,
-        direction: 'reverse'
+        direction: 'backward'
       };
 
       const actual = getSelection(node as HTMLInputElement);
