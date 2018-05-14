@@ -6,14 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {
+  getNodeKeyForPreboot,
   NodeContext,
   PrebootAppData,
   PrebootData,
   PrebootEvent,
   PrebootWindow,
   ServerClientRoot,
-} from '../common/preboot.interfaces';
-import {getNodeKeyForPreboot} from '../common/get-node-key';
+} from 'preboot/common';
 
 export function _window(): PrebootWindow {
   return {

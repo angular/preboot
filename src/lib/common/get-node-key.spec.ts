@@ -1,5 +1,8 @@
 import {NodeContext} from './preboot.interfaces';
 import {getNodeKeyForPreboot} from './get-node-key';
+import {PLATFORM_ID} from '@angular/core';
+import {TestBed} from '@angular/core/testing';
+import {isPlatformBrowser} from '@angular/common';
 
 describe('UNIT TEST get-node-key', function() {
   describe('getNodeKeyForPreboot()', function() {
@@ -18,6 +21,10 @@ describe('UNIT TEST get-node-key', function() {
 
     it('should generate a name for a deeply nested element', function() {
 
+      const platform = TestBed.get(PLATFORM_ID);
+      if (!isPlatformBrowser(platform)) {
+        return;
+      }
       const node = document.createElement('foo');
       const serverNode = document.createElement('div');
       const emptyNode = document.createElement('div');

@@ -15,7 +15,12 @@
       "dom"
     ],
     "skipLibCheck": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "baseUrl": ".",
+    "paths": {
+      "preboot/*": ["src/lib/*"],
+      "preboot": ["src/lib"]
+    }
   },
   "include": [
     "src/**/*.ts",

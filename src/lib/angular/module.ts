@@ -7,8 +7,7 @@
  */
 import {ModuleWithProviders, NgModule} from '@angular/core';
 
-import {EventReplayer} from './api/event.replayer';
-import {PrebootOptions} from './common/preboot.interfaces';
+import {EventReplayer, PrebootOptions} from 'preboot';
 import {PREBOOT_OPTIONS, PREBOOT_PROVIDER} from './provider';
 
 @NgModule({

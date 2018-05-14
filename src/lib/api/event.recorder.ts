@@ -7,15 +7,16 @@
  */
 import {
   EventSelector,
+  getNodeKeyForPreboot,
   PrebootOptions,
   PrebootAppData,
   PrebootData,
   DomEvent,
   PrebootWindow,
   ServerClientRoot,
-  PrebootSelection, PrebootSelectionDirection,
-} from '../common/preboot.interfaces';
-import {getNodeKeyForPreboot} from '../common/get-node-key';
+  PrebootSelection,
+  PrebootSelectionDirection,
+} from 'preboot/common';
 
 /**
  * Called right away to initialize preboot

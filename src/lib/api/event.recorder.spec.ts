@@ -5,9 +5,9 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {getMockElement} from '../common/preboot.mocks';
+import {getMockElement} from './preboot.mocks';
 import {createBuffer, getSelection} from './event.recorder';
-import {PrebootSelection, ServerClientRoot} from '../common/preboot.interfaces';
+import {PrebootSelection, ServerClientRoot} from 'preboot/common';
 
 describe('UNIT TEST event.recorder', function() {
   describe('createBuffer()', function() {

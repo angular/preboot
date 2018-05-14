@@ -16,14 +16,17 @@ import {
 import {DOCUMENT, isPlatformBrowser, isPlatformServer} from '@angular/common';
 import {filter, take} from 'rxjs/operators';
 
-import {EventReplayer} from './api/event.replayer';
-import {PREBOOT_NONCE} from './common/tokens';
-import {getInlineDefinition, getInlineInvocation} from './api/inline.preboot.code';
-import {PrebootOptions} from './common/preboot.interfaces';
-import {validateOptions} from './api';
+import {
+  EventReplayer,
+  getInlineDefinition,
+  getInlineInvocation,
+  PrebootOptions,
+  validateOptions
+} from 'preboot';
 
 const PREBOOT_SCRIPT_CLASS = 'preboot-inline-script';
 export const PREBOOT_OPTIONS = new InjectionToken<PrebootOptions>('PrebootOptions');
+export const PREBOOT_NONCE = new InjectionToken<string>('PrebootNonce');
 
 function createScriptFromCode(doc: Document, nonce: string|null, inlineCode: string) {
   const script = doc.createElement('script');

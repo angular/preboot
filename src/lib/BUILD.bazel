@@ -1,0 +1,36 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@angular//:index.bzl", "ng_package", "ng_module")
+load("//:packages.bzl", "PREBOOT_ROLLUP_GLOBALS", "PKG_GROUP_REPLACEMENTS")
+
+# Export the Preboot tsconfig so that subpackages can reference it directly.
+exports_files(["tsconfig.lib.json"])
+
+# Root "preboot" entry-point
+ng_module(
+    name = "preboot",
+    srcs = glob(["*.ts"]),
+    module_name = "preboot",
+    tsconfig = ":tsconfig.lib.json",
+    deps = [
+        "//src/lib/api",
+        "//src/lib/common",
+    ],
+)
+
+# Creates the preboot package published to npm
+ng_package(
+    name = "npm_package",
+    srcs = ["package.json"],
+    entry_point = "src/lib/public_api.js",
+    entry_point_name = "preboot",
+    globals = PREBOOT_ROLLUP_GLOBALS,
+    readme_md = "//src:README.md",
+    replacements = PKG_GROUP_REPLACEMENTS,
+    deps = [
+        "//src/lib:preboot",
+        "//src/lib/angular",
+        "//src/lib/api",
+        "//src/lib/common",
+    ],
+)

@@ -1,6 +1,6 @@
-import {getMockWindow} from '../common/preboot.mocks';
+import {getMockWindow} from './preboot.mocks';
 import {EventReplayer} from './event.replayer';
-import {PrebootAppData} from '../common/preboot.interfaces';
+import {PrebootAppData} from 'preboot/common';
 
 describe('UNIT TEST event.replayer', function () {
   describe('switchBuffer()', function () {

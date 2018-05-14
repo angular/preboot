@@ -1,0 +1,16 @@
+package(default_visibility = ["//visibility:public"])
+
+exports_files(["package.json"])
+
+load("@angular//:index.bzl", "ng_module")
+
+ng_module(
+    name = "angular",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    module_name = "preboot/angular",
+    tsconfig = "//src/lib:tsconfig.lib.json",
+    deps = ["//src/lib:preboot"],
+)

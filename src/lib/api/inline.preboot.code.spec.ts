@@ -6,7 +6,7 @@ import {
   stringifyWithFunctions,
   validateOptions
 } from './inline.preboot.code';
-import {PrebootOptions} from '../common/preboot.interfaces';
+import {PrebootOptions} from 'preboot/common';
 
 describe('UNIT TEST inline.preboot.code', function() {
   describe('stringifyWithFunctions()', function() {
