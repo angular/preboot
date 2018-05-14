@@ -13,7 +13,7 @@ import {
   DomEvent,
   PrebootWindow,
   ServerClientRoot,
-  PrebootSelection,
+  PrebootSelection, PrebootSelectionDirection,
 } from '../common/preboot.interfaces';
 import {getNodeKeyForPreboot} from '../common/get-node-key';
 
@@ -313,7 +313,7 @@ export function getSelection(node: HTMLInputElement): PrebootSelection {
   node = node || {} as HTMLInputElement;
 
   const nodeValue = node.value || '';
-  const selection = {
+  const selection: PrebootSelection = {
     start: nodeValue.length,
     end: nodeValue.length,
     direction: 'forward'
@@ -324,7 +324,8 @@ export function getSelection(node: HTMLInputElement): PrebootSelection {
     if (node.selectionStart || node.selectionStart === 0) {
       selection.start = node.selectionStart;
       selection.end = node.selectionEnd ? node.selectionEnd : 0;
-      selection.direction = node.selectionDirection ? node.selectionDirection : '';
+      selection.direction = node.selectionDirection ?
+        node.selectionDirection as PrebootSelectionDirection : 'none';
     }
   } catch (ex) {}
 

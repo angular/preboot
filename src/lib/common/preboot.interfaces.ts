@@ -63,10 +63,12 @@ export interface PrebootEventListener {
   handler: EventListener;
 }
 
+export type PrebootSelectionDirection = 'forward' | 'backward' | 'none';
+
 export interface PrebootSelection {
   start: number;
   end: number;
-  direction: string;
+  direction: PrebootSelectionDirection;
 }
 
 // object that contains all data about the currently active node in the DOM (i.e. that has focus)

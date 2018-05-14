@@ -21,8 +21,8 @@
     "universal"
   ],
   "peerDependencies": {
-    "@angular/common": "^5.0.0",
-    "@angular/core": "^5.0.0"
+    "@angular/common": "^6.0.0",
+    "@angular/core": "^6.0.0"
   },
   "repository": {
     "type": "git",
