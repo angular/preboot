@@ -15,9 +15,11 @@ const e2eDir = path.join(__dirname, 'e2e/');
 const distDir = path.join(__dirname, 'dist/');
 const outDir = path.join(__dirname, 'out-tsc/e2e/');
 const rollupConfig = {
-  entry: `${outDir}main.js`,
-  sourceMap: false,
-  format: 'iife',
+  sourcemap: false,
+  input: `${outDir}main.js`,
+  output: {
+    format: 'iife'
+  },
   onwarn: function (warning) {
     // Skip certain warnings
     if (warning.code === 'THIS_IS_UNDEFINED') { return; }
@@ -70,8 +72,8 @@ return Promise.resolve()
   // Bundle app.
   .then(() => rollup.rollup(rollupConfig))
   // Concatenate app and scripts.
-  .then(bundle => {
-    const appBundle = bundle.generate(rollupConfig);
+  .then(async (bundle) => {
+    const appBundle = await bundle.generate(rollupConfig);
 
     const scripts = [
       'node_modules/core-js/client/shim.min.js',

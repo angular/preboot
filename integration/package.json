@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "App for integration test",
   "scripts": {
-    "prebuild": "rm -rf dist out-tsc && npm i",
+    "prebuild": "rm -rf dist out-tsc node_modules yarn.lock && yarn",
     "build": "node build.js",
     "serve": "lite-server -c=bs-config.json",
     "pree2e": "npm run build",
@@ -19,8 +19,8 @@
     "Jeff Whelpley <jeff@gethuman.com>"
   ],
   "dependencies": {
-    "preboot": "file:../dist/",
-    "zone.js": "^0.8.18"
+    "preboot": "file:../dist/bazel/bin/src/lib/npm_package",
+    "zone.js": "^0.8.26"
   },
   "devDependencies": {
     "@ngtools/webpack": "^1.8.0",

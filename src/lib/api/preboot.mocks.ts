@@ -5,8 +5,8 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {PrebootOptions, PrebootWindow} from './preboot.interfaces';
-import {assign, defaultOptions} from '../api/inline.preboot.code';
+import {PrebootOptions, PrebootWindow} from '../common/preboot.interfaces';
+import {assign, defaultOptions} from './inline.preboot.code';
 
 export function getMockWindow(): PrebootWindow {
   return {
