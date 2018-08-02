@@ -18,7 +18,6 @@ import {getNodeKeyForPreboot} from '../common/get-node-key';
 export function _window(): PrebootWindow {
   return {
     prebootData: (window as any)['prebootData'],
-    prebootStarted: false,
     getComputedStyle: window.getComputedStyle,
     document: document
   };
@@ -77,16 +76,7 @@ export class EventReplayer {
 
     // try catch around events b/c even if error occurs, we still move forward
     try {
-      const root = <ServerClientRoot>(appData.root || {});
       const events = appData.events || [];
-
-      // some client side frameworks (like Angular 1 w UI Router) will replace
-      // elements, so we need to re-get client root just to be safe
-      const doc = this.getWindow().document;
-      const clientSelector = root.clientSelector;
-      if (clientSelector != null) {
-        root.clientNode = doc.querySelector(clientSelector) as HTMLElement;
-      }
 
       // replay all the events from the server view onto the client view
       events.forEach(event => this.replayEvent(appData, event));
@@ -190,7 +180,7 @@ export class EventReplayer {
 
     // remove the freeze overlay if it exists
     const doc = this.getWindow().document;
-    const prebootOverlay = doc.body.querySelector('#prebootOverlay') as HTMLElement;
+    const prebootOverlay = doc.getElementById('prebootOverlay');
     if (prebootOverlay) {
       prebootOverlay.remove ?
         prebootOverlay.remove() : prebootOverlay.parentNode !== null ?

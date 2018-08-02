@@ -9,11 +9,10 @@ import {PrebootOptions} from '../common/preboot.interfaces';
 import {getNodeKeyForPreboot} from '../common/get-node-key';
 
 import {
-  init,
-  waitUntilReady,
+  initAll,
   start,
   createOverlay,
-  getAppRoots,
+  getAppRoot,
   handleEvents,
   createListenHandler,
   getSelection,
@@ -21,24 +20,24 @@ import {
 } from './event.recorder';
 
 const eventRecorder = {
-  waitUntilReady,
   start,
   createOverlay,
-  getAppRoots,
+  getAppRoot,
   handleEvents,
   createListenHandler,
   getSelection,
   createBuffer
 };
 
+export const initFunctionName = 'prebootInitFn';
+
 // exporting default options in case developer wants to use these + custom on
 // top
 export const defaultOptions = <PrebootOptions>{
   buffer: true,
-  minify: true,
   replay: true,
 
-  // these are the default events are are listening for an transfering from
+  // these are the default events are are listening for an transferring from
   // server view to client view
   eventSelectors: [
     // for recording changes in form elements
@@ -104,32 +103,46 @@ export function getEventRecorderCode(): string {
   return '\n\n' + eventRecorderFunctions.join('\n\n') + '\n\n';
 }
 
-
 /**
- * Used by the server side version of preboot. The main purpose
- * is to get the inline code that can be inserted into the server view.
+ * Used by the server side version of preboot. The main purpose is to get the
+ * inline code that can be inserted into the server view.
+ * Returns the definitions of the prebootInit function called in code returned by
+ * getInlineInvocation for each server node separately.
  *
  * @param customOptions PrebootRecordOptions that override the defaults
- * @returns Generated inline preboot code is returned
+ * @returns Generated inline preboot code with just functions definitions
+ * to be used separately
  */
-export function getInlinePrebootCode(customOptions?: PrebootOptions): string {
+export function getInlineDefinition(customOptions?: PrebootOptions): string {
   const opts = <PrebootOptions>assign({}, defaultOptions, customOptions);
 
   // safety check to make sure options passed in are valid
   validateOptions(opts);
 
-  const optsStr = stringifyWithFunctions(opts);
   const scriptCode = getEventRecorderCode();
-
-  // TODO re-add minification option?
+  const optsStr = stringifyWithFunctions(opts);
 
   // wrap inline preboot code with a self executing function in order to create scope
-  const initStr = init.toString();
-  return `(function() {
+  const initAllStr = initAll.toString();
+  return `var ${initFunctionName} = (function() {
       ${scriptCode}
-      (${initStr.replace('common_1.', '')}
-      )(${optsStr})
-    })()`;
+      return (${initAllStr.replace('common_1.', '')})(${optsStr});
+    })();`;
+}
+
+
+/**
+ * Used by the server side version of preboot. The main purpose is to get the
+ * inline code that can be inserted into the server view.
+ * Invokes the prebootInit function defined in getInlineDefinition with proper
+ * parameters. Each appRoot should get a separate inlined code from a separate
+ * call to getInlineInvocation but only one inlined code from getInlineDefinition.
+ *
+ * @returns Generated inline preboot code with just invocations of functions from
+ * getInlineDefinition
+ */
+export function getInlineInvocation(): string {
+  return `${initFunctionName}();`;
 }
 
 /**

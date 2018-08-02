@@ -6,20 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {getMockElement} from '../common/preboot.mocks';
-import {createBuffer, createListenHandler, getSelection} from './event.recorder';
-import {
-  EventSelector,
-  PrebootAppData,
-  PrebootData,
-  PrebootSelection,
-  ServerClientRoot,
-} from '../common/preboot.interfaces';
+import {createBuffer, getSelection} from './event.recorder';
+import {PrebootSelection, ServerClientRoot} from '../common/preboot.interfaces';
 
 describe('UNIT TEST event.recorder', function() {
   describe('createBuffer()', function() {
     it('should do nothing if serverNode empty', function () {
       const root = <ServerClientRoot> {
-        serverSelector: 'body',
         serverNode: undefined
       };
 
@@ -29,7 +22,6 @@ describe('UNIT TEST event.recorder', function() {
 
     it('should clone the node and insert before', function () {
       const root = <ServerClientRoot> {
-        serverSelector: 'div',
         serverNode: getMockElement()
       };
       const clientNode = {
@@ -48,7 +40,6 @@ describe('UNIT TEST event.recorder', function() {
 
     it('should add the "ng-non-bindable" attribute to serverNode', function () {
       const root = <ServerClientRoot> {
-        serverSelector: 'div',
         serverNode: getMockElement()
       };
 
@@ -97,37 +88,6 @@ describe('UNIT TEST event.recorder', function() {
 
       const actual = getSelection(node as HTMLInputElement);
       expect(actual).toEqual(expected);
-    });
-  });
-
-
-  describe('createListenHandler()', function () {
-    it('should do nothing if not listening', function () {
-      const prebootData: PrebootData = <PrebootData> {
-        listening: false
-      };
-      const eventSelector: EventSelector = {
-        selector: '',
-        events: [''],
-        preventDefault: true
-      };
-      const appData: PrebootAppData = {
-        root: {
-          serverSelector: '',
-          serverNode: undefined
-        },
-        events: []
-      };
-      const event = {
-        preventDefault: function () {}
-      };
-      const node = <Element>{};
-
-      spyOn(event, 'preventDefault');
-
-      const handler = createListenHandler(prebootData, eventSelector, appData, node);
-      handler(event as Event);
-      expect(event.preventDefault).not.toHaveBeenCalled();
     });
   });
 });

@@ -23,40 +23,20 @@ import {getNodeKeyForPreboot} from '../common/get-node-key';
  * @param opts All the preboot options
  * @param win
  */
-export function init(opts: PrebootOptions, win?: PrebootWindow) {
+export function initAll(opts: PrebootOptions, win?: PrebootWindow) {
   const theWindow = <PrebootWindow>(win || window);
 
-  // add the preboot options to the preboot data and then add the data to
-  // the window so it can be used later by the client
+  // Add the preboot options to the preboot data and then add the data to
+  // the window so it can be used later by the client.
+  // Only set new options if they're not already set - we may have multiple app roots
+  // and each of them invokes the init function separately.
   const data = (theWindow.prebootData = <PrebootData>{
     opts: opts,
-    listening: true,
     apps: [],
     listeners: []
   });
 
-  // start up preboot listening as soon as the DOM is ready
-  waitUntilReady(data);
-}
-
-/**
- * We want to attach event handlers as soon as possible. Unfortunately this
- * means before DOMContentLoaded fires, so we need to look for document.body to
- * exist instead.
- * @param data
- * @param win
- */
-export function waitUntilReady(data: PrebootData, win?: PrebootWindow) {
-  const theWindow = <PrebootWindow>(win || window);
-  const _document = <Document>(theWindow.document || {});
-
-  if (_document.body) {
-    start(data);
-  } else {
-    setTimeout(function() {
-      waitUntilReady(data);
-    }, 10);
-  }
+  return () => start(data, theWindow);
 }
 
 /**
@@ -70,43 +50,54 @@ export function waitUntilReady(data: PrebootData, win?: PrebootWindow) {
  */
 export function start(prebootData: PrebootData, win?: PrebootWindow) {
   const theWindow = <PrebootWindow>(win || window);
+  const _document = <Document>(theWindow.document || {});
 
-  // only start once
-  if (theWindow.prebootStarted) {
+  // Remove the current script from the DOM so that child indexes match
+  // between the client & the server. The script is already running so it
+  // doesn't affect it.
+  const currentScript = _document.currentScript ||
+    // Support: IE 9-11 only
+    // IE doesn't support document.currentScript. Since the script is invoked
+    // synchronously, though, the current running script is just the last one
+    // currently in the document.
+    [].slice.call(_document.getElementsByTagName('script'), -1)[0];
+
+  if (!currentScript) {
+    console.error('Preboot initialization failed, no currentScript has been detected.');
     return;
-  } else {
-    theWindow.prebootStarted = true;
   }
 
-  const _document = <Document>(theWindow.document || {});
+  let serverNode = currentScript.parentNode;
+  if (!serverNode) {
+    console.error('Preboot initialization failed, the script is detached');
+    return;
+  }
+
+  serverNode.removeChild(_document.currentScript);
+
   const opts = prebootData.opts || ({} as PrebootOptions);
   let eventSelectors = opts.eventSelectors || [];
 
-  // create an overlay that can be used later if a freeze event occurs
-  prebootData.overlay = createOverlay(_document);
+  // get the root info
+  const appRoot = prebootData.opts ? getAppRoot(_document, prebootData.opts, serverNode) : null;
 
-  // get an array of all the root info
-  const appRoots = prebootData.opts ? getAppRoots(_document, prebootData.opts) : [];
+  // we track all events for each app in the prebootData object which is on
+  // the global scope; each `start` invocation adds data for one app only.
+  const appData = <PrebootAppData>{ root: appRoot, events: [] };
+  if (prebootData.apps) {
+    prebootData.apps.push(appData);
+  }
 
-  // for each app root
-  appRoots.forEach(function(root) {
-    // we track all events for each app in the prebootData object which is on
-    // the global scope
-    const appData = <PrebootAppData>{ root: root, events: [] };
-    if (prebootData.apps) {
-      prebootData.apps.push(appData);
+  eventSelectors = eventSelectors.map(eventSelector => {
+    if (!eventSelector.hasOwnProperty('replay')) {
+      eventSelector.replay = true;
     }
-
-    eventSelectors = eventSelectors.map(eventSelector => {
-      if (!eventSelector.hasOwnProperty('replay')) {
-        eventSelector.replay = true;
-      }
-      return eventSelector;
-    });
-
-    // loop through all the eventSelectors and create event handlers
-    eventSelectors.forEach(eventSelector => handleEvents(prebootData, appData, eventSelector));
+    return eventSelector;
   });
+
+  // loop through all the eventSelectors and create event handlers
+  eventSelectors.forEach(eventSelector =>
+    handleEvents(_document, prebootData, appData, eventSelector));
 }
 
 /**
@@ -116,7 +107,7 @@ export function start(prebootData: PrebootData, win?: PrebootWindow) {
  * @param _document The global document object (passed in for testing purposes)
  * @returns Element The overlay node is returned
  */
-export function createOverlay(_document: Document): Element | undefined {
+export function createOverlay(_document: Document): HTMLElement | undefined {
   let overlay = _document.createElement('div');
   overlay.setAttribute('id', 'prebootOverlay');
   overlay.setAttribute(
@@ -124,62 +115,49 @@ export function createOverlay(_document: Document): Element | undefined {
     'display:none;position:absolute;left:0;' +
     'top:0;width:100%;height:100%;z-index:999999;background:black;opacity:.3'
   );
-  _document.body.appendChild(overlay);
+  _document.documentElement.appendChild(overlay);
 
   return overlay;
 }
 
 /**
- * Get references to all app root nodes based on input options. Users can
+ * Get references to the current app root node based on input options. Users can
  * initialize preboot either by specifying appRoot which is just one or more
  * selectors for apps. This section option is useful for people that are doing their own
  * buffering (i.e. they have their own client and server view)
  *
- * @param _document The global document object passed in for testing purposes
+ * @param _document The global document object used to attach the overlay
  * @param opts Options passed in by the user to init()
- * @returns ServerClientRoot[] An array of root info for each app
+ * @param serverNode The server node serving as application root
+ * @returns ServerClientRoot An array of root info for the current app
  */
-export function getAppRoots(_document: Document, opts: PrebootOptions): ServerClientRoot[] {
-  const roots: ServerClientRoot[] = [];
+export function getAppRoot(
+  _document: Document,
+  opts: PrebootOptions,
+  serverNode: HTMLElement
+): ServerClientRoot {
+  const root: ServerClientRoot = {serverNode};
 
-  // loop through any appRoot selectors to add them to the list of roots
-  if (opts.appRoot && opts.appRoot.length) {
-    const baseList: string[] = [];
-    const appRootSelectors = baseList.concat(opts.appRoot);
-    appRootSelectors.forEach((selector: any) => roots.push({ serverSelector: selector }));
-  }
+  // if we are doing buffering, we need to create the buffer for the client
+  // else the client root is the same as the server
+  root.clientNode = opts.buffer ? createBuffer(root) : root.serverNode;
 
-  // now loop through the roots to get the nodes for each root
-  roots.forEach(root => {
-    root.serverNode = _document.querySelector(root.serverSelector) as HTMLElement;
-    root.clientSelector = root.clientSelector || root.serverSelector;
+  // create an overlay that can be used later if a freeze event occurs
+  root.overlay = createOverlay(_document);
 
-    if (root.clientSelector !== root.serverSelector) {
-      // if diff selectors, then just get the client node
-      root.clientNode = _document.querySelector(root.clientSelector) as HTMLElement;
-    } else {
-      // if we are doing buffering, we need to create the buffer for the client
-      // else the client root is the same as the server
-      root.clientNode = opts.buffer ? createBuffer(root) : root.serverNode;
-    }
-
-    // if no server node found, log error
-    if (!root.serverNode) {
-      console.log(`No server node found for selector: ${root.serverSelector}`);
-    }
-  });
-
-  return roots;
+  return root;
 }
 
 /**
  * Under given server root, for given selector, record events
  *
+ * @param _document
  * @param prebootData
  * @param appData
  * @param eventSelector
  */
-export function handleEvents(prebootData: PrebootData,
+export function handleEvents(_document: Document,
+                             prebootData: PrebootData,
                              appData: PrebootAppData,
                              eventSelector: EventSelector) {
   const serverRoot = appData.root.serverNode;
@@ -189,52 +167,58 @@ export function handleEvents(prebootData: PrebootData,
     return;
   }
 
-  // get all nodes under the server root that match the given selector
-  const nodes: NodeListOf<Element> = serverRoot.querySelectorAll(eventSelector.selector);
+  // Attach delegated event listeners for each event selector.
+  // We need to use delegated events as only the top level server node
+  // exists at this point.
+  eventSelector.events.forEach((eventName: string) => {
+    // get the appropriate handler and add it as an event listener
+    const handler = createListenHandler(_document, prebootData, eventSelector, appData);
+    // attach the handler in the capture phase so that it fires even if
+    // one of the handlers below calls stopPropagation()
+    serverRoot.addEventListener(eventName, handler, true);
 
-  // don't do anything if no nodes found
-  if (!nodes) {
-    return;
-  }
-
-  // we want to add an event listener for each node and each event
-  for (let i = 0; i < nodes.length; i++) {
-    const node = nodes.item(i);
-    eventSelector.events.forEach((eventName: string) => {
-      // get the appropriate handler and add it as an event listener
-      const handler = createListenHandler(prebootData, eventSelector, appData, node);
-      node.addEventListener(eventName, handler);
-
-      // need to keep track of listeners so we can do node.removeEventListener()
-      // when preboot done
-      if (prebootData.listeners) {
-        prebootData.listeners.push({
-          node: node as HTMLElement,
-          eventName,
-          handler
-        });
-      }
-    });
-  }
+    // need to keep track of listeners so we can do node.removeEventListener()
+    // when preboot done
+    if (prebootData.listeners) {
+      prebootData.listeners.push({
+        node: serverRoot,
+        eventName,
+        handler
+      });
+    }
+  });
 }
 
 /**
  * Create handler for events that we will record
  */
 export function createListenHandler(
+  _document: Document,
   prebootData: PrebootData,
   eventSelector: EventSelector,
-  appData: PrebootAppData,
-  node: Element
+  appData: PrebootAppData
 ): EventListener {
   const CARET_EVENTS = ['keyup', 'keydown', 'focusin', 'mouseup', 'mousedown'];
   const CARET_NODES = ['INPUT', 'TEXTAREA'];
 
+  // Support: IE 9-11 only
+  // IE uses a prefixed `matches` version
+  const matches = _document.documentElement.matches ||
+    _document.documentElement.msMatchesSelector;
+
   return function(event: DomEvent) {
+    const node: Element = event.target;
+
+    // a delegated handlers on document is used so we need to check if
+    // event target matches a desired selector
+    if (!matches.call(node, eventSelector.selector)) {
+      return;
+    }
+
     const root = appData.root;
     const eventName = event.type;
 
-    // if no node or no event name or not listening, just return
+    // if no node or no event name, just return
     if (!node || !eventName) {
       return;
     }
@@ -280,7 +264,7 @@ export function createListenHandler(
 
     // if we are freezing the UI
     if (eventSelector.freeze) {
-      const overlay = prebootData.overlay as HTMLElement;
+      const overlay = root.overlay as HTMLElement;
 
       // show the overlay
       overlay.style.display = 'block';
@@ -344,7 +328,7 @@ export function createBuffer(root: ServerClientRoot): HTMLElement {
   // if no rootServerNode OR the selector is on the entire html doc or the body
   // OR no parentNode, don't buffer
   if (!serverNode || !serverNode.parentNode ||
-    root.serverSelector === 'html' || root.serverSelector === 'body') {
+    serverNode === document.documentElement || serverNode === document.body) {
     return serverNode as HTMLElement;
   }
 
