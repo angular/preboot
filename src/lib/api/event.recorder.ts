@@ -73,7 +73,7 @@ export function start(prebootData: PrebootData, win?: PrebootWindow) {
     return;
   }
 
-  serverNode.removeChild(_document.currentScript);
+  serverNode.removeChild(currentScript);
 
   const opts = prebootData.opts || ({} as PrebootOptions);
   let eventSelectors = opts.eventSelectors || [];
