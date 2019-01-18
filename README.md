@@ -99,6 +99,7 @@ replayer.replayAll();
 * `buffer` (default `true`) - If true, preboot will attempt to buffer client rendering to an extra hidden div. In most
 cases you will want to leave the default (i.e. true) but may turn off if you are debugging an issue.
 * `minify` (deprecated) - minification has been removed in v6. Minification should be handled by the end-user
+* `disableOverlay` (default `true`) - If true, freeze overlay would not get injected in the DOM.
 * `eventSelectors` (defaults below) - This is an array of objects which specify what events preboot should be listening for 
 on the server view and how preboot should replay those events to the client view. 
 See Event Selector section below for more details but note that in most cases, you can just rely on the defaults

@@ -36,6 +36,7 @@ export const initFunctionName = 'prebootInitFn';
 export const defaultOptions = <PrebootOptions>{
   buffer: true,
   replay: true,
+  disableOverlay: false,
 
   // these are the default events are are listening for an transferring from
   // server view to client view

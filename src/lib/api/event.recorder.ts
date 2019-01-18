@@ -142,8 +142,10 @@ export function getAppRoot(
   // else the client root is the same as the server
   root.clientNode = opts.buffer ? createBuffer(root) : root.serverNode;
 
-  // create an overlay that can be used later if a freeze event occurs
-  root.overlay = createOverlay(_document);
+  // create an overlay if not disabled ,that can be used later if a freeze event occurs
+  if (!(opts.disableOverlay || false)) {
+    root.overlay = createOverlay(_document);
+  }
 
   return root;
 }
@@ -205,6 +207,7 @@ export function createListenHandler(
   // IE uses a prefixed `matches` version
   const matches = _document.documentElement.matches ||
     _document.documentElement.msMatchesSelector;
+  const opts = prebootData.opts || ({} as PrebootOptions);
 
   return function(event: DomEvent) {
     const node: Element = event.target;
@@ -262,8 +265,8 @@ export function createListenHandler(
       prebootData.activeNode = undefined;
     }
 
-    // if we are freezing the UI
-    if (eventSelector.freeze) {
+    // if overlay is not disabled and we are freezing the UI
+    if (!(opts.disableOverlay || false) && eventSelector.freeze) {
       const overlay = root.overlay as HTMLElement;
 
       // show the overlay
