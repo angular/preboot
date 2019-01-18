@@ -143,7 +143,7 @@ export function getAppRoot(
   root.clientNode = opts.buffer ? createBuffer(root) : root.serverNode;
 
   // create an overlay if not disabled ,that can be used later if a freeze event occurs
-  if (!(opts.disableOverlay || false)) {
+  if (!opts.disableOverlay) {
     root.overlay = createOverlay(_document);
   }
 
@@ -266,7 +266,7 @@ export function createListenHandler(
     }
 
     // if overlay is not disabled and we are freezing the UI
-    if (!(opts.disableOverlay || false) && eventSelector.freeze) {
+    if (!opts.disableOverlay && eventSelector.freeze) {
       const overlay = root.overlay as HTMLElement;
 
       // show the overlay
