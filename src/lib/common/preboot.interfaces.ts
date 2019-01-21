@@ -29,6 +29,7 @@ export interface PrebootOptions {
   eventSelectors?: EventSelector[]; // when any of these events occur, they are recorded
   appRoot: string | string[]; // define selectors for one or more server roots
   replay?: boolean;
+  disableOverlay?: boolean;
 }
 
 // our wrapper around DOM events in preboot
