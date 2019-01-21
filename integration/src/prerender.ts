@@ -1,10 +1,7 @@
-import 'reflect-metadata';
-import 'zone.js';
 import {INITIAL_CONFIG, renderModuleFactory} from '@angular/platform-server';
 import {readFileSync, writeFileSync} from 'fs-extra';
 
-const { AppServerModuleNgFactory } = require('./app/app.module.ngfactory');
-
+const {AppServerModuleNgFactory} = require('./app/app.module.ngfactory');
 const template = readFileSync('./index.html').toString();
 
 const extraProviders = [
@@ -17,8 +14,5 @@ const extraProviders = [
   }
 ];
 
-renderModuleFactory(AppServerModuleNgFactory, {
-  extraProviders: extraProviders
-}).then((html: string) => {
-  writeFileSync('../dist/index.html', html);
-});
+renderModuleFactory(AppServerModuleNgFactory, {extraProviders})
+  .then((html: string) => writeFileSync('../dist/index.html', html));

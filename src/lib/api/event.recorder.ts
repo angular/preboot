@@ -13,7 +13,8 @@ import {
   DomEvent,
   PrebootWindow,
   ServerClientRoot,
-  PrebootSelection, PrebootSelectionDirection,
+  PrebootSelection,
+  PrebootSelectionDirection,
 } from '../common/preboot.interfaces';
 import {getNodeKeyForPreboot} from '../common/get-node-key';
 
@@ -206,7 +207,7 @@ export function createListenHandler(
   // Support: IE 9-11 only
   // IE uses a prefixed `matches` version
   const matches = _document.documentElement.matches ||
-    _document.documentElement.msMatchesSelector;
+    (_document.documentElement as any).msMatchesSelector;
   const opts = prebootData.opts;
 
   return function(event: DomEvent) {
