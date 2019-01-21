@@ -207,7 +207,7 @@ export function createListenHandler(
   // IE uses a prefixed `matches` version
   const matches = _document.documentElement.matches ||
     _document.documentElement.msMatchesSelector;
-  const opts = prebootData.opts || ({} as PrebootOptions);
+  const opts = prebootData.opts;
 
   return function(event: DomEvent) {
     const node: Element = event.target;
@@ -266,7 +266,7 @@ export function createListenHandler(
     }
 
     // if overlay is not disabled and we are freezing the UI
-    if (!opts.disableOverlay && eventSelector.freeze) {
+    if (opts && !opts.disableOverlay && eventSelector.freeze) {
       const overlay = root.overlay as HTMLElement;
 
       // show the overlay
