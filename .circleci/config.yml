@@ -1,37 +1,114 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
+# Cache key for CircleCI. We want to invalidate the cache whenever the npm shrinkwrap
+# changed.
+var_1: &cache_key preboot-{{ checksum "npm-shrinkwrap.json" }}
+# Use the CircleCI browsers image that comes with NodeJS installed
+var_2: &default_docker_image circleci/node:10.12-browsers
+
+# Settings common to each job
+var_3: &job_defaults
+  working_directory: ~/ng
+  docker:
+    - image: *default_docker_image
+
+# Job step for checking out the source code from GitHub. This also ensures that the source code
+# is rebased on top of master.
+var_4: &checkout_code
+  checkout:
+    # After checkout, rebase on top of master. By default, PRs are not rebased on top of master,
+    # which we want. See https://discuss.circleci.com/t/1662
+    post: git pull --ff-only origin "refs/pull/${CI_PULL_REQUEST//*pull\//}/merge"
+
+# Restores the cache that could be available for the current Yarn lock file. The cache usually
+# includes the node modules.
+var_5: &restore_cache
+  restore_cache:
+    key: *cache_key
+
+# Saves the cache for the current Yarn lock file. We store the node modules
+# in order to make subsequent builds faster.
+var_6: &save_cache
+  save_cache:
+    key: *cache_key
+    paths:
+      - "node_modules"
+
+# Job step that ensures that the node module dependencies are installed and up-to-date. We use
+# Yarn with the frozen lockfile option in order to make sure that lock file and package.json are
+# in sync. Unlike in Travis, we don't need to manually purge the node modules if stale because
+# CircleCI automatically discards the cache if the checksum of the lock file has changed.
+var_7: &yarn_install
+  run: yarn install --frozen-lockfile --non-interactive
+
+# Attaches the release output which has been stored in the workspace to the current job.
+# https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
+var_8: &attach_release_output
+  attach_workspace:
+    at: dist/
+
+
+# -----------------------------
+# Container version of CircleCI
+# -----------------------------
 version: 2
+
+# -----------------------------------------------------------------------------------------
+# Job definitions. Jobs which are defined just here, will not run automatically. Each job
+# must be part of a workflow definition in order to run for PRs and push builds.
+# -----------------------------------------------------------------------------------------
 jobs:
+
   build:
-    docker:
-    # specify the version you desire here
-    - image: circleci/node:8.9
-
-    # Specify service dependencies here if necessary
-    # CircleCI maintains a library of pre-built images
-    # documented at https://circleci.com/docs/2.0/circleci-images/
-    # - image: circleci/mongo:3.4.4
-
-    working_directory: ~/repo
-
+    <<: *job_defaults
     steps:
-    - checkout
+      - *checkout_code
+      - *restore_cache
+      - *yarn_install
 
-    # Download and cache dependencies
-    - restore_cache:
-        keys:
-        - v1-dependencies-{{ checksum "package.json" }}
-        # fallback to using the latest cache if no exact match is found
-        - v1-dependencies-
+      - run: npm run build
 
-    - run: npm install
+      # Store the release output in the workspace storage. This means that other jobs
+      # in the same workflow can attach the release output to their job.
+      - persist_to_workspace:
+          root: dist
+          paths:
+            - "*"
+            - "**/*"
 
-    - save_cache:
-        paths:
-        - node_modules
-        key: v1-dependencies-{{ checksum "package.json" }}
+      - *save_cache
 
-    # run the build!
-    - run: npm run build
+  test:
+    <<: *job_defaults
+    steps:
+      - *checkout_code
+      - *restore_cache
+      - *yarn_install
+
+      - run: npm run test:once
+
+      - *save_cache
+
+  e2e:
+    <<: *job_defaults
+    steps:
+      - *checkout_code
+      - *restore_cache
+      - *attach_release_output
+
+      - run: npm run e2e
+
+      - *save_cache
+
+# ----------------------------------------------------------------------------------------
+# Workflow definitions. A workflow usually groups multiple jobs together. This is useful if
+# one job depends on another.
+# ----------------------------------------------------------------------------------------
+workflows:
+  version: 2
+
+  build_and_test:
+    jobs:
+      - build
+      - test
+      - e2e:
+          requires:
+            - build
