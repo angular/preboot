@@ -1,6 +1,6 @@
 {
   "name": "preboot",
-  "version": "6.0.0-beta.6",
+  "version": "6.0.0",
   "description": "Record server view events and play back to Angular client view",
   "scripts": {
     "clean": "rimraf out-tsc dist/* node_modules && npm i",
