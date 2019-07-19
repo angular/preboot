@@ -253,14 +253,16 @@ export function createListenHandler(
     // get the node key for a given node
     const nodeKey = getNodeKeyForPreboot({ root: root, node: node });
 
-    // if event on input or text area, record active node
-    if (CARET_EVENTS.indexOf(eventName) >= 0 &&
-      CARET_NODES.indexOf(node.tagName ? node.tagName : '') >= 0) {
+    // record active node
+    if (CARET_EVENTS.indexOf(eventName) >= 0) {
+      // if it's an caret node, get the selection for the active node
+      const isCaretNode = CARET_NODES.indexOf(node.tagName ? node.tagName : '') >= 0;
+
       prebootData.activeNode = {
         root: root,
         node: node,
         nodeKey: nodeKey,
-        selection: getSelection(node as HTMLInputElement)
+        selection: isCaretNode ? getSelection(node as HTMLInputElement) : undefined
       };
     } else if (eventName !== 'change' && eventName !== 'focusout') {
       prebootData.activeNode = undefined;
