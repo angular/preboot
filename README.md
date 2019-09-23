@@ -29,7 +29,7 @@ The following sections covers the three different configurations of preboot:
 
 #### Angular Configuration
 
-```typescript
+```ts
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { PrebootModule } from 'preboot';
@@ -116,7 +116,7 @@ yourself once you know that all async events are complete.
 
 To manually trigger replay, inject the EventReplayer like this:
 
-```
+```ts
 import { Injectable } from '@angular/core';
 import { EventReplayer } from 'preboot';
 
@@ -176,7 +176,7 @@ Preboot registers its reply code at the `APP_BOOTSTRAP_LISTENER` token which is 
 
 To make Preboot work correctly in such a case you need to specify `replay: false` in the Preboot options and replay the events yourself. That is, import `PrebootModule` like this:
 
-```typescript
+```ts
 PrebootModule.withConfig({
   appRoot: 'app-root',
   replay: false,
@@ -185,7 +185,7 @@ PrebootModule.withConfig({
 
 and replay events in `AppComponent` like this:
 
-```typescript
+```ts
 import { isPlatformBrowser } from '@angular/common';
 import { Component, OnInit, PLATFORM_ID, Inject, ApplicationRef } from '@angular/core';
 import { Router } from '@angular/router';
@@ -226,7 +226,7 @@ When you are manually replaying events, you often will want to know when Preboot
 is done replaying events and switching the buffers. To do this, use the following
 code in your app:
 
-```
+```es6
 window.document.addEventListener('PrebootComplete', () => {
   // put your code here that you want to run once preboot is complete
 });
@@ -238,7 +238,7 @@ If you're using a CSP, you'll need to add a `nonce` property to preboot's inline
 Preboot allows you to configure this by exporting an optional `PREBOOT_NONCE` token.
 Example usage is as follows (for an Express server):
 
-```typescript
+```ts
 import {PREBOOT_NONCE} from 'preboot';
 import * as express from 'express';
 import {v4} from 'uuid';
@@ -283,7 +283,7 @@ Please note that only the nonce tag will appear on the script,
 sure your nonce is generating correctly, you can add a callback
 onto your render method to examine the resultant HTML as follows:
 
-```typescript
+```ts
 res.render('index', (req, res) => {
   ...
 }, function(error, html) {
