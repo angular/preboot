@@ -8,8 +8,8 @@
 // This is used to identify which events to listen for and what we do with them
 export interface EventSelector {
   selector: string; // same as jQuery; selector for nodes
-  events: [string]; // array of event names to listen for
-  keyCodes?: [number]; // key codes to watch out for
+  events: string[]; // array of event names to listen for
+  keyCodes?: number[]; // key codes to watch out for
   preventDefault?: boolean; // will prevent default handlers if true
   freeze?: boolean; // if  true, the UI will freeze when this event occurs
   action?: Function; // custom action to take with this event
