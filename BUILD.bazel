@@ -1,0 +1,13 @@
+load("//:rollup-globals.bzl", "ROLLUP_GLOBALS")
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files([
+    "LICENSE",
+])
+
+genrule(
+    name = "rollup_globals",
+    outs = ["rollup_globals.json"],
+    cmd = "echo '%s' > $@" % ROLLUP_GLOBALS,
+)

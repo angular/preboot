@@ -5,11 +5,9 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import { NodeContext } from './preboot.interfaces';
+import {NodeContext} from './preboot.interfaces';
 
-/**
- * Attempt to generate key from node position in the DOM
- */
+/** Attempt to generate key from node position in the DOM */
 export function getNodeKeyForPreboot(nodeContext: NodeContext): string {
   const ancestors: Element[] = [];
   const root = nodeContext.root;
@@ -29,8 +27,7 @@ export function getNodeKeyForPreboot(nodeContext: NodeContext): string {
 
   // now go backwards starting from the root, appending the appName to unique
   // identify the node later..
-  const name = node.nodeName || 'unknown';
-  let key = name;
+  let key = node.nodeName || 'unknown';
   const len = ancestors.length;
 
   for (let i = len - 1; i >= 0; i--) {

@@ -25,7 +25,7 @@ import {getNodeKeyForPreboot} from '../common/get-node-key';
  * @param win
  */
 export function initAll(opts: PrebootOptions, win?: PrebootWindow) {
-  const theWindow = <PrebootWindow>(win || window);
+  const theWindow = <PrebootWindow>(win ?? window);
 
   // Add the preboot options to the preboot data and then add the data to
   // the window so it can be used later by the client.
@@ -50,13 +50,13 @@ export function initAll(opts: PrebootOptions, win?: PrebootWindow) {
  * @param win Optional param to pass in mock window for testing purposes
  */
 export function start(prebootData: PrebootData, win?: PrebootWindow) {
-  const theWindow = <PrebootWindow>(win || window);
-  const _document = <Document>(theWindow.document || {});
+  const theWindow = <PrebootWindow>(win ?? window);
+  const _document = <Document>(theWindow.document ?? {});
 
   // Remove the current script from the DOM so that child indexes match
   // between the client & the server. The script is already running so it
   // doesn't affect it.
-  const currentScript = _document.currentScript ||
+  const currentScript = _document.currentScript ??
     // Support: IE 9-11 only
     // IE doesn't support document.currentScript. Since the script is invoked
     // synchronously, though, the current running script is just the last one
@@ -76,11 +76,11 @@ export function start(prebootData: PrebootData, win?: PrebootWindow) {
 
   serverNode.removeChild(currentScript);
 
-  const opts = prebootData.opts || ({} as PrebootOptions);
+  const opts: Partial<PrebootOptions> = prebootData.opts ?? {};
   let eventSelectors = opts.eventSelectors || [];
 
   // get the root info
-  const appRoot = prebootData.opts ? getAppRoot(_document, prebootData.opts, serverNode) : null;
+  const appRoot = prebootData.opts ? getAppRoot(_document, prebootData.opts, serverNode as HTMLElement) : null;
 
   // we track all events for each app in the prebootData object which is on
   // the global scope; each `start` invocation adds data for one app only.
@@ -141,7 +141,7 @@ export function getAppRoot(
 
   // if we are doing buffering, we need to create the buffer for the client
   // else the client root is the same as the server
-  root.clientNode = opts.buffer ? createBuffer(root) : root.serverNode;
+  root.clientNode = opts.buffer ? createBuffer(root) : serverNode;
 
   // create an overlay if not disabled ,that can be used later if a freeze event occurs
   if (!opts.disableOverlay) {
@@ -206,7 +206,7 @@ export function createListenHandler(
 
   // Support: IE 9-11 only
   // IE uses a prefixed `matches` version
-  const matches = _document.documentElement.matches ||
+  const matches = _document.documentElement.matches ??
     (_document.documentElement as any).msMatchesSelector;
   const opts = prebootData.opts;
 
@@ -256,7 +256,7 @@ export function createListenHandler(
     // record active node
     if (CARET_EVENTS.indexOf(eventName) >= 0) {
       // if it's an caret node, get the selection for the active node
-      const isCaretNode = CARET_NODES.indexOf(node.tagName ? node.tagName : '') >= 0;
+      const isCaretNode = CARET_NODES.indexOf(node.tagName ?? '') >= 0;
 
       prebootData.activeNode = {
         root: root,
@@ -270,7 +270,7 @@ export function createListenHandler(
 
     // if overlay is not disabled and we are freezing the UI
     if (opts && !opts.disableOverlay && eventSelector.freeze) {
-      const overlay = root.overlay as HTMLElement;
+      const overlay = root.overlay!;
 
       // show the overlay
       overlay.style.display = 'block';
@@ -300,9 +300,9 @@ export function createListenHandler(
  * is active
  */
 export function getSelection(node: HTMLInputElement): PrebootSelection {
-  node = node || {} as HTMLInputElement;
+  node = node ?? {} as HTMLInputElement;
 
-  const nodeValue = node.value || '';
+  const nodeValue = node.value ?? '';
   const selection: PrebootSelection = {
     start: nodeValue.length,
     end: nodeValue.length,
@@ -313,9 +313,8 @@ export function getSelection(node: HTMLInputElement): PrebootSelection {
   try {
     if (node.selectionStart || node.selectionStart === 0) {
       selection.start = node.selectionStart;
-      selection.end = node.selectionEnd ? node.selectionEnd : 0;
-      selection.direction = node.selectionDirection ?
-        node.selectionDirection as PrebootSelectionDirection : 'none';
+      selection.end = node.selectionEnd ?? 0;
+      selection.direction = node.selectionDirection ?? 'none';
     }
   } catch (ex) {}
 

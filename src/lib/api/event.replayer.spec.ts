@@ -8,7 +8,7 @@ describe('UNIT TEST event.replayer', function () {
       const eventReplayer = new EventReplayer();
       const appData = <PrebootAppData>{};
 
-      eventReplayer.setWindow(getMockWindow());
+      eventReplayer.window = getMockWindow();
       eventReplayer.switchBuffer(appData);
     });
   });

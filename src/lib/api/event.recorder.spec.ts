@@ -9,10 +9,10 @@ import {getMockElement} from '../common/preboot.mocks';
 import {createBuffer, getSelection} from './event.recorder';
 import {PrebootSelection, ServerClientRoot} from '../common/preboot.interfaces';
 
-describe('UNIT TEST event.recorder', function() {
-  describe('createBuffer()', function() {
-    it('should do nothing if serverNode empty', function () {
-      const root = <ServerClientRoot> {
+describe('UNIT TEST event.recorder', () => {
+  describe('createBuffer()', () => {
+    it('should do nothing if serverNode empty', () => {
+      const root: Partial<ServerClientRoot> = {
         serverNode: undefined
       };
 
@@ -20,27 +20,25 @@ describe('UNIT TEST event.recorder', function() {
       expect(actual).toBe(root.serverNode as HTMLElement);
     });
 
-    it('should clone the node and insert before', function () {
-      const root = <ServerClientRoot> {
-        serverNode: getMockElement()
+    it('should clone the node and insert before', () => {
+      const root: Partial<ServerClientRoot> = {
+        serverNode: getMockElement() as HTMLElement
       };
       const clientNode = {
-        style: { display: 'block' }
+        style: { display: 'block' } as CSSStyleDeclaration
       } as HTMLElement;
 
       if (root.serverNode) {
-        root.serverNode.cloneNode = function () {
-          return clientNode;
-        };
+        root.serverNode.cloneNode = () => clientNode;
       }
 
       const actual = createBuffer(root);
-      expect(actual).toBe(clientNode as HTMLElement);
+      expect(actual).toBe(clientNode);
     });
 
-    it('should add the "ng-non-bindable" attribute to serverNode', function () {
-      const root = <ServerClientRoot> {
-        serverNode: getMockElement()
+    it('should add the "ng-non-bindable" attribute to serverNode', () => {
+      const root: Partial<ServerClientRoot> = {
+        serverNode: getMockElement() as HTMLElement
       };
 
       createBuffer(root);
@@ -48,8 +46,8 @@ describe('UNIT TEST event.recorder', function() {
     });
   });
 
-  describe('getSelection()', function () {
-    it('should return default if no value', function () {
+  describe('getSelection()', () => {
+    it('should return default if no value', () => {
       const node = {};
       const expected: PrebootSelection = {
         start: 0,
@@ -61,7 +59,7 @@ describe('UNIT TEST event.recorder', function() {
       expect(actual).toEqual(expected);
     });
 
-    it('should return selection for older browsers', function () {
+    it('should return selection for older browsers', () => {
       const node = { value: 'foo' };
       const expected: PrebootSelection = {
         start: 3,
@@ -73,7 +71,7 @@ describe('UNIT TEST event.recorder', function() {
       expect(actual).toEqual(expected);
     });
 
-    it('should return selection for modern browsers', function () {
+    it('should return selection for modern browsers', () => {
       const node = {
         value: 'foo',
         selectionStart: 1,

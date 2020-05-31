@@ -1,0 +1,15 @@
+load("@npm_bazel_typescript//:index.bzl", "ts_config")
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files([
+    "bazel-tsconfig-build.json",
+    "bazel-tsconfig-test.json",
+    "README.md",
+])
+
+ts_config(
+    name = "tsconfig-test",
+    src = "bazel-tsconfig-test.json",
+    deps = ["bazel-tsconfig-build.json"],
+)

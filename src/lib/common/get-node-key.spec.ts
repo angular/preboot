@@ -1,52 +1,50 @@
 import {NodeContext} from './preboot.interfaces';
 import {getNodeKeyForPreboot} from './get-node-key';
 
-describe('UNIT TEST get-node-key', function() {
-  describe('getNodeKeyForPreboot()', function() {
-    it('should generate a default name', function() {
-      const nodeContext = <NodeContext>{
-        root: {
-          serverNode: {},
-          clientNode: {},
-        },
-        node: {}
-      };
-      const expected = 'unknown';
-      const actual = getNodeKeyForPreboot(nodeContext);
-      expect(actual).toEqual(expected);
-    });
+describe('getNodeKeyForPreboot()', () => {
+  it('should generate a default name', () => {
+    const nodeContext = <NodeContext>{
+      root: {
+        serverNode: {},
+        clientNode: {},
+      },
+      node: {}
+    };
+    const expected = 'unknown';
+    const actual = getNodeKeyForPreboot(nodeContext);
+    expect(actual).toEqual(expected);
+  });
 
-    it('should generate a name for a deeply nested element', function() {
+  it('should generate a name for a deeply nested element', () => {
 
-      const node = document.createElement('foo');
-      const serverNode = document.createElement('div');
-      const emptyNode = document.createElement('div');
-      const levelTwo = document.createElement('div');
-      const levelThree = document.createElement('div');
+    const node = document.createElement('foo');
+    const serverNode = document.createElement('div');
+    const emptyNode = document.createElement('div');
+    const levelTwo = document.createElement('div');
+    const levelThree = document.createElement('div');
 
-      levelThree.appendChild(emptyNode.cloneNode());
-      levelThree.appendChild(emptyNode.cloneNode());
-      levelThree.appendChild(emptyNode.cloneNode());
-      levelThree.appendChild(node);
+    levelThree.appendChild(emptyNode.cloneNode());
+    levelThree.appendChild(emptyNode.cloneNode());
+    levelThree.appendChild(emptyNode.cloneNode());
+    levelThree.appendChild(node);
 
-      levelTwo.appendChild(emptyNode.cloneNode());
-      levelTwo.appendChild(levelThree);
+    levelTwo.appendChild(emptyNode.cloneNode());
+    levelTwo.appendChild(levelThree);
 
-      serverNode.appendChild(emptyNode.cloneNode());
-      serverNode.appendChild(emptyNode.cloneNode());
-      serverNode.appendChild(levelTwo);
+    serverNode.appendChild(emptyNode.cloneNode());
+    serverNode.appendChild(emptyNode.cloneNode());
+    serverNode.appendChild(levelTwo);
 
-      const nodeContext = {
-        root: {
-          serverNode,
-          clientNode: emptyNode
-        },
-        node
-      };
+    const nodeContext = {
+      root: {
+        serverNode,
+        clientNode: emptyNode
+      },
+      node
+    };
 
-      const expected = 'FOO_s3_s2_s4';
-      const actual = getNodeKeyForPreboot(nodeContext);
-      expect(actual).toEqual(expected);
-    });
+    const expected = 'FOO_s3_s2_s4';
+    const actual = getNodeKeyForPreboot(nodeContext);
+    expect(actual).toEqual(expected);
   });
 });

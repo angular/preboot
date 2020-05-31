@@ -15,7 +15,7 @@ import {PREBOOT_OPTIONS, PREBOOT_PROVIDER} from './provider';
   providers: [EventReplayer, PREBOOT_PROVIDER]
 })
 export class PrebootModule {
-  static withConfig(opts: PrebootOptions): ModuleWithProviders {
+  static withConfig(opts: PrebootOptions): ModuleWithProviders<PrebootModule> {
     return {
       ngModule: PrebootModule,
       providers: [{provide: PREBOOT_OPTIONS, useValue: opts}]
