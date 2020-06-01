@@ -18,9 +18,8 @@ import {filter, take} from 'rxjs/operators';
 
 import {EventReplayer} from './api/event.replayer';
 import {PREBOOT_NONCE} from './common/tokens';
-import {getInlineDefinition, getInlineInvocation} from './api/inline.preboot.code';
+import {getInlineDefinition, getInlineInvocation, validateOptions} from './api/inline.preboot.code';
 import {PrebootOptions} from './common/preboot.interfaces';
-import {validateOptions} from './api';
 
 const PREBOOT_SCRIPT_CLASS = 'preboot-inline-script';
 export const PREBOOT_OPTIONS = new InjectionToken<PrebootOptions>('PrebootOptions');
@@ -28,7 +27,7 @@ export const PREBOOT_OPTIONS = new InjectionToken<PrebootOptions>('PrebootOption
 function createScriptFromCode(doc: Document, nonce: string|null, inlineCode: string) {
   const script = doc.createElement('script');
   if (nonce) {
-    (script as any).nonce = nonce;
+    script.nonce = nonce;
   }
   script.className = PREBOOT_SCRIPT_CLASS;
   script.textContent = inlineCode;

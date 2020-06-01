@@ -170,14 +170,14 @@ export function validateOptions(opts: PrebootOptions) {
  * @returns A new object that contains all the merged values
  */
 export function assign(target: Object, ...optionSets: any[]): Object {
-  if (target === undefined || target === null) {
+  if (target == null) {
     throw new TypeError('Cannot convert undefined or null to object');
   }
 
   const output = Object(target);
   for (let index = 0; index < optionSets.length; index++) {
     const source = optionSets[index];
-    if (source !== undefined && source !== null) {
+    if (source != null) {
       for (const nextKey in source) {
         if (source.hasOwnProperty && source.hasOwnProperty(nextKey)) {
           output[nextKey] = source[nextKey];

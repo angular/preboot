@@ -1,21 +1,25 @@
 {
   "compilerOptions": {
-    "declaration": true,
-    "stripInternal": false,
+    "outDir": "./dist/packages/all",
     "experimentalDecorators": true,
-    "noUnusedParameters": true,
-    "strictNullChecks": true,
-    "importHelpers": true,
-    "newLine": "lf",
+    // Bazel either uses "umd" or "esnext". We replicate this here for IDE support.
+    // https://github.com/bazelbuild/rules_typescript/blob/master/internal/common/tsconfig.bzl#L199
+    "module": "esnext",
     "moduleResolution": "node",
-    "sourceMap": true,
-    "inlineSources": true,
-    "lib": [
-      "es2015",
-      "dom"
-    ],
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": false,
+    "strictNullChecks": true,
+    "noImplicitReturns": true,
+    "strictFunctionTypes": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
     "skipLibCheck": true,
-    "noImplicitAny": true
+    "strictBindCallApply": true,
+    "target": "es2015",
+    "lib": ["es5", "es2015", "dom"],
+    "types": ["jasmine"],
+    "baseUrl": "."
   },
   "include": [
     "src/**/*.ts",

@@ -1,0 +1,67 @@
+load("//tools:defaults.bzl", "ng_package", "ng_module", "ng_test_library", "ng_web_test_suite", "ng_e2e_test_library", "protractor_web_test_suite")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_module(
+    name = "preboot",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts", "testing/**/*"],
+    ),
+    module_name = "preboot",
+    deps = [
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
+        "@npm//@angular/platform-server",
+        "@npm//rxjs",
+    ],
+)
+
+ng_test_library(
+    name = "unit_test_sources",
+    srcs = glob(
+        ["**/*.spec.ts"],
+        exclude = ["**/*.e2e.spec.ts"],
+    ),
+    deps = [
+        ":preboot",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)
+
+ng_e2e_test_library(
+  name = "e2e_test_sources",
+  srcs = glob(["**/*.e2e.spec.ts", "testing/**/*"]),
+)
+
+protractor_web_test_suite(
+  name = "e2e_tests",
+  tags = ["e2e"],
+  configuration = "//e2e-app:protractor.conf.js",
+  on_prepare = "//e2e-app:start-devserver.js",
+  server = "//e2e-app:devserver",
+  deps = [
+    ":e2e_test_sources",
+  ],
+  data = [
+    "@npm//@angular/bazel",
+    "//tools/axe-protractor",
+  ],
+)
+
+# Creates the preboot package published to npm.
+ng_package(
+    name = "npm_package",
+    srcs = [
+        "package.json",
+    ],
+    entry_point = ":index.ts",
+    entry_point_name = "preboot",
+    tags = ["release-package"],
+    deps = [":preboot"],
+)

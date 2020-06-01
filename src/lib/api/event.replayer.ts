@@ -19,7 +19,7 @@ export function _window(): PrebootWindow {
   return {
     prebootData: (window as any)['prebootData'],
     getComputedStyle: window.getComputedStyle,
-    document: document
+    document
   };
 }
 
@@ -32,15 +32,10 @@ export class EventReplayer {
    * Window setting and getter to facilitate testing of window
    * in non-browser environments
    */
-  setWindow(win: PrebootWindow) {
+  set window(win: PrebootWindow) {
     this.win = win;
   }
-
-  /**
-   * Window setting and getter to facilitate testing of window
-   * in non-browser environments
-   */
-  getWindow() {
+  get window(): PrebootWindow {
     if (!this.win) {
       this.win = _window();
     }
@@ -59,8 +54,8 @@ export class EventReplayer {
     }
 
     // loop through each of the preboot apps
-    const prebootData = this.getWindow().prebootData || {};
-    const apps = prebootData.apps || [];
+    const prebootData = this.window.prebootData ?? {};
+    const apps = prebootData.apps ?? [];
     apps.forEach(appData => this.replayForApp(appData));
 
     // once all events have been replayed and buffers switched, then we cleanup preboot
@@ -72,11 +67,11 @@ export class EventReplayer {
    * @param appData
    */
   replayForApp(appData: PrebootAppData) {
-    appData = <PrebootAppData>(appData || {});
+    appData = <PrebootAppData>(appData ?? {});
 
     // try catch around events b/c even if error occurs, we still move forward
     try {
-      const events = appData.events || [];
+      const events = appData.events ?? [];
 
       // replay all the events from the server view onto the client view
       events.forEach(event => this.replayEvent(appData, event));
@@ -128,9 +123,9 @@ export class EventReplayer {
    * @param appData
    */
   switchBuffer(appData: PrebootAppData) {
-    appData = <PrebootAppData>(appData || {});
+    appData = <PrebootAppData>(appData ?? {});
 
-    const root = <ServerClientRoot>(appData.root || {});
+    const root = <ServerClientRoot>(appData.root ?? {});
     const serverView = root.serverNode;
     const clientView = root.clientNode;
 
@@ -143,7 +138,7 @@ export class EventReplayer {
     // do a try-catch just in case something messed up
     try {
       // get the server view display mode
-      const gcs = this.getWindow().getComputedStyle;
+      const gcs = this.window.getComputedStyle;
       const display = gcs(serverView).getPropertyValue('display') || 'block';
 
       // first remove the server view
@@ -162,9 +157,9 @@ export class EventReplayer {
    * @param prebootData
    */
   cleanup(prebootData: PrebootData) {
-    prebootData = prebootData || {};
+    prebootData = prebootData ?? {};
 
-    const listeners = prebootData.listeners || [];
+    const listeners = prebootData.listeners ?? [];
 
     // set focus on the active node AFTER a small delay to ensure buffer
     // switched
@@ -179,7 +174,7 @@ export class EventReplayer {
     }
 
     // remove the freeze overlay if it exists
-    const doc = this.getWindow().document;
+    const doc = this.window.document;
     const prebootOverlay = doc.getElementById('prebootOverlay');
     if (prebootOverlay) {
       prebootOverlay.remove ?
@@ -243,7 +238,7 @@ export class EventReplayer {
    * server view
    */
   findClientNode(serverNodeContext: NodeContext): HTMLElement | null {
-    serverNodeContext = <NodeContext>(serverNodeContext || {});
+    serverNodeContext = <NodeContext>(serverNodeContext ?? {});
 
     const serverNode = serverNodeContext.node;
     const root = serverNodeContext.root;
@@ -255,7 +250,7 @@ export class EventReplayer {
 
     // we use the string of the node to compare to the client node & as key in
     // cache
-    const serverNodeKey = serverNodeContext.nodeKey || getNodeKeyForPreboot(serverNodeContext);
+    const serverNodeKey = serverNodeContext.nodeKey ?? getNodeKeyForPreboot(serverNodeContext);
 
     // if client node already in cache, return it
     if (this.clientNodeCache[serverNodeKey]) {
@@ -263,7 +258,7 @@ export class EventReplayer {
     }
 
     // get the selector for client nodes
-    const className = (serverNode.className || '').replace('ng-binding', '').trim();
+    const className = (serverNode.className ?? '').replace('ng-binding', '').trim();
     let selector = serverNode.tagName;
 
     if (serverNode.id) {
