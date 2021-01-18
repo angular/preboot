@@ -1,6 +1,6 @@
 # Cache key for CircleCI. We want to invalidate the cache whenever the npm shrinkwrap
 # changed.
-var_1: &cache_key preboot-{{ checksum "npm-shrinkwrap.json" }}
+var_1: &cache_key preboot-{{ checksum "package-lock.json" }}
 # Use the CircleCI browsers image that comes with NodeJS installed
 var_2: &default_docker_image circleci/node:10.12-browsers
 
