@@ -13,8 +13,8 @@ exports.config = {
     browserName: 'chrome',
     // For Travis
     chromeOptions: {
-      binary: process.env.CHROME_BIN,
-      args: ['--no-sandbox']
+      args: ['--headless'],
+      binary: require('puppeteer').executablePath(),
     }
   },
   directConnect: true,
@@ -26,6 +26,6 @@ exports.config = {
     print: function () { }
   },
   onPrepare() {
-    jasmine.getEnv().addReporter(new SpecReporter({ spec: { displayStacktrace: true } }));
+    jasmine.getEnv().addReporter(new SpecReporter({ spec: { displayStacktrace: 'pretty' } }));
   }
 };

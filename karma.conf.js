@@ -1,5 +1,6 @@
-module.exports = function (config) {
+process.env.CHROME_BIN = require('puppeteer').executablePath();
 
+module.exports = function (config) {
   config.set({
     basePath: __dirname,
     frameworks: ['jasmine'],
@@ -23,13 +24,12 @@ module.exports = function (config) {
       // From the CLI. Not used here but interesting
       // chrome setup for travis CI using chromium
       CustomChrome: {
+        binary: process.env.CHROME_BIN,
         base: 'ChromeHeadless',
-        flags: process.env.TRAVIS && ['--no-sandbox']
       }
     },
 
     files: [
-      {pattern: 'node_modules/core-js/client/core.js', included: true, watched: false},
       {pattern: 'node_modules/tslib/tslib.js', included: true, watched: false},
       {pattern: 'node_modules/systemjs/dist/system.src.js', included: true, watched: false},
       {pattern: 'node_modules/zone.js/dist/zone.js', included: true, watched: false},

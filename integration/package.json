@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "description": "App for integration test",
   "scripts": {
-    "prebuild": "rm -rf dist out-tsc && npm i",
+    "prebuild": "rm -rf dist out-tsc && yarn install --frozen-lockfile",
     "build": "node build.js",
     "serve": "lite-server -c=bs-config.json",
-    "pree2e": "npm run build",
-    "e2e": "concurrently \"npm run serve\" \"npm run protractor\" --kill-others --success first",
-    "preprotractor": "webdriver-manager update",
-    "protractor": "protractor protractor.conf.js"
+    "pree2e": "yarn build",
+    "e2e": "concurrently \"yarn serve\" \"yarn protractor\" --kill-others --success first",
+    "preprotractor": "webdriver-manager update --gecko false --standalone false 87.0.4280.20",
+    "protractor": "protractor protractor.conf.js",
+    "ngcc": "ngcc --properties es2015 browser module main --first-only",
+    "postinstall": "yarn ngcc"
   },
   "author": "Jeff Whelpley",
   "license": "MIT",
@@ -19,24 +21,34 @@
     "Jeff Whelpley <jeff@gethuman.com>"
   ],
   "dependencies": {
+    "@angular/animations": "^11.0.0",
+    "@angular/common": "^11.0.0",
+    "@angular/compiler": "^11.0.0",
+    "@angular/core": "^11.0.0",
+    "@angular/platform-browser": "^11.0.0",
+    "@angular/platform-browser-dynamic": "^11.0.0",
+    "@angular/platform-server": "^11.0.0",
     "core-js": "^2.6.2",
-    "preboot": "file:../dist/",
-    "zone.js": "^0.8.28"
+    "preboot": "file:../dist",
+    "rxjs": "^6.6.3",
+    "tslib": "^2.1.0",
+    "zone.js": "~0.10.3"
   },
   "devDependencies": {
+    "@angular/compiler-cli": "^11.0.0",
     "@types/express": "^4.16.0",
     "@types/fs-extra": "^4.0.8",
+    "@types/jasmine": "^3.6.2",
     "@types/uglify-js": "^2.6.32",
     "ajv": "^5.5.2",
     "concurrently": "^3.6.1",
-    "copy-webpack-plugin": "^4.6.0",
     "express": "^4.16.4",
     "glob": "^7.1.3",
-    "http-server": "^0.10.0",
+    "jasmine-spec-reporter": "^6.0.0",
     "lite-server": "^2.4.0",
     "protractor": "^5.4.2",
-    "raw-loader": "^0.5.1",
-    "reflect-metadata": "^0.1.13",
+    "puppeteer": "~5.5.0",
+    "typescript": "~4.0.3",
     "webpack": "^4.29.0"
   }
 }

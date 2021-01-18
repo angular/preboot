@@ -6,9 +6,10 @@ logs
 .DS_Store
 **/.DS_Store
 
-package-lock.json
+/npm-shrinkwrap.json
 
 dist/
+dist-tarball/
 node_modules/
 out-tsc/
 debug.log

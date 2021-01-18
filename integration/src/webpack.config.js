@@ -1,12 +1,14 @@
 const webpack = require('webpack');
 const path = require('path');
-const rootDir = process.cwd();
-const outDir = path.resolve(rootDir, 'out-tsc/e2e/');
 
 module.exports = {
-  entry: path.resolve(outDir, 'postrender.js'),
+  mode: 'production',
+  entry: [
+    './node_modules/core-js/client/shim.min.js',
+    './out-tsc/e2e/postrender.js',
+  ],
   output: {
-    path: path.resolve(rootDir, 'dist'),
+    path: path.resolve('dist'),
     filename: 'postrender.js'
   },
 

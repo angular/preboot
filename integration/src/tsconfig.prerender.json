@@ -22,9 +22,5 @@
   },
   "files": [
     "prerender.ts"
-  ],
-  "angularCompilerOptions": {
-    "annotateForClosureCompiler": true,
-    "skipMetadataEmit": true
-  }
+  ]
 }

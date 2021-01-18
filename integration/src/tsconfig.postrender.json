@@ -22,9 +22,5 @@
   },
   "files": [
     "postrender.ts"
-  ],
-  "angularCompilerOptions": {
-    "annotateForClosureCompiler": true,
-    "skipMetadataEmit": true
-  }
+  ]
 }
