@@ -31,10 +31,5 @@
   "bugs": {
     "url": "https://github.com/angular/preboot/issues"
   },
-  "homepage": "https://github.com/angular/preboot",
-  "ngPackage": {
-    "lib": {
-      "entryFile": "public-api.ts"
-    }
-  }
+  "homepage": "https://github.com/angular/preboot"
 }

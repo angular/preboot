@@ -28,11 +28,8 @@
     "./typings.d.ts"
   ],
   "angularCompilerOptions": {
-    "annotateForClosureCompiler": true,
+    "enableIvy": false,
     "strictMetadataEmit": true,
     "skipTemplateCodegen": true,
-    "flatModuleOutFile": "index.js",
-    "flatModuleId": "preboot",
-    "genDir": "../../out-tsc/lib-gen-dir/"
   }
 }
