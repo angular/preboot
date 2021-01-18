@@ -9,7 +9,9 @@
     "pree2e": "npm run build",
     "e2e": "concurrently \"npm run serve\" \"npm run protractor\" --kill-others --success first",
     "preprotractor": "webdriver-manager update",
-    "protractor": "protractor protractor.conf.js"
+    "protractor": "protractor protractor.conf.js",
+    "ngcc": "ngcc --properties es2015 browser module main --first-only",
+    "postinstall": "yarn ngcc"
   },
   "author": "Jeff Whelpley",
   "license": "MIT",
@@ -21,7 +23,7 @@
   "dependencies": {
     "core-js": "^2.6.2",
     "preboot": "file:../dist/",
-    "zone.js": "^0.8.28"
+    "zone.js": "~0.10.3"
   },
   "devDependencies": {
     "@types/express": "^4.16.0",
@@ -37,6 +39,12 @@
     "protractor": "^5.4.2",
     "raw-loader": "^0.5.1",
     "reflect-metadata": "^0.1.13",
+    "rollup": "~0.41.6",
+    "rollup-plugin-alias": "^1.5.1",
+    "rollup-plugin-commonjs": "^8.4.1",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-uglify": "^2.0.1",
     "webpack": "^4.29.0"
   }
 }

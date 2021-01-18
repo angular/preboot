@@ -6,7 +6,7 @@ logs
 .DS_Store
 **/.DS_Store
 
-package-lock.json
+/npm-shrinkwrap.json
 
 dist/
 node_modules/
