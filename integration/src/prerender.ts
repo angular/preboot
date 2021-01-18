@@ -1,3 +1,4 @@
+import 'zone.js';
 import {INITIAL_CONFIG, renderModule} from '@angular/platform-server';
 import {readFileSync, writeFileSync} from 'fs-extra';
 

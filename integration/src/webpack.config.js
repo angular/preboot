@@ -5,8 +5,7 @@ module.exports = {
   mode: 'production',
   entry: [
     './node_modules/core-js/client/shim.min.js',
-    './node_modules/zone.js/dist/zone.min.js',
-    path.join('../out-tsc/e2e', 'postrender.js'),
+    './out-tsc/e2e/postrender.js',
   ],
   output: {
     path: path.resolve('dist'),

@@ -1,3 +1,4 @@
+import 'zone.js';
 import {platformBrowser} from '@angular/platform-browser';
 import {AppBrowserModule} from './app/app.module';
 
