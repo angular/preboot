@@ -1,11 +1,12 @@
 import 'core-js/es7/reflect';
 import 'zone.js';
-import {Component, Inject, NgModule, PLATFORM_ID} from '@angular/core';
+import {Component, enableProdMode, Inject, NgModule, PLATFORM_ID} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {ServerModule} from '@angular/platform-server';
 import {isPlatformBrowser} from '@angular/common';
 import {PrebootModule} from 'preboot';
-
+ 
+enableProdMode();
 @Component({
   selector: 'app-root',
   template: `
