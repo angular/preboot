@@ -46,7 +46,6 @@
     "concurrently": "^3.6.1",
     "express": "^4.16.4",
     "glob": "^7.1.3",
-    "http-server": "^0.10.0",
     "jasmine": "^3.6.3",
     "jasmine-core": "^3.6.0",
     "jasmine-spec-reporter": "^6.0.0",
