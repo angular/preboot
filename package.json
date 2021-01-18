@@ -3,7 +3,7 @@
   "version": "8.0.0",
   "description": "Record server view events and play back to Angular client view",
   "scripts": {
-    "clean": "rimraf out-tsc dist/* dist-tarball/* node_modules && npm i",
+    "clean": "rimraf out-tsc dist/* dist-tarball/* node_modules && npm ci",
     "build": "ng-packagr --project src/lib/ng-package.json --config src/lib/tsconfig.lib.json",
     "postbuild": "cp README.md dist/. && cd ./dist && npm pack && mkdir ../dist-tarball && mv *.tgz ../dist-tarball/",
     "e2e": "cd integration && npm run e2e",
