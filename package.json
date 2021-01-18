@@ -3,9 +3,9 @@
   "version": "8.0.0",
   "description": "Record server view events and play back to Angular client view",
   "scripts": {
-    "clean": "rimraf out-tsc dist/* node_modules && npm i",
-    "prebuild": "npm run clean",
-    "build": "ng-packagr -p src/lib/package.json && mv src/lib/dist . && cp README.md dist/.",
+    "clean": "rimraf out-tsc dist/* dist-tarball/* node_modules && npm i",
+    "build": "ng-packagr --project src/lib/ng-package.json --config src/lib/tsconfig.lib.json",
+    "postbuild": "cp README.md dist/. && cd ./dist && npm pack && mkdir ../dist-tarball && mv *.tgz ../dist-tarball/",
     "e2e": "cd integration && npm run e2e",
     "build-test": "ngc -p src/lib/tsconfig.spec.json",
     "build-test:watch": "ngc -p src/lib/tsconfig.spec.json -w",
@@ -17,9 +17,7 @@
     "integration": "npm run integration:aot && npm run integration:jit",
     "integration:jit": "cd integration && npm run e2e",
     "integration:aot": "cd integration && npm run e2e:aot",
-    "lint": "tslint -c tslint.json --project ./tsconfig.json -t verbose",
-    "ngcc": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
-    "postinstall": "yarn ngcc"
+    "lint": "tslint -c tslint.json --project ./tsconfig.json -t verbose"
   },
   "author": "Jeff Whelpley",
   "license": "MIT",
@@ -65,7 +63,6 @@
     "systemjs": "0.19.43",
     "ts-loader": "^3.5.0",
     "ts-node": "^9.1.1",
-    "tsickle": "~0.39.1",
     "tslint": "^5.12.1",
     "typescript": "~4.0.5",
     "uglify-js": "^3.4.9",
