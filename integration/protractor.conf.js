@@ -26,6 +26,6 @@ exports.config = {
     print: function () { }
   },
   onPrepare() {
-    jasmine.getEnv().addReporter(new SpecReporter({ spec: { displayStacktrace: true } }));
+    jasmine.getEnv().addReporter(new SpecReporter({ spec: { displayStacktrace: 'pretty' } }));
   }
 };
