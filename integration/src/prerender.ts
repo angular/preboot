@@ -1,7 +1,7 @@
-import {INITIAL_CONFIG, renderModuleFactory} from '@angular/platform-server';
+import {INITIAL_CONFIG, renderModule} from '@angular/platform-server';
 import {readFileSync, writeFileSync} from 'fs-extra';
 
-const {AppServerModuleNgFactory} = require('./app/app.module.ngfactory');
+const {AppServerModule} = require('./app/app.module');
 const template = readFileSync('./index.html').toString();
 
 const extraProviders = [
@@ -14,5 +14,5 @@ const extraProviders = [
   }
 ];
 
-renderModuleFactory(AppServerModuleNgFactory, {extraProviders})
+renderModule(AppServerModule, {extraProviders})
   .then((html: string) => writeFileSync('../dist/index.html', html));
