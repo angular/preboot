@@ -13,8 +13,8 @@ exports.config = {
     browserName: 'chrome',
     // For Travis
     chromeOptions: {
-      binary: process.env.CHROME_BIN,
-      args: ['--no-sandbox']
+      args: ['--headless'],
+      binary: require('puppeteer').executablePath(),
     }
   },
   directConnect: true,

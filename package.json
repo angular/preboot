@@ -57,6 +57,7 @@
     "minimatch": "^3.0.4",
     "ng-packagr": "^11.0.3",
     "protractor": "^5.4.2",
+    "puppeteer": "^5.5.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^2.6.3",
     "rxjs": "^6.3.3",
@@ -76,6 +77,5 @@
   "bugs": {
     "url": "https://github.com/angular/preboot/issues"
   },
-  "homepage": "https://github.com/angular/preboot",
-  "dependencies": {}
+  "homepage": "https://github.com/angular/preboot"
 }

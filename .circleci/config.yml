@@ -89,6 +89,7 @@ jobs:
   test:
     executor: action-executor
     steps:
+      - browser-tools/install-chrome
       - *checkout_code
       - *restore_cache
       - *yarn_install
