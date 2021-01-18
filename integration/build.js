@@ -34,17 +34,7 @@ return Promise.resolve()
   .then(() => ngc(['-p', e2eDir]))
   .then(() => ngc(['-p', srcDir]))
   // Create dist dir.
-  .then(() => _recursiveMkDir(distDir))
-  // Copy files.
-  .then(() => {
-    // Copy global stylesheets, images, etc.
-    const assets = [
-      'favicon.ico',
-      'styles.css'
-    ];
-
-    return Promise.all(assets.map(asset => _relativeCopy(asset, srcDir, distDir)));
-  })
+  .then(() => fs.mkdirSync(distDir))
   // .then(() => ngc(['-p', path.join(srcDir, 'tsconfig.prerender.json')]))
   // .then(() => fork(path.join(srcDir, 'prerender.js'), [], {cwd: srcDir}))
   .then(() => ngc(['-p', path.join(srcDir, `tsconfig.postrender.json`)]))
@@ -56,26 +46,3 @@ return Promise.resolve()
     console.error(e);
     process.exit(1);
   });
-
-
-
-// Copy files maintaining relative paths.
-function _relativeCopy(fileGlob, from, to) {
-  return glob(fileGlob, { cwd: from, nodir: true }, (err, files) => {
-    if (err) throw err;
-    files.forEach(file => {
-      const origin = path.join(from, file);
-      const dest = path.join(to, file);
-      _recursiveMkDir(path.dirname(dest));
-      fs.createReadStream(origin).pipe(fs.createWriteStream(dest));
-    })
-  })
-}
-
-// Recursively create a dir.
-function _recursiveMkDir(dir) {
-  if (!fs.existsSync(dir)) {
-    _recursiveMkDir(path.dirname(dir));
-    fs.mkdirSync(dir);
-  }
-}
