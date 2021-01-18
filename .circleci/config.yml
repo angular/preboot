@@ -1,6 +1,6 @@
 # Cache key for CircleCI. We want to invalidate the cache whenever the npm shrinkwrap
 # changed.
-var_1: &cache_key preboot-v1-{{ checksum "package-lock.json" }}
+var_1: &cache_key preboot-v1-{{ checksum "yarn.lock" }}
 # Use the CircleCI browsers image that comes with NodeJS installed
 var_2: &docker_image cimg/node:10.20
 
@@ -37,7 +37,7 @@ var_6: &save_cache
   save_cache:
     key: *cache_key
     paths:
-      - ~/usr/local/lib/node_modules  # location depends on npm version
+      - ~/.cache/yarn
 
 # Job step that ensures that the node module dependencies are installed and up-to-date. We use
 # Yarn with the frozen lockfile option in order to make sure that lock file and package.json are
@@ -75,14 +75,14 @@ jobs:
       - *restore_cache
       - *yarn_install
 
-      - run: npm run build
+      - run: yarn build
 
       # Store the release output in the workspace storage. This means that other jobs
       # in the same workflow can attach the release output to their job.
       - persist_to_workspace:
           root: *workspace_location
           paths:
-            - ./dist-tarball
+            - ./dist
 
       - *save_cache
 
@@ -94,7 +94,7 @@ jobs:
       - *restore_cache
       - *yarn_install
 
-      - run: npm run test:once
+      - run: yarn test:once
 
       - *save_cache
 
@@ -106,7 +106,7 @@ jobs:
       - *restore_cache
       - *attach_release_output
 
-      - run: npm run e2e
+      - run: yarn e2e
 
       - *save_cache
 
