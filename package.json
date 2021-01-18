@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "rimraf out-tsc dist/* dist-tarball/* node_modules && npm ci",
     "build": "ng-packagr --project src/lib/ng-package.json --config src/lib/tsconfig.lib.json",
-    "postbuild": "cp README.md dist/. && cd ./dist && npm pack && mkdir ../dist-tarball && mv *.tgz ../dist-tarball/",
+    "postbuild": "cp README.md dist/. && cd ./dist && npm pack && mkdir ../dist-tarball && mv *.tgz ../dist-tarball/preboot.tgz",
     "e2e": "cd integration && npm run e2e",
     "build-test": "ngc -p src/lib/tsconfig.spec.json",
     "build-test:watch": "ngc -p src/lib/tsconfig.spec.json -w",
@@ -17,6 +17,7 @@
     "integration": "npm run integration:aot && npm run integration:jit",
     "integration:jit": "cd integration && npm run e2e",
     "integration:aot": "cd integration && npm run e2e:aot",
+    "preprotractor": "webdriver-manager update --gecko false --standalone false 87.0.4280.20",
     "lint": "tslint -c tslint.json --project ./tsconfig.json -t verbose"
   },
   "author": "Jeff Whelpley",

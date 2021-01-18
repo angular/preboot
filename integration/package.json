@@ -8,7 +8,7 @@
     "serve": "lite-server -c=bs-config.json",
     "pree2e": "npm run build",
     "e2e": "concurrently \"npm run serve\" \"npm run protractor\" --kill-others --success first",
-    "preprotractor": "webdriver-manager update",
+    "preprotractor": "webdriver-manager update --gecko false --standalone false 87.0.4280.20",
     "protractor": "protractor protractor.conf.js",
     "ngcc": "ngcc --properties es2015 browser module main --first-only",
     "postinstall": "yarn ngcc"
@@ -29,7 +29,7 @@
     "@angular/platform-browser-dynamic": "^11.0.0",
     "@angular/platform-server": "^11.0.0",
     "core-js": "^2.6.2",
-    "preboot": "file:../dist-tarball/preboot-8.0.0.tgz",
+    "preboot": "file:../dist-tarball/preboot.tgz",
     "rxjs": "^6.6.3",
     "tslib": "^2.1.0",
     "zone.js": "~0.10.3"
