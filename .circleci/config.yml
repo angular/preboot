@@ -68,7 +68,7 @@ orbs:
 # -----------------------------------------------------------------------------------------
 jobs:
 
-  build:
+  build_and_test:
     executor: action-executor
     steps:
       - *checkout_code
@@ -77,24 +77,15 @@ jobs:
 
       - run: yarn build
 
+      - browser-tools/install-chrome
+      - run: yarn test:once
+
       # Store the release output in the workspace storage. This means that other jobs
       # in the same workflow can attach the release output to their job.
       - persist_to_workspace:
           root: *workspace_location
           paths:
             - ./dist
-
-      - *save_cache
-
-  test:
-    executor: action-executor
-    steps:
-      - browser-tools/install-chrome
-      - *checkout_code
-      - *restore_cache
-      - *yarn_install
-
-      - run: yarn test:once
 
       - *save_cache
 
@@ -119,8 +110,7 @@ workflows:
 
   build_and_test:
     jobs:
-      - build
-      - test
+      - build_and_test
       - e2e:
           requires:
-            - build
+            - build_and_test
