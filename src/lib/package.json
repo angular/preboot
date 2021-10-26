@@ -1,6 +1,6 @@
 {
   "name": "preboot",
-  "version": "8.0.0",
+  "version": "9.0.0",
   "description": "Record server view events and play back to Angular client view",
   "main": "./bundles/preboot.umd.js",
   "module": "./esm5/preboot.es5.js",
@@ -21,8 +21,8 @@
     "universal"
   ],
   "peerDependencies": {
-    "@angular/common": ">=11.0.0",
-    "@angular/core": ">=11.0.0"
+    "@angular/common": ">=12.0.0",
+    "@angular/core": ">=12.0.0"
   },
   "repository": {
     "type": "git",
