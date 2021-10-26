@@ -17,7 +17,7 @@
     "integration": "yarn integration:aot && yarn integration:jit",
     "integration:jit": "cd integration && yarn e2e",
     "integration:aot": "cd integration && yarn e2e:aot",
-    "preprotractor": "webdriver-manager update --gecko false --standalone false 87.0.4280.20",
+    "postinstall": "webdriver-manager update --gecko false --standalone false $CHROMEDRIVER_VERSION_ARG",
     "lint": "tslint -c tslint.json --project ./tsconfig.json -t verbose"
   },
   "author": "Jeff Whelpley",
@@ -57,7 +57,7 @@
     "minimatch": "^3.0.4",
     "ng-packagr": "^11.0.3",
     "protractor": "^5.4.2",
-    "puppeteer": "^5.5.0",
+    "puppeteer": "^10.4.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^2.6.3",
     "rxjs": "^6.3.3",
