@@ -2,7 +2,7 @@
 # changed.
 var_1: &cache_key preboot-v1-{{ checksum "yarn.lock" }}
 # Use the CircleCI browsers image that comes with NodeJS installed
-var_2: &docker_image cimg/node:10.20
+var_2: &docker_image cimg/node:14.17
 
 # Executor Definitions
 # https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-executors
