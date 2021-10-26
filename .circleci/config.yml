@@ -1,8 +1,8 @@
 # Cache key for CircleCI. We want to invalidate the cache whenever the npm shrinkwrap
 # changed.
-var_1: &cache_key preboot-v1-{{ checksum "yarn.lock" }}
+var_1: &cache_key preboot-v2-{{ checksum "yarn.lock" }}
 # Use the CircleCI browsers image that comes with NodeJS installed
-var_2: &docker_image cimg/node:10.20
+var_2: &docker_image cimg/node:14.17
 
 # Executor Definitions
 # https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-executors
@@ -97,6 +97,13 @@ jobs:
       - *restore_cache
       - *attach_release_output
 
+      - run:
+          name: 'Setup custom environment variables'
+          # Use matching versions of Chromium (via puppeteer) and ChromeDriver.
+          # https://github.com/GoogleChrome/puppeteer/releases
+          # http://chromedriver.chromium.org/downloads
+          command: |
+            echo 'export CHROMEDRIVER_VERSION_ARG="--versions.chrome 93.0.4577.0"' >> $BASH_ENV # Redirect into $BASH_ENV
       - run: yarn e2e
 
       - *save_cache
