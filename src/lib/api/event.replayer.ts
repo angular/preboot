@@ -18,7 +18,7 @@ import {getNodeKeyForPreboot} from '../common/get-node-key';
 export function _window(): PrebootWindow {
   return {
     prebootData: (window as any)['prebootData'],
-    getComputedStyle: window.getComputedStyle,
+    getComputedStyle: (element, pseudoElt) => window.getComputedStyle(element, pseudoElt),
     document: document
   };
 }
